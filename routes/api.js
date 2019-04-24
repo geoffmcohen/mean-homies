@@ -12,6 +12,7 @@ module.exports = (function(){
   // #TODO: This is to test calls to the api, remove later
   api.get('/test', function(req, res){
     console.log('/api/test called.');
+    res.send({data: 'test'});
   });
 
   return api;
