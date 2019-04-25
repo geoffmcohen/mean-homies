@@ -8,7 +8,7 @@ import { BlogService } from './blog.service';
   providers: [ BlogService ]
 })
 export class BlogComponent implements OnInit {
-  private data: any;
+  public data: any;
 
   constructor(private blogService: BlogService) {
     console.log('constructor called on BlogComponent');
