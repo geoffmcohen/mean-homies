@@ -29,8 +29,6 @@ module.exports = (function(){
     if(req.query.page) input.page = parseInt(req.query.page);
     if(req.query.posts_per_page) input.postsPerPage = parseInt(req.query.posts_per_page);
 
-    console.log("Requested page = %d", input.page);
-
     // Connect to the database
     var MongoClient = require('mongodb').MongoClient;
     var mongoURI = process.env.MONGOLAB_URI;

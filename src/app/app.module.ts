@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { AdminComponent } from './admin/admin.component';
 import { BlogComponent } from './blog/blog.component';
 import { HomeComponent } from './home/home.component';
+import { BlogPostComponent } from './blog/blog-post/blog-post.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AdminComponent,
     BlogComponent,
-    HomeComponent
+    HomeComponent,
+    BlogPostComponent
   ],
   imports: [
     BrowserModule,

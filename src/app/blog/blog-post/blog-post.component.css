@@ -1,0 +1,42 @@
+* {
+  font-family: Courier New;
+}
+
+.blog-post {
+  border: 1px solid black;
+  padding: 5px;
+  margin: 10px;
+  max-width: 1000px;
+}
+
+.blog-title {
+  font-size: 175%;
+  font-weight: bold;
+  padding: 5px;
+  max-width: inherit;
+  text-align: left;
+}
+
+.blog-auth-and-time {
+  font-size: 75%;
+  padding: 5px;
+  max-width: inherit;
+  text-align: left;
+}
+
+.blog-body {
+  margin: 5px;
+  max-width: inherit;
+  text-align: left;
+}
+
+.blog-image {
+  padding: 15px;
+  max-width: inherit;
+}
+
+.blog-image > img {
+  border: 1px solid lightgrey;
+  width: 100%;
+  height: auto;
+}

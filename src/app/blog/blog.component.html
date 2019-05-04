@@ -1,2 +1,7 @@
-<h1>The blog will be here.</h1>
+<div style="text-align:center; width:100%">
+  <img src="../../assets/images/Vegan Homies Blog Banner.jpg">
+</div>
+<div style="text-align:center; width:100%">
+  <app-blog-post *ngFor="let blogPost of blogPosts" [blogPost]="blogPost" ></app-blog-post>
+</div>
 <p *ngIf="pageInfo">Current page is {{pageInfo.currentPage}}</p>
