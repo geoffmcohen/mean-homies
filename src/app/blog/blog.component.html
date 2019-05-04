@@ -4,4 +4,4 @@
 <div style="text-align:center; width:100%">
   <app-blog-post *ngFor="let blogPost of blogPosts" [blogPost]="blogPost" ></app-blog-post>
 </div>
-<p *ngIf="pageInfo">Current page is {{pageInfo.currentPage}}</p>
+<app-blog-page-navigation *ngIf="pageInfo" [pageInfo]="pageInfo"></app-blog-page-navigation>

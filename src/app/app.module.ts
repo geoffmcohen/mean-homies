@@ -8,6 +8,7 @@ import { AdminComponent } from './admin/admin.component';
 import { BlogComponent } from './blog/blog.component';
 import { HomeComponent } from './home/home.component';
 import { BlogPostComponent } from './blog/blog-post/blog-post.component';
+import { BlogPageNavigationComponent } from './blog/blog-page-navigation/blog-page-navigation.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { BlogPostComponent } from './blog/blog-post/blog-post.component';
     AdminComponent,
     BlogComponent,
     HomeComponent,
-    BlogPostComponent
+    BlogPostComponent,
+    BlogPageNavigationComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,17 @@
+<div class="blog-pagination">
+  <span *ngIf="pageInfo.currentPage == 1">&lt;&lt;&nbsp;&lt;&nbsp;</span>
+  <span *ngIf="pageInfo.currentPage > 1" >
+    <a routerLink="/blog/page/1">&lt;&lt;</a>&nbsp;
+    <a routerLink="/blog/page/{{pageInfo.currentPage-1}}">&lt;</a>&nbsp;
+  </span>
+  <span *ngFor="let pageNumber of createPageNumbers()">
+    <span *ngIf="pageInfo.currentPage == pageNumber">{{pageNumber}}</span>
+    <a *ngIf="pageInfo.currentPage != pageNumber" routerLink="/blog/page/{{pageNumber}}">{{pageNumber}}</a>
+    &nbsp;
+  </span>
+  <span *ngIf="pageInfo.currentPage == pageInfo.pageCount">&gt;&nbsp;&gt;&gt;</span>
+  <span *ngIf="pageInfo.currentPage != pageInfo.pageCount">
+    <a routerLink="/blog/page/{{pageInfo.currentPage+1}}">&gt;</a>&nbsp;
+    <a routerLink="/blog/page/{{pageInfo.pageCount}}">&gt;&gt;</a>
+  </span>
+</div>
