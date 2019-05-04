@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'blog', component: BlogComponent},
+  {path: 'blog/page/:pageNumber', component: BlogComponent},
   {path: 'admin', component: AdminComponent}
 ];
 

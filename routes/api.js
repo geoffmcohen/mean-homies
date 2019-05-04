@@ -15,16 +15,21 @@ module.exports = (function(){
   'use strict';
   var api = require('express').Router();
 
-  // #TODO: This is to test calls to the api, remove later
-  api.get('/test', function(req, res){
-    console.log('/api/test called.');
-    res.send({data: 'test'});
-  });
+  // // #TODO: This is to test calls to the api, remove later
+  // api.get('/test', function(req, res){
+  //   console.log('/api/test called.');
+  //   res.send({data: 'test'});
+  // });
 
   // Get blog posts for display
   api.get('/blog/get_posts', function(req, res){
-    var input = {postsPerPage: 3, page: 1};
-    if(req.query.page) input.page = req.query.page;
+    console.log("getPosts called on BlogService");
+
+    var input = {page: 1, postsPerPage: 3};
+    if(req.query.page) input.page = parseInt(req.query.page);
+    if(req.query.posts_per_page) input.postsPerPage = parseInt(req.query.posts_per_page);
+
+    console.log("Requested page = %d", input.page);
 
     // Connect to the database
     var MongoClient = require('mongodb').MongoClient;

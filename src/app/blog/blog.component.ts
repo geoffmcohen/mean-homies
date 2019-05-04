@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BlogService } from './blog.service';
-
 
 @Component({
   selector: 'app-blog',
@@ -12,13 +12,23 @@ export class BlogComponent implements OnInit {
   public pageInfo: any;
   public blogPosts: any[];
 
-  constructor(private blogService: BlogService) {}
+  constructor(
+    private blogService: BlogService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.blogService.getPosts().subscribe((res : any) => {
-      this.blogPosts = res.blogPosts;
-      this.pageInfo = res.pageInfo;
-    });
-  }
+    // Get the page number from the route if provided
+    this.route.params.subscribe(params => {
+      var pageNumber = 1;
+      if (params['pageNumber']) pageNumber = +params['pageNumber'];
+      console.log("Page number = %d", pageNumber);
 
+      this.blogService.getPosts(pageNumber).subscribe((res : any) => {
+        this.blogPosts = res.blogPosts;
+        this.pageInfo = res.pageInfo;
+      });
+    });
+
+  }
 }
