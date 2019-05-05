@@ -1,7 +1,5 @@
 <div style="text-align:center; width:100%">
   <img src="../../assets/images/Vegan Homies Blog Banner.jpg">
 </div>
-<div style="text-align:center; width:100%">
-  <app-blog-post *ngFor="let blogPost of blogPosts" [blogPost]="blogPost" ></app-blog-post>
-</div>
+<app-blog-post *ngFor="let blogPost of blogPosts" [blogPost]="blogPost" ></app-blog-post>
 <app-blog-page-navigation *ngIf="pageInfo" [pageInfo]="pageInfo"></app-blog-page-navigation>

@@ -14,7 +14,6 @@
   color: white;
 }
 
-/* .blog-pagination > */
 a {
   text-decoration: none;
   padding: 3px;
@@ -22,7 +21,6 @@ a {
   border: 1px solid black;
 }
 
-/*.blog-pagination > */
 a:hover {
   font-weight: bold;
 }

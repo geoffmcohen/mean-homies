@@ -1,6 +1,8 @@
-<div class="blog-post">
-  <div class="blog-title">{{blogPost.title}}</div>
-  <div class="blog-auth-and-time">Written by {{blogPost.author}} at {{blogPost.entryTime | date: 'E MMM d yyyy hh:mm:ss'}}.</div>
-  <div *ngIf="blogPost.image_url" class="blog-image"><img src="{{blogPost.image_url}}"></div>
-  <div class="blog-body">{{blogPost.body}}</div>
+<div style="text-align:center;padding:5px 10px">
+  <div class="blog-post">
+    <div class="blog-title">{{blogPost.title}}</div>
+    <div class="blog-auth-and-time">Written by {{blogPost.author}} at {{blogPost.entryTime | date: 'E MMM d yyyy hh:mm:ss'}}.</div>
+    <div *ngIf="blogPost.image_url" class="blog-image"><img src="{{blogPost.image_url}}"></div>
+    <div class="blog-body" [innerHtml]="blogPost.body"></div>
+  </div>
 </div>

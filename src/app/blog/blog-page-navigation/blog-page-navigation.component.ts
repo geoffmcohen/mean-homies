@@ -13,6 +13,7 @@ export class BlogPageNavigationComponent implements OnInit {
   ngOnInit() {
   }
 
+  // Function to create an array of page numbers to use for the navigation link
   public createPageNumbers(): number[]{
     var pageNumbers: number[] = new Array();
     if(this.pageInfo.pageCount){

@@ -15,12 +15,6 @@ module.exports = (function(){
   'use strict';
   var api = require('express').Router();
 
-  // // #TODO: This is to test calls to the api, remove later
-  // api.get('/test', function(req, res){
-  //   console.log('/api/test called.');
-  //   res.send({data: 'test'});
-  // });
-
   // Get blog posts for display
   api.get('/blog/get_posts', function(req, res){
     console.log("getPosts called on BlogService");
