@@ -2,6 +2,18 @@
 const express = require('express');
 const path = require('path');
 
+// Connect to mongodb and fail if unable to connect
+var MongoClient = require('mongodb').MongoClient;
+var mongoURI = process.env.MONGOLAB_URI;
+MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+  if(err){
+    console.log("Unable to connect to MongoDB!!!");
+    throw err;
+  } else {
+    console.log("Vegan Homies is running...");
+  }
+});
+
 const app = express();
 
 // Serve only the static files form the dist directory

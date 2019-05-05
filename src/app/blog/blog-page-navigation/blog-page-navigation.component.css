@@ -7,12 +7,22 @@
   text-align: center;
 }
 
-.blog-pagination > a {
+.disabled {
+  margin: 5px;
+  padding: 3px;
+  background-color: black;
+  color: white;
+}
+
+/* .blog-pagination > */
+a {
   text-decoration: none;
   padding: 3px;
+  margin: 5px;
   border: 1px solid black;
 }
 
-.blog-pagination > a:hover {
+/*.blog-pagination > */
+a:hover {
   font-weight: bold;
 }

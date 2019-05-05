@@ -1,17 +1,15 @@
 <div class="blog-pagination">
-  <span *ngIf="pageInfo.currentPage == 1">&lt;&lt;&nbsp;&lt;&nbsp;</span>
+  <span *ngIf="pageInfo.currentPage == 1">
+    <span class='disabled'>&lt;&lt;</span><span class='disabled'>&lt;</span>
+  </span>
   <span *ngIf="pageInfo.currentPage > 1" >
-    <a routerLink="/blog/page/1">&lt;&lt;</a>&nbsp;
-    <a routerLink="/blog/page/{{pageInfo.currentPage-1}}">&lt;</a>&nbsp;
+    <a routerLink="/blog/page/1">&lt;&lt;</a><a routerLink="/blog/page/{{pageInfo.currentPage-1}}">&lt;</a>
   </span>
   <span *ngFor="let pageNumber of createPageNumbers()">
-    <span *ngIf="pageInfo.currentPage == pageNumber">{{pageNumber}}</span>
-    <a *ngIf="pageInfo.currentPage != pageNumber" routerLink="/blog/page/{{pageNumber}}">{{pageNumber}}</a>
-    &nbsp;
+    <span *ngIf="pageInfo.currentPage == pageNumber" class='disabled'>{{pageNumber}}</span><a *ngIf="pageInfo.currentPage != pageNumber" routerLink="/blog/page/{{pageNumber}}">{{pageNumber}}</a>
   </span>
-  <span *ngIf="pageInfo.currentPage == pageInfo.pageCount">&gt;&nbsp;&gt;&gt;</span>
+  <span *ngIf="pageInfo.currentPage == pageInfo.pageCount"><span class='disabled'>&gt;</span><span class='disabled'>&gt;&gt;</span></span>
   <span *ngIf="pageInfo.currentPage != pageInfo.pageCount">
-    <a routerLink="/blog/page/{{pageInfo.currentPage+1}}">&gt;</a>&nbsp;
-    <a routerLink="/blog/page/{{pageInfo.pageCount}}">&gt;&gt;</a>
+    <a routerLink="/blog/page/{{pageInfo.currentPage+1}}">&gt;</a><a routerLink="/blog/page/{{pageInfo.pageCount}}">&gt;&gt;</a>
   </span>
 </div>
