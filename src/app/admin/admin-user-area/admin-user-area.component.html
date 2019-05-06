@@ -1,6 +1,8 @@
 <button *ngIf="true" (click)="openModal('admin-login-dialog');">Login</button>
 
 <app-modal-dialog id="admin-login-dialog">
-  <h1>Login</h1>
-  <button (click)="closeModal('admin-login-dialog');">Close</button>
+  <h1>Admin Login</h1>
+  Username: <input [(ngModel)]="username" type="text" ><br>
+  Password: <input [(ngModel)]="password" type="password"><br>
+  <button (click)="submitLoginForm('admin-login-dialog');">Login</button>
 </app-modal-dialog>
