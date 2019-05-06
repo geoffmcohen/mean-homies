@@ -8,8 +8,8 @@ import { ModalService } from '../../shared/modal.service';
   styleUrls: ['./admin-user-area.component.css']
 })
 export class AdminUserAreaComponent implements OnInit {
-  private username: string;
-  private password: string;
+  public username: string;
+  public password: string;
 
   constructor(private modalService: ModalService) { }
 
