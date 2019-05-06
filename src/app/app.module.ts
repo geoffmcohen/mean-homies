@@ -9,6 +9,10 @@ import { BlogComponent } from './blog/blog.component';
 import { HomeComponent } from './home/home.component';
 import { BlogPostComponent } from './blog/blog-post/blog-post.component';
 import { BlogPageNavigationComponent } from './blog/blog-page-navigation/blog-page-navigation.component';
+import { AdminTopComponent } from './admin/admin-top/admin-top.component';
+import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
+import { AdminUserAreaComponent } from './admin/admin-user-area/admin-user-area.component';
+import { ModalDialogComponent } from './shared/modal-dialog/modal-dialog.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +21,11 @@ import { BlogPageNavigationComponent } from './blog/blog-page-navigation/blog-pa
     BlogComponent,
     HomeComponent,
     BlogPostComponent,
-    BlogPageNavigationComponent
+    BlogPageNavigationComponent,
+    AdminTopComponent,
+    AdminMenuComponent,
+    AdminUserAreaComponent,
+    ModalDialogComponent
   ],
   imports: [
     BrowserModule,

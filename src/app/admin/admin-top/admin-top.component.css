@@ -1,0 +1,23 @@
+*{
+  font-family: Courier New;
+}
+
+.top-panel{
+  overflow: hidden;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+.title-area{
+  border: 1px solid black;
+  padding: 5px;
+  float: left;
+  font-size: 150%;
+  font-weight: bold;
+}
+
+.user-area{
+  border: 1px solid black;
+  padding: 5px;
+  float: right;
+}
