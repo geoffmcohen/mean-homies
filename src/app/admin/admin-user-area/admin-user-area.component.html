@@ -1,4 +1,5 @@
-<button *ngIf="true" (click)="openModal('admin-login-dialog');">Login</button>
+<button *ngIf="!loggedIn" (click)="openModal('admin-login-dialog');">Login</button>
+<span *ngIf="loggedIn">Admin Logged In</span>
 
 <app-modal-dialog id="admin-login-dialog">
   <h1>Admin Login</h1>

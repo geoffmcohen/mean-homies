@@ -23,6 +23,7 @@ module.exports = (function(){
     if(req.query.page) input.page = parseInt(req.query.page);
     if(req.query.posts_per_page) input.postsPerPage = parseInt(req.query.posts_per_page);
 
+    // #TODO: Move this into module
     // Connect to the database
     var MongoClient = require('mongodb').MongoClient;
     var mongoURI = process.env.MONGOLAB_URI;
@@ -63,6 +64,63 @@ module.exports = (function(){
     });
   });
 
+  // Attempt to authenticate admin user
+  api.post('/admin/login', function(req, res){
+    console.log('api/admin/login called');
+
+    var admin = require("../modules/admin.js");
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function(err, fields, files){
+      admin.authenticateAdminUser(fields.username, fields.password, function(err, authResult){
+        if(authResult){
+          var jwt = require('jsonwebtoken');
+          var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
+
+          var payload = {
+            username: req.query.username,
+            userType: 'admin'
+          };
+
+          jwt.sign(payload, jwtSecret, {expiresIn: '1h'}, function(err, token){
+            if(err){
+              sendError(res, err, "Unable to sign in admin user");
+            } else {
+                res.send({success: true, message: "", token: token});
+            }
+          });
+        } else {
+          // #TODO: Make this more accurate so we can display better messages
+          res.send({success: false, message: "Wrong username/password combination"});
+        }
+      });
+    });
+  });
+
+  // Used to verify a user token to ensure they are still logged in
+  api.post('/admin/verify_user', function(req, res){
+    console.log('api/admin/login called');
+
+    var admin = require("../modules/admin.js");
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+
+    form.parse(req, function(err, fields, files){
+      var jwt = require('jsonwebtoken');
+      var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
+      jwt.verify(fields.token, jwtSecret, function(err, decoded){
+        if(err){
+          res.send({success: false, error: err});
+        } else {
+          console.log("Decoded username = %s", decoded.username);
+          res.send({success: true});
+        }
+      });
+    });
+  });
+
   // api.get()
+
   return api;
 })();

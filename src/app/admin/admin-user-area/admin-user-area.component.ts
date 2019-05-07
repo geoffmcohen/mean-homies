@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ModalService } from '../../shared/modal.service';
+import { AuthenticationService } from '../../auth/authentication.service'
 
 @Component({
   selector: 'app-admin-user-area',
@@ -10,10 +11,17 @@ import { ModalService } from '../../shared/modal.service';
 export class AdminUserAreaComponent implements OnInit {
   public username: string;
   public password: string;
+  public message: string;
+  public loggedIn: boolean;
 
-  constructor(private modalService: ModalService) { }
+  constructor(
+    private modalService: ModalService,
+    private authService: AuthenticationService
+  ) { }
 
   ngOnInit() {
+    // NOT SURE IF THIS IS BEING CALLED APPROPRIATLEY
+    this.loggedIn = this.checkLoggedIn();
   }
 
   // Used to show login form
@@ -28,16 +36,40 @@ export class AdminUserAreaComponent implements OnInit {
 
   // Attempt logging in
   submitLoginForm(id: string){
-    console.log("User '%s' attempted to login", this.username);
-
     // Make call to auth services
-    // If successful store token or something
-    // If failure redisplay the dialog with a message and remove password
-    this.username = "";
-    this.password = "";
+    //this.authService.adminLogin(this.username, this.password).subscribe((res : any) => {
+    this.authService.adminLogin(this.username, this.password, (res : any) => {
+        console.log("Trying to login %s", this.username);
+        console.log(res);
 
-    // Close the login form
-    this.closeModal(id);
+        this.message = null;
+
+        // If successful store token or something
+        if(res.success){
+          this.loggedIn = true;
+
+          // Remove username and password
+          this.username = "";
+          this.password = "";
+
+          // Close the login form
+          this.closeModal(id);
+        } else {
+            this.password = "";
+            this.message = res.message;
+        }
+    });
   }
 
+  // // Allow user to log out
+  // logout(){
+  //   localStorage.removeItem('admin_user');
+  //   localStorage.removeItem('admin_user_token')
+  // }
+
+  // Check if user is logged in
+  checkLoggedIn(): boolean{
+    console.log('checkLoggedIn called');
+    return this.authService.checkAdminIsLoggedIn();
+  }
 }
