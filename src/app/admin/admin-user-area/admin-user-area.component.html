@@ -1,11 +1,15 @@
 <button *ngIf="!loggedIn" (click)="openModal('admin-login-dialog');">Login</button>
-<div *ngIf="loggedIn" class='userLoggedIn'>Admin: <span class="loggedInUser">{{loggedInUser}}</span><button (click)="logout()">Logout</button></div>
+<div *ngIf="loggedIn" class='userLoggedIn'>Admin: <span class="loggedInUser"> {{loggedInUser}}</span><button (click)="logout()">Logout</button></div>
 
 <app-modal-dialog id="admin-login-dialog">
-  <h1>Admin Login</h1>
-  Username: <input [(ngModel)]="username" type="text" ><br>
-  Password: <input [(ngModel)]="password" type="password"><br>
-  <button (click)="submitLoginForm('admin-login-dialog');">Login</button>
+  <!-- <form> -->
+    <h1>Admin Login</h1>
+    <div *ngIf="message" class="message">{{message}}</div>
+    Username: <input [(ngModel)]="username" type="text" ><br>
+    Password: <input [(ngModel)]="password" type="password"><br>
+    <!--<div style="text-align: center"><input (click)="submitLoginForm('admin-login-dialog');" type='submit' value='Login'></div>-->
+    <div style="text-align: center"><button (click)="submitLoginForm('admin-login-dialog');">Login</button></div>
+  <!-- </form> -->
 </app-modal-dialog>
 
 <app-modal-dialog id="admin-login-loading-dialog">

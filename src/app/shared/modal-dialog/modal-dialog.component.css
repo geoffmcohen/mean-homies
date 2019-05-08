@@ -18,6 +18,8 @@
 
     /* enables scrolling for tall modals */
     overflow: auto;
+
+    text-align: center;
 }
 
 .modal-dialog-body {
@@ -26,6 +28,9 @@
 
     /* margin exposes part of the modal background */
     margin: 40px;
+
+    display: inline-block;
+    text-align: left;
 }
 
 .modal-dialog-background {
