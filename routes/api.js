@@ -79,7 +79,7 @@ module.exports = (function(){
           var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
 
           var payload = {
-            username: req.query.username,
+            username: fields.username,
             userType: 'admin'
           };
 
@@ -114,6 +114,7 @@ module.exports = (function(){
           res.send({success: false, error: err});
         } else {
           console.log("Decoded username = %s", decoded.username);
+          console.log(decoded);
           res.send({success: true});
         }
       });
