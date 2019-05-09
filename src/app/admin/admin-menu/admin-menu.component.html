@@ -1,13 +1,25 @@
 <mat-card>
-  <button mat-button [matMenuTriggerFor]="adminmenu">Admin Menu</button>
-  <mat-menu #adminmenu="matMenu">
-    <button mat-menu-item>Test 1</button>
-    <button mat-menu-item [matMenuTriggerFor]="testsubmenu">Test 2</button>
-    <button mat-menu-item>Test 3</button>
-  </mat-menu>
-  <mat-menu #testsubmenu="matMenu">
-    <button mat-menu-item>Test 4</button>
-    <button mat-menu-item>Test 5</button>
+  <button mat-button [matMenuTriggerFor]="blogmenu">Blog</button>
+  <mat-menu #blogmenu="matMenu">
+    <button mat-menu-item>Create Post</button>
   </mat-menu>
 
+  <button mat-button [matMenuTriggerFor]="usermenu">User Admin</button>
+  <mat-menu #usermenu="matMenu">
+    <button mat-menu-item [matMenuTriggerFor]="adminusersubmenu">Admin Users</button>
+    <button mat-menu-item [matMenuTriggerFor]="vhusersubmenu">VH Users</button>
+  </mat-menu>
+  <mat-menu #adminusersubmenu="matMenu">
+    <button mat-menu-item disabled>Create Admin User</button>
+    <button mat-menu-item disabled>Delete Admin User</button>
+  </mat-menu>
+  <mat-menu #vhusersubmenu="matMenu">
+    <button mat-menu-item disabled>Swing Ban Hammer</button>
+    <button mat-menu-item disabled>Restore Banned User</button>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="reportsmenu">Reports</button>
+  <mat-menu #reportsmenu="matMenu">
+    <button mat-menu-item>Page Request Stats</button>
+  </mat-menu>
 </mat-card>
