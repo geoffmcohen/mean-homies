@@ -1,3 +1,2 @@
-<app-admin-top></app-admin-top>
-<app-admin-menu></app-admin-menu>
-<div>Forms and whatnot.</div>
+<app-admin-top (loggedInOutput)="updateLogin($event)"></app-admin-top>
+<app-admin-menu *ngIf="loggedIn"></app-admin-menu>

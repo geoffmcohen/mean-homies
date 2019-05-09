@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 import { ModalService } from '../../shared/modal.service';
 import { AuthenticationService } from '../../auth/authentication.service'
@@ -9,6 +9,8 @@ import { AuthenticationService } from '../../auth/authentication.service'
   styleUrls: ['./admin-user-area.component.css']
 })
 export class AdminUserAreaComponent implements OnInit {
+  @Output() loggedInOutput = new EventEmitter<boolean>();
+
   public username: string;
   public password: string;
   public message: string;
@@ -56,6 +58,9 @@ export class AdminUserAreaComponent implements OnInit {
           this.loggedIn = true;
           this.loggedInUser = this.authService.getAdminUser();
 
+          // Alert parent that user has logged in
+          this.notifyLoginChange();
+
           // Remove username and password from form
           this.username = "";
           this.password = "";
@@ -76,5 +81,12 @@ export class AdminUserAreaComponent implements OnInit {
     this.authService.adminLogout();
     this.loggedIn = false;
     this.loggedInUser = null;
+
+    // Alert parent that user has logged out
+    this.notifyLoginChange();
+  }
+
+  notifyLoginChange(){
+    this.loggedInOutput.emit(this.loggedIn);
   }
 }

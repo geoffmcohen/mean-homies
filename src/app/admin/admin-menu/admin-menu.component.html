@@ -1,3 +1,13 @@
-<p>
-  admin-menu works!
-</p>
+<mat-card>
+  <button mat-button [matMenuTriggerFor]="adminmenu">Admin Menu</button>
+  <mat-menu #adminmenu="matMenu">
+    <button mat-menu-item>Test 1</button>
+    <button mat-menu-item [matMenuTriggerFor]="testsubmenu">Test 2</button>
+    <button mat-menu-item>Test 3</button>
+  </mat-menu>
+  <mat-menu #testsubmenu="matMenu">
+    <button mat-menu-item>Test 4</button>
+    <button mat-menu-item>Test 5</button>
+  </mat-menu>
+
+</mat-card>
