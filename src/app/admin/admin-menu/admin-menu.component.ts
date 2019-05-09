@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-admin-menu',
@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-menu.component.css']
 })
 export class AdminMenuComponent implements OnInit {
+  @Output() displayComponentOutput = new EventEmitter<string>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  displayComponent(componentName: string){
+    this.displayComponentOutput.emit(componentName);
+  }
 }

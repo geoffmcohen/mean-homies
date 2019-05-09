@@ -9,6 +9,7 @@ import { AuthenticationService } from '../auth/authentication.service'
 export class AdminComponent implements OnInit {
   public loggedIn: boolean;
   public loggedInUser: string;
+  public componentDisplayed: string;
 
   constructor( private authService: AuthenticationService ) { }
 
@@ -27,6 +28,11 @@ export class AdminComponent implements OnInit {
     } else {
       this.loggedInUser = null;
     }
+  }
+
+  // Switch main component based on menu selections
+  switchComponent($event){
+    this.componentDisplayed = $event;
   }
 
 }

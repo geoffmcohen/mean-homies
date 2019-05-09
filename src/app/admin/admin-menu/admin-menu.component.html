@@ -1,7 +1,7 @@
 <mat-card>
   <button mat-button [matMenuTriggerFor]="blogmenu">Blog</button>
   <mat-menu #blogmenu="matMenu">
-    <button mat-menu-item>Create Post</button>
+    <button mat-menu-item (click)="displayComponent('new-blog-post')">Create Post</button>
   </mat-menu>
 
   <button mat-button [matMenuTriggerFor]="usermenu">User Admin</button>
@@ -20,6 +20,6 @@
 
   <button mat-button [matMenuTriggerFor]="reportsmenu">Reports</button>
   <mat-menu #reportsmenu="matMenu">
-    <button mat-menu-item>Page Request Stats</button>
+    <button mat-menu-item (click)="displayComponent('report')">Page Request Stats</button>
   </mat-menu>
 </mat-card>

@@ -17,6 +17,8 @@ import { AdminTopComponent } from './admin/admin-top/admin-top.component';
 import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
 import { AdminUserAreaComponent } from './admin/admin-user-area/admin-user-area.component';
 import { ModalDialogComponent } from './shared/modal-dialog/modal-dialog.component';
+import { NewBlogPostComponent } from './admin/new-blog-post/new-blog-post.component';
+import { ReportComponent } from './admin/report/report.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { ModalDialogComponent } from './shared/modal-dialog/modal-dialog.compone
     AdminTopComponent,
     AdminMenuComponent,
     AdminUserAreaComponent,
-    ModalDialogComponent
+    ModalDialogComponent,
+    NewBlogPostComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,
