@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModalDialogComponent } from './modal-dialog.component';
+import { AdminLoginDialogComponent } from './admin-login-dialog.component';
 
-describe('ModalDialogComponent', () => {
-  let component: ModalDialogComponent;
-  let fixture: ComponentFixture<ModalDialogComponent>;
+describe('AdminLoginDialogComponent', () => {
+  let component: AdminLoginDialogComponent;
+  let fixture: ComponentFixture<AdminLoginDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalDialogComponent ]
+      declarations: [ AdminLoginDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ModalDialogComponent);
+    fixture = TestBed.createComponent(AdminLoginDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

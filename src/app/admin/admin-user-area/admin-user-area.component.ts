@@ -1,7 +1,11 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
-import { ModalService } from '../../shared/modal.service';
-import { AuthenticationService } from '../../auth/authentication.service'
+// import { ModalService } from '../../shared/modal.service';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+
+import { AuthenticationService } from '../../auth/authentication.service';
+
+import { AdminLoginDialogComponent } from '../admin-login-dialog/admin-login-dialog.component';
 
 @Component({
   selector: 'app-admin-user-area',
@@ -14,11 +18,12 @@ export class AdminUserAreaComponent implements OnInit {
   public username: string;
   public password: string;
   public message: string;
+
   public loggedIn: boolean;
   public loggedInUser: string;
 
   constructor(
-    private modalService: ModalService,
+    private dialog: MatDialog,
     private authService: AuthenticationService
   ) { }
 
@@ -29,50 +34,25 @@ export class AdminUserAreaComponent implements OnInit {
     }
   }
 
-  // Used to show login form
-  openModal(id: string) {
-    this.modalService.open(id);
-  }
+  // Show the login dialog
+  showLoginDialog(){
+    // Create the login dialog
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
 
-  // Used to hide login form
-  closeModal(id: string) {
-    this.modalService.close(id);
-  }
+    // Show the dialog
+    const dialogRef = this.dialog.open(AdminLoginDialogComponent, dialogConfig);
 
-  // Attempt logging in
-  submitLoginForm(id: string){
-    // Close login form and show loading dialog
-    this.closeModal(id);
-    this.openModal("admin-login-loading-dialog");
+    // See what the result of the dialog is
+    dialogRef.afterClosed().subscribe(loggedIn => {
+      if(loggedIn){
+        // Set the loggedIn flag and username
+        this.loggedIn = true;
+        this.loggedInUser = this.authService.getAdminUser();
 
-    // Make call to auth services
-    this.authService.adminLogin(this.username, this.password, (res : any) => {
-        console.log("Trying to login %s", this.username);
-        console.log(res);
-
-        this.message = null;
-
-        // If successful store token or something
-        if(res.success){
-          // Set the loggedIn flag and username
-          this.loggedIn = true;
-          this.loggedInUser = this.authService.getAdminUser();
-
-          // Alert parent that user has logged in
-          this.notifyLoginChange();
-
-          // Remove username and password from form
-          this.username = "";
-          this.password = "";
-
-          // Close the login form
-          this.closeModal("admin-login-loading-dialog");
-        } else {
-            this.closeModal("admin-login-loading-dialog");
-            this.password = "";
-            this.message = res.message;
-            this.openModal(id);
-        }
+        // Alert parent that user has logged in
+        this.notifyLoginChange();
+      }
     });
   }
 
@@ -89,4 +69,7 @@ export class AdminUserAreaComponent implements OnInit {
   notifyLoginChange(){
     this.loggedInOutput.emit(this.loggedIn);
   }
+
+
+
 }

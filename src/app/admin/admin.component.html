@@ -1,4 +1,6 @@
 <app-admin-top (loggedInOutput)="updateLogin($event)"></app-admin-top>
 <app-admin-menu *ngIf="loggedIn" (displayComponentOutput)="switchComponent($event)"></app-admin-menu>
-<app-new-blog-post *ngIf="componentDisplayed.componentName=='new-blog-post'"></app-new-blog-post>
-<app-report *ngIf="componentDisplayed.componentName=='report'" [args]="componentDisplayed.args"></app-report>
+<div *ngIf="loggedIn">
+  <app-new-blog-post *ngIf="componentDisplayed.componentName=='new-blog-post'"></app-new-blog-post>
+  <app-report *ngIf="componentDisplayed.componentName=='report'" [args]="componentDisplayed.args"></app-report>
+</div>

@@ -1,10 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule, MatButtonModule, MatMenuModule, MatIconModule } from '@angular/material';
+import {
+  MatCardModule,
+  MatButtonModule,
+  MatMenuModule,
+  MatIconModule,
+  MatDividerModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatProgressSpinnerModule
+} from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,9 +26,9 @@ import { BlogPageNavigationComponent } from './blog/blog-page-navigation/blog-pa
 import { AdminTopComponent } from './admin/admin-top/admin-top.component';
 import { AdminMenuComponent } from './admin/admin-menu/admin-menu.component';
 import { AdminUserAreaComponent } from './admin/admin-user-area/admin-user-area.component';
-import { ModalDialogComponent } from './shared/modal-dialog/modal-dialog.component';
 import { NewBlogPostComponent } from './admin/new-blog-post/new-blog-post.component';
 import { ReportComponent } from './admin/report/report.component';
+import { AdminLoginDialogComponent } from './admin/admin-login-dialog/admin-login-dialog.component';
 
 @NgModule({
   declarations: [
@@ -31,22 +41,29 @@ import { ReportComponent } from './admin/report/report.component';
     AdminTopComponent,
     AdminMenuComponent,
     AdminUserAreaComponent,
-    ModalDialogComponent,
     NewBlogPostComponent,
-    ReportComponent
+    ReportComponent,
+    AdminLoginDialogComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     MatCardModule,
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
+    MatDividerModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule
   ],
   providers: [CookieService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AdminLoginDialogComponent]
 })
 export class AppModule { }

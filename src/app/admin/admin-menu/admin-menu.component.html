@@ -1,25 +1,27 @@
-<mat-card>
-  <button mat-button [matMenuTriggerFor]="blogmenu">Blog</button>
-  <mat-menu #blogmenu="matMenu">
-    <button mat-menu-item (click)="displayComponent({componentName: 'new-blog-post'})">Create Post</button>
-  </mat-menu>
+<mat-divider></mat-divider>
 
-  <button mat-button [matMenuTriggerFor]="usermenu">User Admin</button>
-  <mat-menu #usermenu="matMenu">
-    <button mat-menu-item [matMenuTriggerFor]="adminusersubmenu">Admin Users</button>
-    <button mat-menu-item [matMenuTriggerFor]="vhusersubmenu">VH Users</button>
-  </mat-menu>
-  <mat-menu #adminusersubmenu="matMenu">
-    <button mat-menu-item disabled>Create Admin User</button>
-    <button mat-menu-item disabled>Delete Admin User</button>
-  </mat-menu>
-  <mat-menu #vhusersubmenu="matMenu">
-    <button mat-menu-item disabled>Swing Ban Hammer</button>
-    <button mat-menu-item disabled>Restore Banned User</button>
-  </mat-menu>
+<button mat-button [matMenuTriggerFor]="blogmenu">Blog</button>
+<mat-menu #blogmenu="matMenu">
+  <button mat-menu-item (click)="displayComponent({componentName: 'new-blog-post'})">Create Post</button>
+</mat-menu>
 
-  <button mat-button [matMenuTriggerFor]="reportsmenu">Reports</button>
-  <mat-menu #reportsmenu="matMenu">
-    <button mat-menu-item (click)="displayComponent({componentName: 'report', args: {reportType: 'page request stats'}})">Page Request Stats</button>
-  </mat-menu>
-</mat-card>
+<button mat-button [matMenuTriggerFor]="usermenu">User Admin</button>
+<mat-menu #usermenu="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="adminusersubmenu">Admin Users</button>
+  <button mat-menu-item [matMenuTriggerFor]="vhusersubmenu">VH Users</button>
+</mat-menu>
+<mat-menu #adminusersubmenu="matMenu">
+  <button mat-menu-item disabled>Create Admin User</button>
+  <button mat-menu-item disabled>Delete Admin User</button>
+</mat-menu>
+<mat-menu #vhusersubmenu="matMenu">
+  <button mat-menu-item disabled>Swing Ban Hammer</button>
+  <button mat-menu-item disabled>Restore Banned User</button>
+</mat-menu>
+
+<button mat-button [matMenuTriggerFor]="reportsmenu">Reports</button>
+<mat-menu #reportsmenu="matMenu">
+  <button mat-menu-item (click)="displayComponent({componentName: 'report', args: {reportType: 'page request stats'}})">Page Request Stats</button>
+</mat-menu>
+
+<mat-divider></mat-divider>
