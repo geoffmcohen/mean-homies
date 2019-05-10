@@ -6,14 +6,14 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./admin-menu.component.css']
 })
 export class AdminMenuComponent implements OnInit {
-  @Output() displayComponentOutput = new EventEmitter<string>();
+  @Output() displayComponentOutput = new EventEmitter<any>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  displayComponent(componentName: string){
-    this.displayComponentOutput.emit(componentName);
+  displayComponent(componentInfo: any){
+    this.displayComponentOutput.emit(componentInfo);
   }
 }

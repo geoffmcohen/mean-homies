@@ -9,15 +9,18 @@ import { AuthenticationService } from '../auth/authentication.service'
 export class AdminComponent implements OnInit {
   public loggedIn: boolean;
   public loggedInUser: string;
-  public componentDisplayed: string;
+  public componentDisplayed: any;
 
   constructor( private authService: AuthenticationService ) { }
 
   ngOnInit() {
+    // Check if a user is logged in
     this.loggedIn = this.authService.checkAdminIsLoggedIn();
     if(this.loggedIn){
       this.loggedInUser = this.authService.getAdminUser();
     }
+    // Default the displayed component so we don't get a page error
+    this.componentDisplayed = {componentName: ''};
   }
 
   // Updates the login information based the change in state from the child component
