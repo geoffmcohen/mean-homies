@@ -1,10 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-
-// import { ModalService } from '../../shared/modal.service';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-
 import { AuthenticationService } from '../../auth/authentication.service';
-
 import { AdminLoginDialogComponent } from '../admin-login-dialog/admin-login-dialog.component';
 
 @Component({

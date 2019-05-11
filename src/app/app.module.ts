@@ -29,6 +29,7 @@ import { AdminUserAreaComponent } from './admin/admin-user-area/admin-user-area.
 import { NewBlogPostComponent } from './admin/new-blog-post/new-blog-post.component';
 import { ReportComponent } from './admin/report/report.component';
 import { AdminLoginDialogComponent } from './admin/admin-login-dialog/admin-login-dialog.component';
+import { LoadingDialogComponent } from './shared/loading-dialog/loading-dialog.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { AdminLoginDialogComponent } from './admin/admin-login-dialog/admin-logi
     AdminUserAreaComponent,
     NewBlogPostComponent,
     ReportComponent,
-    AdminLoginDialogComponent
+    AdminLoginDialogComponent,
+    LoadingDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -64,6 +66,9 @@ import { AdminLoginDialogComponent } from './admin/admin-login-dialog/admin-logi
   ],
   providers: [CookieService],
   bootstrap: [AppComponent],
-  entryComponents: [AdminLoginDialogComponent]
+  entryComponents: [
+    AdminLoginDialogComponent,
+    LoadingDialogComponent
+  ]
 })
 export class AppModule { }

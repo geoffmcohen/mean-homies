@@ -1,3 +1,26 @@
-<p>
-  new-blog-post works!
-</p>
+<mat-card>
+  <mat-card-title>Create Blog Post</mat-card-title>
+  <mat-card-content>
+    <mat-form-field class='half-width'>
+      <input matInput [(ngModel)]="title" placeholder="Title">
+    </mat-form-field>
+    <br>
+    <mat-form-field class='full-width'>
+      <textarea matInput [(ngModel)]="body" placeholder="Blog Post Body"></textarea>
+    </mat-form-field>
+    <!-- This could be it's own component later -->
+    <div class='file_uploader'>
+      <mat-form-field class='half-width'>
+        <input class='hidden' type='file' #hidden_file_input accept="image/*" [(ngModel)]="image_filename" (change)="onFileChange($event)" />
+        <input matInput readonly [(ngModel)]="image_filename" placeholder="Upload File" >
+      </mat-form-field>
+      <mat-card-actions>
+        <button type="button" mat-button (click)="hidden_file_input.click()"><mat-icon>attach_file</mat-icon>Choose File</button>
+        <button type="button" mat-button (click)="clearSelectedFile()"><mat-icon>clear</mat-icon>Clear</button>
+      </mat-card-actions>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <button class="mat-raised-button mat-primary" (click)="post()">Post</button>
+  </mat-card-actions>
+</mat-card>
