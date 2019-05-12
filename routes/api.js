@@ -88,9 +88,7 @@ module.exports = (function(){
             if(err){
               sendError(res, err, "Unable to sign in admin user");
             } else {
-                console.log("New token created?");
-                console.log(token);
-                res.send({success: true, message: "", token: token});
+              res.send({success: true, message: "", token: token});
             }
           });
         } else {
@@ -110,25 +108,11 @@ module.exports = (function(){
     var form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files){
-      // #TODO: Replace with admin.verifyUser call
       // Check the adminToken here
       var admin = require("../modules/admin.js")
       admin.verifyUser(fields.token, fields.username, 'admin', function(err, result){
         res.send({success: result, error: err});
       });
-
-      // var jwt = require('jsonwebtoken');
-      // var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
-      //
-      // jwt.verify(fields.token, jwtSecret, function(err, decoded){
-      //   if(err){
-      //     res.send({success: false, error: err});
-      //   } else {
-      //     console.log("Decoded username = %s", decoded.username);
-      //     console.log(decoded);
-      //     res.send({success: true});
-      //   }
-      // });
     });
   });
 

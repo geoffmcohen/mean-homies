@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from '@angular/material';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { BlogService } from '../../blog/blog.service';
 import { AuthenticationService } from '../../auth/authentication.service';
@@ -17,6 +17,7 @@ export class NewBlogPostComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private blogService: BlogService,
     private authService: AuthenticationService
   ) { }
@@ -44,8 +45,11 @@ export class NewBlogPostComponent implements OnInit {
         }
 
         // Add snackbar with result
-        console.log(res);
-        
+        let snackBarRef = this.snackBar.open(res.message, "View", {duration: 5000});
+        snackBarRef.onAction().subscribe(() => {
+          window.open('/blog', "_blank");
+        })
+
         // Hide the loading dialog
         this.closeLoadingDialog();
       });
