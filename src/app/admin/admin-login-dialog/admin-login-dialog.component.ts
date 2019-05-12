@@ -23,17 +23,12 @@ export class AdminLoginDialogComponent implements OnInit {
   }
 
   submitLoginForm() {
-    // #TODO: Need to figure out what to do here
-    console.log("Submitted login form for username '%s'", this.username);
-
-    //
+    // #TODO: We should use the loading dialog here instead of this
+    // Show loading
     this.isLoading = true;
 
     // Make call to auth services
     this.authService.adminLogin(this.username, this.password, (res : any) => {
-      console.log("Trying to login %s", this.username);
-      console.log(res);
-
       this.isLoading = false;
       this.message = null;
 
@@ -47,5 +42,5 @@ export class AdminLoginDialogComponent implements OnInit {
       }
     });
   }
-  
+
 }

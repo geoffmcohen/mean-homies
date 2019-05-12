@@ -136,7 +136,6 @@ module.exports = (function(){
     form.on('field', function(field, value){
       if(field == 'adminToken') {
         adminToken = value;
-        console.log(adminToken);
       } else if (field == 'adminUser') {
         adminUser = value;
         blogPost.author = adminUser;

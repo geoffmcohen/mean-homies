@@ -1,6 +1,6 @@
 // Function used to insert a new post into the database
 exports.insertBlogPost = function(blogPost, callback){
-  console.log("Publishing blog post ''%s'...", blogPost.title);
+  console.log("Publishing blog post '%s'...", blogPost.title);
 
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;

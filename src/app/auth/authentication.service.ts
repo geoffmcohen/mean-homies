@@ -19,8 +19,6 @@ export class AuthenticationService {
     password: string,
     callback: ((result: any) => void)
     ) : void{
-    console.log("adminLogin called for %s", username);
-
     // Make the REST call
     this.http.post<any>(
       '/api/admin/login',
