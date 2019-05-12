@@ -11,8 +11,8 @@
     <!-- This could be it's own component later -->
     <div class='file_uploader'>
       <mat-form-field class='half-width'>
-        <input class='hidden' type='file' #hidden_file_input accept="image/*" [(ngModel)]="image_filename" (change)="onFileChange($event)" />
-        <input matInput readonly [(ngModel)]="image_filename" placeholder="Upload File" >
+        <input class='hidden' type='file' #hidden_file_input accept="image/*" [(ngModel)]="imageFilename" (change)="onFileChange($event)" />
+        <input matInput readonly [(ngModel)]="imageFilename" placeholder="Upload File" >
       </mat-form-field>
       <mat-card-actions>
         <button type="button" mat-button (click)="hidden_file_input.click()"><mat-icon>attach_file</mat-icon>Choose File</button>

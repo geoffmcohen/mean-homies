@@ -12,7 +12,8 @@ import { AuthenticationService } from '../../auth/authentication.service';
 export class NewBlogPostComponent implements OnInit {
   public title: string;
   public body: string;
-  public image_filename: string;
+  public imageFilename: string;
+  public imageFile: File;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
@@ -38,6 +39,7 @@ export class NewBlogPostComponent implements OnInit {
       this.authService.getAdminUser(),
       this.title,
       this.body,
+      this.imageFile,
       (res : any) => {
         // If posted clear the fields
         if(res.success) {
@@ -56,12 +58,12 @@ export class NewBlogPostComponent implements OnInit {
   }
 
   onFileChange(event){
-    console.log('File changed');
+    this.imageFile = event.target.files.item(0);
   }
 
   clearSelectedFile(){
-    console.log('Image file removed');
-    this.image_filename = null;
+    this.imageFilename = null;
+    this.imageFile = null;
   }
 
   // Displays a loading dialog

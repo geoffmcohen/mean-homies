@@ -122,7 +122,6 @@ module.exports = (function(){
 
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
-    //var blogPost = {author: req.session.adminUser};
     var blogPost = {};
     var adminToken = null;
     var adminUser = null;
@@ -177,6 +176,7 @@ module.exports = (function(){
     // Parse the form to kick off the processing
     form.parse(req);
   });
+
   // api.get()
 
   return api;
