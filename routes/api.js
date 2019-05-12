@@ -73,6 +73,7 @@ module.exports = (function(){
     var form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files){
+      // #TODO: This should be moved into admin module
       admin.authenticateAdminUser(fields.username, fields.password, function(err, authResult){
         if(authResult){
           var jwt = require('jsonwebtoken');
@@ -83,10 +84,12 @@ module.exports = (function(){
             userType: 'admin'
           };
 
-          jwt.sign(payload, jwtSecret, {expiresIn: '1h'}, function(err, token){
+          jwt.sign(payload, jwtSecret, {expiresIn: '6h'}, function(err, token){
             if(err){
               sendError(res, err, "Unable to sign in admin user");
             } else {
+                console.log("New token created?");
+                console.log(token);
                 res.send({success: true, message: "", token: token});
             }
           });
@@ -100,27 +103,97 @@ module.exports = (function(){
 
   // Used to verify a user token to ensure they are still logged in
   api.post('/admin/verify_user', function(req, res){
-    console.log('api/admin/login called');
+    console.log('api/admin/verify_user called');
 
     var admin = require("../modules/admin.js");
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
 
     form.parse(req, function(err, fields, files){
-      var jwt = require('jsonwebtoken');
-      var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
-      jwt.verify(fields.token, jwtSecret, function(err, decoded){
-        if(err){
-          res.send({success: false, error: err});
-        } else {
-          console.log("Decoded username = %s", decoded.username);
-          console.log(decoded);
-          res.send({success: true});
-        }
+      // #TODO: Replace with admin.verifyUser call
+      // Check the adminToken here
+      var admin = require("../modules/admin.js")
+      admin.verifyUser(fields.token, fields.username, 'admin', function(err, result){
+        res.send({success: result, error: err});
       });
+
+      // var jwt = require('jsonwebtoken');
+      // var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
+      //
+      // jwt.verify(fields.token, jwtSecret, function(err, decoded){
+      //   if(err){
+      //     res.send({success: false, error: err});
+      //   } else {
+      //     console.log("Decoded username = %s", decoded.username);
+      //     console.log(decoded);
+      //     res.send({success: true});
+      //   }
+      // });
     });
   });
 
+  // Post method for creating a blog posts
+  api.post('/admin/create_blog_post', function(req, res){
+    console.log('api/admin/create_blog_post called');
+
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    //var blogPost = {author: req.session.adminUser};
+    var blogPost = {};
+    var adminToken = null;
+    var adminUser = null;
+
+    // Set the file path for the image file
+    form.on('file', function(field, file){
+      if(file.size > 0) blogPost.image_file = file.path;
+    });
+
+    // Get the user information for authentication and build the JSON for the post
+    form.on('field', function(field, value){
+      if(field == 'adminToken') {
+        adminToken = value;
+        console.log(adminToken);
+      } else if (field == 'adminUser') {
+        adminUser = value;
+        blogPost.author = adminUser;
+      } else {
+        blogPost[field] = value;
+      }
+    });
+
+    // Once all of the fields are consumed now we do the real work
+    form.on('end', function(){
+      // Check to make sure adminUser and adminToken were providedIn
+      if (!adminUser || !adminToken){
+        res.send({success: false, message: 'Missing parameters for adminUser and/or adminToken'})
+      } else {
+        // Check the adminToken here
+        var admin = require("../modules/admin.js")
+        admin.verifyUser(adminToken, adminUser, 'admin', function(err, result){
+          if(!result){
+            console.log("Unable to verify token for admin user %s", adminUser);
+            console.log(err);
+            res.send({success: false, message: "Unable to verify admin user"});
+          } else {
+            // Now attempt to create the post
+            var blog = require("../modules/blog.js");
+            blog.insertBlogPost(blogPost, function(err, result){
+              if(err){
+                console.log("Unable to post to blog");
+                console.log(err);
+                res.send({success: false, message: "Blog post failed to insert"});
+              } else {
+                res.send({success: true, message: "Blog post successfully inserted"})
+              }
+            });
+          }
+        });
+      }
+    });
+
+    // Parse the form to kick off the processing
+    form.parse(req);
+  });
   // api.get()
 
   return api;

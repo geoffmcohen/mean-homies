@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CookieService } from 'ngx-cookie-service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatCardModule,
@@ -64,7 +63,7 @@ import { LoadingDialogComponent } from './shared/loading-dialog/loading-dialog.c
     MatInputModule,
     MatProgressSpinnerModule
   ],
-  providers: [CookieService],
+  providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
     AdminLoginDialogComponent,

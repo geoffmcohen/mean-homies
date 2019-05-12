@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
+import * as cookies from 'js-cookie';
+
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
 
 export class AuthenticationService {
   constructor(
-    private http: HttpClient,
-    private cookieService: CookieService
+    private http: HttpClient
   ) { }
 
   // Function to attempt to login an admin user
@@ -26,14 +26,12 @@ export class AuthenticationService {
       '/api/admin/login',
       {username: username, password: password},
     ).subscribe((res : any) => {
-
         // Store the user and token if successful
         if(res.success){
-          this.cookieService.set('admin-user', username);
-          this.cookieService.set('admin-token', res.token);
+          cookies.set('admin-user', username);
+          cookies.set('admin-token', res.token);
         } else {
-          this.cookieService.delete('admin-user');
-          this.cookieService.delete('admin-token');
+          this.adminLogout();
         }
 
         // Send the results back to the callback
@@ -43,25 +41,28 @@ export class AuthenticationService {
 
   // Log the admin user out
   public adminLogout(){
-    this.cookieService.delete('admin-user');
-    this.cookieService.delete('admin-token');
+    cookies.remove('admin-user');
+    cookies.remove('admin-token');
   }
 
   // Getter for admin user
   public getAdminUser() : string {
-    return this.cookieService.get('admin-user');
+    return cookies.get('admin-user');
   }
 
   // Getter for admin adminToken
   public getAdminToken() : string {
-      return this.cookieService.get('admin-token');
+      return cookies.get('admin-token');
   }
 
   // Function to determine if the admin user is logged in
   public checkAdminIsLoggedIn() : boolean {
     if(this.getAdminUser() && this.getAdminToken()) {
       // Make a call to verify the token is still valid
-      this.http.post<any>('/api/admin/verify_user', {token: this.getAdminToken()}).subscribe((res : any) => {
+      this.http.post<any>('/api/admin/verify_user', {
+        token: this.getAdminToken(),
+        username: this.getAdminUser()
+      }).subscribe((res : any) => {
         // If token is no longer valid call adminLogout()
         if(!res.success){
           this.adminLogout();
@@ -70,9 +71,8 @@ export class AuthenticationService {
 
       // Return true for now, backend services will still check the token before doing anything
       return true;
-    } else {
+  } else {
       return false;
     }
   }
-
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
+import { BlogService } from '../../blog/blog.service';
+import { AuthenticationService } from '../../auth/authentication.service';
 
 @Component({
   selector: 'app-new-blog-post',
@@ -14,7 +16,9 @@ export class NewBlogPostComponent implements OnInit {
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private blogService: BlogService,
+    private authService: AuthenticationService
   ) { }
 
   ngOnInit() {
@@ -28,14 +32,23 @@ export class NewBlogPostComponent implements OnInit {
     this.showLoadingDialog();
 
     // Make call to service here
+    this.blogService.createBlogPost(
+      this.authService.getAdminToken(),
+      this.authService.getAdminUser(),
+      this.title,
+      this.body,
+      (res : any) => {
+        // If posted clear the fields
+        if(res.success) {
+          this.clearFields();
+        }
 
-    // If posted clear the fields
-    this.clearFields();
-
-    // Add snackbar with result
-
-    // Hide the loading dialog
-    this.closeLoadingDialog();
+        // Add snackbar with result
+        console.log(res);
+        
+        // Hide the loading dialog
+        this.closeLoadingDialog();
+      });
   }
 
   onFileChange(event){
