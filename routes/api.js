@@ -188,6 +188,18 @@ module.exports = (function(){
     });
   });
 
+  // Gets the page Counts
+  api.get('/admin/get_page_counts', function(req, res){
+    var pageCounter = require('../modules/page-counter.js');
+    pageCounter.getPageCounts(function(err, results){
+      if (err) {
+        sendError(res, err, "Unable to get page counts");
+      } else {
+        res.send({results: results});
+      }
+    });
+  });
+
   // api.get()
   return api;
 })();

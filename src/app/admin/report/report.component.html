@@ -1,1 +1,16 @@
-This will be the report <span style="color: red;">{{args.reportType}}</span>.
+<!-- Page Request Stats Table -->
+<mat-card *ngIf="args.reportType=='page request stats'">
+  <mat-card-title>Page Request Stats</mat-card-title>
+  <table mat-table [dataSource]="data" class="mat-elevation-z8">
+    <ng-container matColumnDef="pageName">
+      <th mat-header-cell *matHeaderCellDef>Page Name</th>
+      <td mat-cell *matCellDef="let record">{{record.pageName}}</td>
+    </ng-container>
+    <ng-container matColumnDef="count">
+      <th mat-header-cell *matHeaderCellDef>Counts</th>
+      <td mat-cell *matCellDef="let record">{{record.count}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+  </table>
+</mat-card>

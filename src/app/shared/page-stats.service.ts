@@ -13,4 +13,10 @@ export class PageStatsService {
   public incrementPageCount( pageName: string ): void{
     this.http.post<any>("/api/increment_page_count", { pageName: pageName }).subscribe((res: any) => {});
   }
+
+  // Gets page counts
+  public getPageCounts(): Observable<any>{
+    // Make the REST call to the api
+    return this.http.get<any>('/api/admin/get_page_counts');
+  };
 }

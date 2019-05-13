@@ -4,7 +4,6 @@ import { BlogService } from './blog.service';
 import { BlogPostComponent } from './blog-post/blog-post.component';
 import { PageStatsService } from '../shared/page-stats.service';
 
-
 @Component({
   selector: 'app-blog',
   templateUrl: './blog.component.html',
