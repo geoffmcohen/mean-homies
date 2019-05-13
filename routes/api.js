@@ -177,7 +177,17 @@ module.exports = (function(){
     form.parse(req);
   });
 
-  // api.get()
+  // Increments the page count for a page/component
+  api.post('/increment_page_count', function(req, res){
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      if(fields.pageName) {
+        require('../modules/page-counter.js').incrementPageCount(fields.pageName, function(err, result){});
+      };
+    });
+  });
 
+  // api.get()
   return api;
 })();

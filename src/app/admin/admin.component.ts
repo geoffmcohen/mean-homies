@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../auth/authentication.service'
+import { AuthenticationService } from '../auth/authentication.service';
+import { PageStatsService } from '../shared/page-stats.service';
 
 @Component({
   selector: 'app-admin',
@@ -11,9 +12,15 @@ export class AdminComponent implements OnInit {
   public loggedInUser: string;
   public componentDisplayed: any;
 
-  constructor( private authService: AuthenticationService ) { }
+  constructor(
+    private authService: AuthenticationService,
+    private pageStatsService: PageStatsService
+   ) { }
 
   ngOnInit() {
+    // Increment page stats for admin page
+    this.pageStatsService.incrementPageCount( "admin" );
+
     // Check if a user is logged in
     this.loggedIn = this.authService.checkAdminIsLoggedIn();
     if(this.loggedIn){

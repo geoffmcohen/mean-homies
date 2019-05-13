@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BlogService } from './blog.service';
 import { BlogPostComponent } from './blog-post/blog-post.component';
+import { PageStatsService } from '../shared/page-stats.service';
+
 
 @Component({
   selector: 'app-blog',
@@ -15,10 +17,14 @@ export class BlogComponent implements OnInit {
 
   constructor(
     private blogService: BlogService,
+    private pageStatsService: PageStatsService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    // Increment page stats for blog page
+    this.pageStatsService.incrementPageCount( "blog" );
+
     // Get the page number from the route if provided
     this.route.params.subscribe(params => {
       var pageNumber = 1;
