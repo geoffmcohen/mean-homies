@@ -23,4 +23,10 @@ export class BlogPageNavigationComponent implements OnInit {
     }
     return pageNumbers;
   }
+
+  // Navigates to the given page
+  // #TODO: We can make this just reload parent from the service
+  public navigateToPage(pageNumber: number){
+    window.location.href = "/blog/page/" + pageNumber;
+  }
 }

@@ -1,3 +1,4 @@
+<!--
 <div class="blog-pagination">
   <span *ngIf="pageInfo.currentPage == 1">
     <span class='disabled'>&lt;&lt;</span><span class='disabled'>&lt;</span>
@@ -12,4 +13,13 @@
   <span *ngIf="pageInfo.currentPage != pageInfo.pageCount">
     <a routerLink="/blog/page/{{pageInfo.currentPage+1}}">&gt;</a><a routerLink="/blog/page/{{pageInfo.pageCount}}">&gt;&gt;</a>
   </span>
+</div>
+-->
+<div class="blog-pagination">
+  <!-- mat-icon is not working on this page -->
+  <button mat-button [disabled]="pageInfo.currentPage==1" (click)="navigateToPage(1)"><!--<mat-icon>fast_rewind</mat-icon>--><<</button>
+  <button mat-button [disabled]="pageInfo.currentPage==1" (click)="navigateToPage(pageInfo.currentPage-1)"><!--<mat-icon>skip_previous</mat-icon>--><</button>
+  <button mat-button *ngFor="let pageNumber of createPageNumbers()" [disabled]="pageInfo.currentPage==pageNumber" (click)="navigateToPage(pageNumber)">{{pageNumber}}</button>
+  <button mat-button [disabled]="pageInfo.currentPage==pageInfo.pageCount" (click)="navigateToPage(pageInfo.currentPage+1)"><!--<mat-icon>skip_next</mat-icon>-->></button>
+  <button mat-button [disabled]="pageInfo.currentPage==pageInfo.pageCount" (click)="navigateToPage(pageInfo.pageCount)"><!--<mat-icon>fast_forward</mat-icon>-->>></button>
 </div>

@@ -14,7 +14,8 @@ import {
   MatInputModule,
   MatProgressSpinnerModule,
   MatSnackBarModule,
-  MatTableModule
+  MatTableModule,
+  MatPaginatorModule
 } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -65,7 +66,8 @@ import { LoadingDialogComponent } from './shared/loading-dialog/loading-dialog.c
     MatInputModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent],
