@@ -206,10 +206,21 @@ module.exports = (function(){
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files){
-      var user = require("../modules/user.js")
+      var user = require("../modules/user.js");
       user.createUser(fields.email, fields.username, fields.password, function(success, message){
         res.send({success: success, message: message});
       });
+    });
+  });
+
+  // Activates a new user account
+  api.get("/user/activate_user", function(req, res){
+    console.log('api/user/create_user called');
+    
+    var user = require("../modules/user.js");
+    user.activateUserAccount(req.query.username, req.query.activationCode, function(success, message){
+      var util = require('util');
+      res.send(util.format("<p>%s</p><p>Please close this browser window or tab.</p>", message));
     });
   });
 

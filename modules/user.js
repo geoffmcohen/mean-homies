@@ -6,7 +6,7 @@ exports.checkIfUsernameIsTaken = checkIfUsernameIsTaken = function(username, cal
   MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
     // Throw error if unable to connect
     if(err){
-      console.log("Unable to connect to MongoDB!!!");
+      console.error("Unable to connect to MongoDB!!!");
       throw err;
     }
     var dbo = db.db();
@@ -38,7 +38,7 @@ exports.checkIfEmailIsTaken = checkIfEmailIsTaken = function(email, callback){
   MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
     // Throw error if unable to connect
     if(err){
-      console.log("Unable to connect to MongoDB!!!");
+      console.error("Unable to connect to MongoDB!!!");
       throw err;
     }
     var dbo = db.db();
@@ -62,6 +62,21 @@ exports.checkIfEmailIsTaken = checkIfEmailIsTaken = function(email, callback){
   });
 }
 
+// Sends the user an email with a link to activate their account
+// #TODO: Need to actually create the email code
+sendUserAccountActivationEmail = function(emailTo, username, activationCode){
+  var util = require('util');
+  var appUrl = process.env.VH_APP_URL || 'localhost:3000';
+  var activationUrl = util.format("http://%s/api/user/activate_user?username=%s&activationCode=%s", appUrl, username, activationCode);
+  var activationLink = util.format("<a href='%s'>Activate</a>", activationUrl);
+  console.log("User will be sent following link: '%s'", activationLink);
+
+  var email = require('./email.js');
+  email.sendAppEmail(emailTo, "Activate Account", "No html", activationLink);
+}
+
+// Attempts to create a new user
+// #TODO: Validate user password requirements - can be done in frontend
 exports.createUser = function(email, username, password, callback){
   console.log("Creating user for '%s'...", username);
 
@@ -71,7 +86,7 @@ exports.createUser = function(email, username, password, callback){
   MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
     // Throw error if unable to connect
     if(err){
-      console.log("Unable to connect to MongoDB!!!");
+      console.error("Unable to connect to MongoDB!!!");
       throw err;
     }
     var dbo = db.db();
@@ -97,7 +112,11 @@ exports.createUser = function(email, username, password, callback){
             user.passwordHash = bcrypt.hashSync(password, 10);
 
             // Create an activation string
+            var crypto = require('crypto');
+            user.activationCode = crypto.randomBytes(12).toString('hex');
+
             // Send activation email
+            sendUserAccountActivationEmail(user.email, user.username, user.activationCode);
 
             // Insert user into user collection
             dbo.collection("users").insertOne(user, function(err, res){
@@ -107,7 +126,7 @@ exports.createUser = function(email, username, password, callback){
                   return callback(false, "An error occurred while trying to create user.");
               } else {
                 console.log("Created user '%s'", username);
-                return callback(true, "User '${username}' successfully created");
+                return callback(true, util.format("User '%s' successfully created", username));
               }
             });
 
@@ -116,6 +135,46 @@ exports.createUser = function(email, username, password, callback){
         });
       }
     });
-
   });
+}
+
+// Activates the users account
+exports.activateUserAccount = function(username, activationCode, callback){
+  console.log("Activating user account for '%s'...", username);
+
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Get the users collection
+    searchCriteria = {username: username, activationCode: activationCode};
+    dbo.collection("users").findOne(searchCriteria, function(err, result){
+      var util = require('util');
+      if(!result) {
+        console.log("No user found for '%s' with valid activationCode", username);
+        return callback(false, util.format("Unable to activate user '%s', user may already be activated.", username));
+      } else {
+        // Try to update the user to remove activationCode and add activationTime
+        newValues = {$set: {activationTime: Date.now()}, $unset: {activationCode: ""}};
+        dbo.collection("users").updateOne(searchCriteria, newValues, function(err, result){
+          if(err){
+            console.error("Error while trying to activate user %s", username);
+            console.error(err);
+            return callback(false, "A server error occurred while trying to activate user.");
+          } else {
+            console.log("User '%s' was successfully activated", username);
+            return callback(true, "User successfully activated.");
+          }
+        });
+      }
+    });
+  });
+
 }
