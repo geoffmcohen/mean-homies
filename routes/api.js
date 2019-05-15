@@ -103,7 +103,6 @@ module.exports = (function(){
   api.post('/admin/verify_user', function(req, res){
     console.log('api/admin/verify_user called');
 
-    var admin = require("../modules/admin.js");
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
 
@@ -197,6 +196,20 @@ module.exports = (function(){
       } else {
         res.send({results: results});
       }
+    });
+  });
+
+  // Creates a new user
+  api.post('/user/create_user', function(req, res){
+    console.log('api/user/create_user called');
+
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      var user = require("../modules/user.js")
+      user.createUser(fields.email, fields.username, fields.password, function(success, message){
+        res.send({success: success, message: message});
+      });
     });
   });
 
