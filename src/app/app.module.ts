@@ -32,6 +32,7 @@ import { NewBlogPostComponent } from './admin/new-blog-post/new-blog-post.compon
 import { ReportComponent } from './admin/report/report.component';
 import { AdminLoginDialogComponent } from './admin/admin-login-dialog/admin-login-dialog.component';
 import { LoadingDialogComponent } from './shared/loading-dialog/loading-dialog.component';
+import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { LoadingDialogComponent } from './shared/loading-dialog/loading-dialog.c
     NewBlogPostComponent,
     ReportComponent,
     AdminLoginDialogComponent,
-    LoadingDialogComponent
+    LoadingDialogComponent,
+    ComingSoonComponent
   ],
   imports: [
     BrowserModule,
