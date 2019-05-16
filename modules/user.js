@@ -64,15 +64,33 @@ exports.checkIfEmailIsTaken = checkIfEmailIsTaken = function(email, callback){
 
 // Sends the user an email with a link to activate their account
 // #TODO: Need to actually create the email code
-sendUserAccountActivationEmail = function(emailTo, username, activationCode){
-  var util = require('util');
-  var appUrl = process.env.VH_APP_URL || 'localhost:3000';
-  var activationUrl = util.format("http://%s/api/user/activate_user?username=%s&activationCode=%s", appUrl, username, activationCode);
-  var activationLink = util.format("<a href='%s'>Activate</a>", activationUrl);
-  console.log("User will be sent following link: '%s'", activationLink);
-
+exports.sendUserAccountActivationEmail = sendUserAccountActivationEmail = function(
+  emailTo,
+  username,
+  activationCode,
+  send = true,
+  preview = false
+){
   var email = require('./email.js');
-  email.sendAppEmail(emailTo, "Activate Account", "No html", activationLink);
+
+  // Get the url to use for the link from an environment variable
+  var appUrl = process.env.VH_APP_URL || 'http://localhost:3000';
+
+  // Set up the inputs for the email template
+  templateInputs = {
+    appUrl: appUrl,
+    username: username,
+    activationCode: activationCode
+  };
+
+  // Send the email using the template
+  email.sendAppTemplateEmail(
+    emailTo,
+    'account-activation',
+    templateInputs,
+    send,
+    preview
+  );
 }
 
 // Attempts to create a new user

@@ -27,6 +27,8 @@
     "bcrypt": "^3.0.6",
     "cloudinary": "^1.14.0",
     "core-js": "^2.5.4",
+    "ejs": "^2.6.1",
+    "email-templates": "^5.0.5",
     "express": "^4.16.4",
     "formidable": "^1.2.1",
     "js-cookie": "^2.2.0",
