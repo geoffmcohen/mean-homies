@@ -68,33 +68,16 @@ module.exports = (function(){
   api.post('/admin/login', function(req, res){
     console.log('api/admin/login called');
 
-    var admin = require("../modules/admin.js");
+    // Get the parameters from the request
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
-
     form.parse(req, function(err, fields, files){
-      // #TODO: This should be moved into admin module
-      admin.authenticateAdminUser(fields.username, fields.password, function(err, authResult){
-        if(authResult){
-          var jwt = require('jsonwebtoken');
-          var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
-
-          var payload = {
-            username: fields.username,
-            userType: 'admin'
-          };
-
-          jwt.sign(payload, jwtSecret, {expiresIn: '6h'}, function(err, token){
-            if(err){
-              sendError(res, err, "Unable to sign in admin user");
-            } else {
-              res.send({success: true, message: "", token: token});
-            }
-          });
-        } else {
-          // #TODO: Make this more accurate so we can display better messages
-          res.send({success: false, message: "Wrong username/password combination"});
-        }
+      // Authenticate the user
+      var auth = require('../modules/auth.js');
+      auth.login(fields.username, fields.password, 'admin', function(token, message){
+        var success = false;
+        if( token ) success = true;
+        res.send({success: success, message: message, token: token});
       });
     });
   });
@@ -103,13 +86,13 @@ module.exports = (function(){
   api.post('/admin/verify_user', function(req, res){
     console.log('api/admin/verify_user called');
 
+    // Get the parameters from the request
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
-
     form.parse(req, function(err, fields, files){
       // Check the adminToken here
-      var admin = require("../modules/admin.js")
-      admin.verifyUser(fields.token, fields.username, 'admin', function(err, result){
+      var auth = require("../modules/auth.js")
+      auth.verifyUser(fields.token, fields.username, 'admin', function(err, result){
         res.send({success: result, error: err});
       });
     });
@@ -149,8 +132,8 @@ module.exports = (function(){
         res.send({success: false, message: 'Missing parameters for adminUser and/or adminToken'})
       } else {
         // Check the adminToken here
-        var admin = require("../modules/admin.js")
-        admin.verifyUser(adminToken, adminUser, 'admin', function(err, result){
+        var auth = require("../modules/auth.js")
+        auth.verifyUser(adminToken, adminUser, 'admin', function(err, result){
           if(!result){
             console.log("Unable to verify token for admin user %s", adminUser);
             console.log(err);
@@ -216,11 +199,45 @@ module.exports = (function(){
   // Activates a new user account
   api.get("/user/activate_user", function(req, res){
     console.log('api/user/create_user called');
-    
+
     var user = require("../modules/user.js");
     user.activateUserAccount(req.query.username, req.query.activationCode, function(success, message){
       var util = require('util');
       res.send(util.format("<p>%s</p><p>Please close this browser window or tab.</p>", message));
+    });
+  });
+
+  // Attempt to authenticate a user
+  api.post('/user/login', function(req, res){
+    console.log('api/user/login called');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Authenticate the user
+      var auth = require('../modules/auth.js');
+      auth.login(fields.username, fields.password, 'user', function(token, message){
+        var success = false;
+        if( token ) success = true;
+        res.send({success: success, message: message, token: token});
+      });
+    });
+  });
+
+  // Used to verify a user token to ensure they are still logged in
+  api.post('/user/verify_user', function(req, res){
+    console.log('api/user/verify_user called');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Check the adminToken here
+      var auth = require("../modules/auth.js")
+      auth.verifyUser(fields.token, fields.username, 'user', function(err, result){
+        res.send({success: result, error: err});
+      });
     });
   });
 

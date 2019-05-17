@@ -194,5 +194,77 @@ exports.activateUserAccount = function(username, activationCode, callback){
       }
     });
   });
+}
 
+// Function to authenticate a user - callback(success, message)
+exports.authenticateUser = function(username, password, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+    var util = require('util');
+
+    // Determine whether to search under username or email
+    var usernameOrEmail = "username";
+    var searchCriteria = {username: username};
+    if(require('email-validator').validate(username)){
+      usernameOrEmail = "email";
+      searchCriteria = {email: username};
+    }
+
+    // Perform the search
+    dbo.collection("users").findOne(searchCriteria, function(err, result){
+      db.close();
+      if(result == null){
+        console.log("No user found for %s '%s'", usernameOrEmail, username);
+        return callback(false, util.format("No user found for %s '%s'. Please check to make sure you have the correct %s.", usernameOrEmail, username, usernameOrEmail), null);
+      } else {
+        // Check the password
+        const bcrypt = require('bcrypt');
+        bcrypt.compare(password, result.passwordHash, function(err, passwordMatch){
+            if(passwordMatch){
+              // Make sure the user has activated their account
+              if(result.activationTime) {
+                console.log("User %s authenticated", result.username);
+                updateLastLoginTime(result.username);
+                return callback(true, null, result.username);
+              } else {
+                console.log("User '%s' attempted to login with unactived account", result.username);
+                return callback(false, util.format("Account '%s' has not yet been activated. Please use the activation link sent to your email to activate the account.", result.username), null);
+              }
+            }
+            else {
+              console.log("Wrong password for %s '%s'", usernameOrEmail, username);
+              return callback(false, util.format("Incorrect password for %s '%s'. Try again or reset your password, if you have forgotten it.", usernameOrEmail, username), null);
+            }
+        });
+      }
+    });
+  });
+}
+
+// Local function to update the last login time for a user upon login
+function updateLastLoginTime(username){
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+    newValues = {$set: {lastLoginTime: Date.now()} };
+    dbo.collection("users").updateOne({username: username}, newValues, function(err, result){
+      if(err) throw err;
+      console.log("Updated lastLoginTime for '%s'", username);
+      db.close();
+    });
+  });
 }
