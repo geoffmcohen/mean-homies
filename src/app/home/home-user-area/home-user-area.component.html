@@ -1,0 +1,8 @@
+<span *ngIf="loggedIn">
+  {{loggedInUser}}
+  <button mat-button (click)="logout()">Logout</button>
+</span>
+<span *ngIf="!loggedIn">
+  <button mat-button (click)="showLoginDialog()">Login</button>
+  <button mat-button (click)="showSignupDialog()">Sign Up</button>
+</span>

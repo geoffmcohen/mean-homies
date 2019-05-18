@@ -11,10 +11,6 @@ import { AdminLoginDialogComponent } from '../admin-login-dialog/admin-login-dia
 export class AdminUserAreaComponent implements OnInit {
   @Output() loggedInOutput = new EventEmitter<boolean>();
 
-  public username: string;
-  public password: string;
-  public message: string;
-
   public loggedIn: boolean;
   public loggedInUser: string;
 
@@ -62,10 +58,8 @@ export class AdminUserAreaComponent implements OnInit {
     this.notifyLoginChange();
   }
 
+  // Notifies the parent that user has logged in or out
   notifyLoginChange(){
     this.loggedInOutput.emit(this.loggedIn);
   }
-
-
-
 }

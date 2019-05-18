@@ -15,7 +15,9 @@ import {
   MatProgressSpinnerModule,
   MatSnackBarModule,
   MatTableModule,
-  MatPaginatorModule
+  MatPaginatorModule,
+  MatToolbarModule,
+  MatTabsModule
 } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -33,6 +35,10 @@ import { ReportComponent } from './admin/report/report.component';
 import { AdminLoginDialogComponent } from './admin/admin-login-dialog/admin-login-dialog.component';
 import { LoadingDialogComponent } from './shared/loading-dialog/loading-dialog.component';
 import { ComingSoonComponent } from './coming-soon/coming-soon.component';
+import { PasswordResetComponent } from './user/password-reset/password-reset.component';
+import { HomeUserAreaComponent } from './home/home-user-area/home-user-area.component';
+import { LoginDialogComponent } from './user/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from './user/signup-dialog/signup-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +55,11 @@ import { ComingSoonComponent } from './coming-soon/coming-soon.component';
     ReportComponent,
     AdminLoginDialogComponent,
     LoadingDialogComponent,
-    ComingSoonComponent
+    ComingSoonComponent,
+    PasswordResetComponent,
+    HomeUserAreaComponent,
+    LoginDialogComponent,
+    SignupDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -69,13 +79,17 @@ import { ComingSoonComponent } from './coming-soon/coming-soon.component';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatToolbarModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
     AdminLoginDialogComponent,
-    LoadingDialogComponent
+    LoadingDialogComponent,
+    LoginDialogComponent,
+    SignupDialogComponent
   ]
 })
 export class AppModule { }

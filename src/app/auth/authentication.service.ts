@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as cookies from 'js-cookie';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -70,6 +69,67 @@ export class AuthenticationService {
       // Return true for now, backend services will still check the token before doing anything
       return true;
   } else {
+      return false;
+    }
+  }
+
+  // Function to attempt to login the user
+  public userLogin(
+    username: string,
+    password: string,
+    callback: ((result: any) => void)
+    ) : void{
+    // Make the REST call
+    this.http.post<any>(
+      '/api/user/login',
+      {username: username, password: password},
+    ).subscribe((res : any) => {
+        // Store the user and token if successful
+        if(res.success){
+          cookies.set('user', username);
+          cookies.set('user-token', res.token);
+        } else {
+          this.userLogout();
+        }
+
+        // Send the results back to the callback
+        callback(res);
+    });
+  }
+
+  // Log the user out
+  public userLogout(){
+    cookies.remove('user');
+    cookies.remove('user-token');
+  }
+
+  // Getter for user
+  public getUser() : string {
+    return cookies.get('user');
+  }
+
+  // Getter for user token
+  public getUserToken() : string {
+      return cookies.get('user-token');
+  }
+
+  // Function to determine if the user is logged in
+  public checkUserIsLoggedIn() : boolean {
+    if(this.getUser() && this.getUserToken()) {
+      // Make a call to verify the token is still valid
+      this.http.post<any>('/api/user/verify_user', {
+        token: this.getUserToken(),
+        username: this.getUser()
+      }).subscribe((res : any) => {
+        // If token is no longer valid call userLogout()
+        if(!res.success){
+          this.userLogout();
+        }
+      });
+
+      // Return true for now, backend services will still check the token before doing anything
+      return true;
+    } else {
       return false;
     }
   }
