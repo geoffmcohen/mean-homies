@@ -217,10 +217,15 @@ module.exports = (function(){
     form.parse(req, function(err, fields, files){
       // Authenticate the user
       var auth = require('../modules/auth.js');
-      auth.login(fields.username, fields.password, 'user', function(token, message){
+      auth.login(fields.username, fields.password, 'user', function(token, message, actualUsername){
         var success = false;
         if( token ) success = true;
-        res.send({success: success, message: message, token: token});
+        res.send({
+          success: success,
+          message: message,
+          token: token,
+          actualUsername: actualUsername
+        });
       });
     });
   });

@@ -1,7 +1,9 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button><mat-icon>menu</mat-icon></button>
-  Vegan Homies
-  <span class='top-middle-spacer'></span>
-  <app-home-user-area (loggedInOutput)="updateLogin($event)"></app-home-user-area>
-</mat-toolbar>
-<p>This is the home component (loggedIn = {{loggedIn}}).</p>
+<div class="mat-app-background">
+  <mat-toolbar color="accent">
+    <button mat-icon-button><mat-icon>menu</mat-icon></button>
+    Vegan Homies
+    <span class='top-middle-spacer'></span>
+    <app-home-user-area (loggedInOutput)="updateLogin($event)"></app-home-user-area>
+  </mat-toolbar>
+  <p>This is the home component (loggedIn = {{loggedIn}}).</p>
+</div>

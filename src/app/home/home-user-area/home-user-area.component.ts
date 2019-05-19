@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter  } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AuthenticationService } from '../../auth/authentication.service';
-// import { LoginSignupDialogComponent } from '../login-signup-dialog/login-signup-dialog.component';
 import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../user/signup-dialog/signup-dialog.component';
 

@@ -30,9 +30,9 @@ exports.login = function(username, password, userType, callback){
         // Create the token
         createToken(username, userType, '6h', function(err, token){
             if(err) {
-              return callback(null, serverErrorMessage);
+              return callback(null, serverErrorMessage, null);
             } else {
-              return callback(token, "Login successful");
+              return callback(token, "Login successful", username);
             }
         });
       } else {
@@ -47,19 +47,19 @@ exports.login = function(username, password, userType, callback){
         // Create the token
         createToken(actualUsername, userType, '24h', function(err, token){
           if(err) {
-            return callback(null, serverErrorMessage);
+            return callback(null, serverErrorMessage, null);
           } else {
-            return callback(token, "Login successful");
+            return callback(token, "Login successful", actualUsername);
           }
         });
       } else {
-        return callback(null, message);
+        return callback(null, message, null);
       };
     });
   }
   else {
     console.error("Wrong userType input '%s' to auth.login()", userType);
-    return callback(null, serverErrorMessage);
+    return callback(null, serverErrorMessage, null);
   }
 }
 

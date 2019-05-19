@@ -86,7 +86,7 @@ export class AuthenticationService {
     ).subscribe((res : any) => {
         // Store the user and token if successful
         if(res.success){
-          cookies.set('user', username);
+          cookies.set('user', res.actualUsername);
           cookies.set('user-token', res.token);
         } else {
           this.userLogout();
