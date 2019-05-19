@@ -119,7 +119,7 @@ exports.createUser = function(email, username, password, callback){
         // Check email for uniqueness
         checkIfEmailIsTaken(email, function(emailTaken){
           if(emailTaken) {
-            console.log("User with email address '%s' already exists. User will not be created.", email);
+            console.log("User with email address '%s' already exists. Account will not be created.", email);
             return callback(false, util.format("An account for the email address '%s' already exists.", email));
           } else {
             // Create the account
@@ -144,7 +144,7 @@ exports.createUser = function(email, username, password, callback){
                   return callback(false, "An error occurred while trying to create user.");
               } else {
                 console.log("Created user '%s'", username);
-                return callback(true, util.format("User '%s' successfully created", username));
+                return callback(true, "Your new account has successfully been created.  Please check your email to activate your new account.");
               }
             });
 

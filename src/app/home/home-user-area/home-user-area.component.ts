@@ -49,6 +49,8 @@ export class HomeUserAreaComponent implements OnInit {
   }
 
   showSignupDialog(){
+    // #TODO: Show user agreement first and only display signup if accepted
+    
     // Create the login/signup dialog
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;

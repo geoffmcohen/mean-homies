@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Admin Login</h2>
+<h2 mat-dialog-title>Login</h2>
 <mat-dialog-content>
   <mat-form-field>
     <input matInput [(ngModel)]="usernameOrEmail" placeholder="Username or Email">
@@ -12,6 +12,6 @@
   <div class='message'>{{message}}</div>
 </mat-card>
 <mat-dialog-actions>
-  <button class="mat-raised-button mat-primary" (click)="submitLoginForm()">Login</button>
   <button *ngIf="showPasswordReset" class="mat-raised-button mat-warn" (click)="showPasswordResetDialog()">Reset Password</button>
+  <button class="mat-raised-button mat-primary" (click)="submitLoginForm()">Login</button>
 </mat-dialog-actions>
