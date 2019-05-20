@@ -114,7 +114,7 @@ exports.createUser = function(email, username, password, callback){
       var util = require('util');
       if(usernameTaken) {
         console.log("Username '%s' already exists. User will not be created.", username);
-        return callback(false, util.format("Username '%s' is already in use. Please select an new one.", username));
+        return callback(false, util.format("Username '%s' is already in use. Please select a new one.", username));
       } else {
         // Check email for uniqueness
         checkIfEmailIsTaken(email, function(emailTaken){

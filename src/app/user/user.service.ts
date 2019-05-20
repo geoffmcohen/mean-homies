@@ -28,4 +28,19 @@ export class UserService {
     });
   }
 
+  // Checks to see if an email address is taken
+  public checkIfEmailIsTaken(
+    email: string,
+  ): Observable<any>{
+    return this.http.post<any>('api/user/is_email_taken', {email: email});
+  }
+
+  // Checks to see if an username is taken
+  public checkIfUsernameIsTaken(
+    username: string,
+  ): Observable<any>{
+    return this.http.post<any>('api/user/is_username_taken', {username: username});
+  }
+
+
 }

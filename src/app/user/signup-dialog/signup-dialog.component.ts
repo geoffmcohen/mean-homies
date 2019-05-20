@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { FormControl, AbstractControl, Validators, ValidatorFn, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
 import { UserService } from '../user.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
@@ -9,10 +12,15 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   styleUrls: ['./signup-dialog.component.css']
 })
 export class SignupDialogComponent implements OnInit {
-  public email: string;
-  public username: string;
-  public password:  string;
-  public passwordConfirm:  string;
+  email = new FormControl('', [Validators.required, Validators.email], this.validateEmailIsTaken(this.userService));
+  username = new FormControl('', [Validators.required], this.validateUsernameIsTaken(this.userService));
+  // #FIXME: Password pattern rejects everything
+  password = new FormControl('', [Validators.required, Validators.pattern("^(?=.*[a-z])(?=.*[A- ?=.*[0-9])(?=.{8,})")]);
+  // #FIXME: Password match needs to be on form level since it only catches when Confirm field changes but not when password changes
+  passwordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.password)]);
+  // #TODO: We should disable the Create Account button unless all validations are passed
+
+  public passwordRequirements = "Min 8 chars, at least 1 upper, 1 lower & 1 number";
   public message: string;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
@@ -30,7 +38,8 @@ export class SignupDialogComponent implements OnInit {
     // Show the loading dialog
     this.showLoadingDialog();
 
-    this.userService.createUser(this.email, this.username, this.password, (res: any) => {
+    // Create the new user account
+    this.userService.createUser(this.email.value, this.username.value, this.password.value, (res: any) => {
       // Hide the loading dialog
       this.closeLoadingDialog();
       this.message = null;
@@ -40,12 +49,11 @@ export class SignupDialogComponent implements OnInit {
         this.dialogRef.close();
         this.snackBar.open(res.message, "Close");
       } else {
-        this.password = "";
-        this.passwordConfirm = "";
+        this.password.setValue("");
+        this.passwordConfirm.setValue("");
         this.message = res.message;
       }
     });
-
   }
 
   // Displays a loading dialog
@@ -64,4 +72,83 @@ export class SignupDialogComponent implements OnInit {
     this.loadingDialogRef.close();
   }
 
+  // Gets an error message for an email
+  getEmailErrorMessage() {
+    if(this.email.hasError('required')){
+      return "Email is required";
+    } else if (this.email.hasError('email')){
+      return "Invalid email address";
+    } else if (this.email.hasError('isTaken')){
+      return "Email is already attached to an existing account";
+    }
+  }
+
+  // Gets an error message for an username
+  getUsernameErrorMessage() {
+    if(this.username.hasError('required')){
+      return "Username is required";
+    } else if (this.username.hasError('isTaken')){
+      return "Username is in use. Please select a new username.";
+    }
+  }
+
+  // Gets an error message for a password
+  getPasswordErrorMessage() {
+    if(this.password.hasError('required')){
+      return "Password is required";
+    }
+    else if(this.password.hasError('pattern')){
+      return this.passwordRequirements;
+    }
+  }
+
+  // Gets an error message for a password confirm
+  getPasswordConfirmErrorMessage() {
+    if(this.passwordConfirm.hasError('required')){
+      return "Password Confirm is required";
+    } else if (this.passwordConfirm.hasError('passwordsMismatch')){
+      return "Passwords must match";
+    }
+  }
+
+  // Validate that email is available
+  validateEmailIsTaken(userService: UserService): AsyncValidatorFn {
+    return (control: AbstractControl) : Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return userService.checkIfEmailIsTaken(control.value).pipe(map(
+        res => {
+          if(res.taken) {
+            return {isTaken: true};
+          } else {
+            return null;
+          }
+        }
+      ));
+    }
+  }
+
+  // Validate that email is available
+  validateUsernameIsTaken(userService: UserService): AsyncValidatorFn {
+    return (control: AbstractControl) : Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return userService.checkIfUsernameIsTaken(control.value).pipe(map(
+        res => {
+          if(res.taken) {
+            return {isTaken: true};
+          } else {
+            return null;
+          }
+        }
+      ));
+    }
+  }
+
+  // Validate that password and passwordConfirm passwordMatch
+  validatePasswordsMatch(matchControl: AbstractControl) : ValidatorFn {
+    return (control: AbstractControl) : ValidationErrors | null => {
+      if (control.value != matchControl.value) {
+        return {passwordsMismatch: true};
+      } else {
+        return null;
+      }
+    };
+  }
 }

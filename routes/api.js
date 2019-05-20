@@ -246,6 +246,36 @@ module.exports = (function(){
     });
   });
 
+  // Checks to see if an email address is already attached to a user account
+  api.post('/user/is_email_taken', function(req, res){
+    console.log('api/user/is_email_taken called');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      var user = require("../modules/user.js");
+      user.checkIfEmailIsTaken(fields.email, function(result){
+        res.send({taken: result});
+      });
+    });
+  });
+
+  // Checks to see if a username is already attached to a user account
+  api.post('/user/is_username_taken', function(req, res){
+    console.log('api/user/is_username_taken called');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      var user = require("../modules/user.js");
+      user.checkIfUsernameIsTaken(fields.username, function(result){
+        res.send({taken: result});
+      });
+    });
+  });
+
   // api.get()
   return api;
 })();

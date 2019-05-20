@@ -1,24 +1,35 @@
-<h2 mat-dialog-title>Create Account</h2>
-<mat-dialog-content>
-  <mat-form-field>
-    <input matInput [(ngModel)]="email" placeholder="Email Address">
-  </mat-form-field>
-  <br>
-  <mat-form-field>
-    <input matInput [(ngModel)]="username" placeholder="Username">
-  </mat-form-field>
-  <br>
-  <mat-form-field>
-    <input matInput [(ngModel)]="password" placeholder="Password" type="password">
-  </mat-form-field>
-  <br>
-  <mat-form-field>
-    <input matInput [(ngModel)]="passwordConfirm" placeholder="Confirm Password" type="password">
-  </mat-form-field>
-</mat-dialog-content>
-<mat-card *ngIf="message">
-  <div class='message'>{{message}}</div>
-</mat-card>
-<mat-dialog-actions>
-  <button class="mat-raised-button mat-primary" (click)="submitSignupForm()">Create Account</button>
-</mat-dialog-actions>
+<div class="signup-dialog">
+  <h2 mat-dialog-title>Create Account</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Email Address</mat-label>
+      <input matInput placeholder="Email Address" [formControl]="email" required>
+      <mat-error *ngIf="email.invalid">{{getEmailErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="outline">
+      <mat-label>Username</mat-label>
+      <input matInput placeholder="Username" [formControl]="username" required>
+      <mat-error *ngIf="username.invalid">{{getUsernameErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput placeholder="Password" [formControl]="password" type="password" required>
+      <mat-hint>{{passwordRequirements}}</mat-hint>
+      <mat-error *ngIf="password.invalid">{{getPasswordErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <br>
+    <mat-form-field appearance="outline">
+      <mat-label>Confirm Password</mat-label>
+      <input matInput placeholder="Confirm Password" [formControl]="passwordConfirm" type="password" required>
+      <mat-error *ngIf="passwordConfirm.invalid">{{getPasswordConfirmErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-card *ngIf="message">
+    <div class='message'>{{message}}</div>
+  </mat-card>
+  <mat-dialog-actions>
+    <button class="mat-raised-button mat-primary" (click)="submitSignupForm()">Create Account</button>
+  </mat-dialog-actions>
+</div>
