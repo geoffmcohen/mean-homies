@@ -39,6 +39,7 @@ import { PasswordResetComponent } from './user/password-reset/password-reset.com
 import { HomeUserAreaComponent } from './home/home-user-area/home-user-area.component';
 import { LoginDialogComponent } from './user/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './user/signup-dialog/signup-dialog.component';
+import { ResetPasswordDialogComponent } from './user/reset-password-dialog/reset-password-dialog.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { SignupDialogComponent } from './user/signup-dialog/signup-dialog.compon
     PasswordResetComponent,
     HomeUserAreaComponent,
     LoginDialogComponent,
-    SignupDialogComponent
+    SignupDialogComponent,
+    ResetPasswordDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +91,8 @@ import { SignupDialogComponent } from './user/signup-dialog/signup-dialog.compon
     AdminLoginDialogComponent,
     LoadingDialogComponent,
     LoginDialogComponent,
-    SignupDialogComponent
+    SignupDialogComponent,
+    ResetPasswordDialogComponent
   ]
 })
 export class AppModule { }

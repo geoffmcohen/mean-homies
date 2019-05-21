@@ -42,5 +42,16 @@ export class UserService {
     return this.http.post<any>('api/user/is_username_taken', {username: username});
   }
 
+  // Requests a password reset for the given email
+  public requestPasswordReset(
+    email: string,
+    callback: ((result: any) => void)
+  ) :  void{
+    // Make the REST call
+    this.http.post<any>('/api/user/request_password_reset', {email: email}).subscribe((res : any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
 
 }

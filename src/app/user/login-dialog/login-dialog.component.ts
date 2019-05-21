@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
 import { AuthenticationService } from '../../auth/authentication.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
+import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-password-dialog.component';
 
 @Component({
   selector: 'app-login-dialog',
@@ -14,6 +15,7 @@ export class LoginDialogComponent implements OnInit {
   public message: string;
   public showPasswordReset: boolean;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
+  private resetDialogRef: MatDialogRef<ResetPasswordDialogComponent>;
 
   constructor(
     private dialogRef: MatDialogRef<LoginDialogComponent>,
@@ -73,6 +75,19 @@ export class LoginDialogComponent implements OnInit {
 
   // Show password reset dialog
   showPasswordResetDialog(){
-    console.log("showPasswordResetDialog() called");
+    // Create the loading dialog
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+
+    // Show the password reset dialog
+    this.resetDialogRef = this.dialog.open(ResetPasswordDialogComponent, dialogConfig);
+
+    // Handle actions after password reset dialog is closed
+    this.resetDialogRef.afterClosed().subscribe(reset => {
+      // Close this dialog if the user initiated a password reset
+      if (reset){
+        this.dialogRef.close();
+      }
+    });
   }
 }

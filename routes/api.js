@@ -276,6 +276,23 @@ module.exports = (function(){
     });
   });
 
+  // Sends a password reset email
+  api.post('/user/request_password_reset', function(req, res){
+    console.log('api/user/request_password_reset called');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Request the password reset
+      var user = require("../modules/user.js");
+      user.requestPasswordReset(fields.email, function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+
+  });
+
   // api.get()
   return api;
 })();

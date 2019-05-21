@@ -1,3 +1,6 @@
+// Error message to return if something goes wrong on the server side
+const serverErrorMessage = "Server error occurred, please contact geoff@veganhomies.com if you continue to encounter this issue.";
+
 // Checks the user collection to see if a user already exists with the username
 exports.checkIfUsernameIsTaken = checkIfUsernameIsTaken = function(username, callback){
   // Connect to the database
@@ -63,7 +66,6 @@ exports.checkIfEmailIsTaken = checkIfEmailIsTaken = function(email, callback){
 }
 
 // Sends the user an email with a link to activate their account
-// #TODO: Need to actually create the email code
 exports.sendUserAccountActivationEmail = sendUserAccountActivationEmail = function(
   emailTo,
   username,
@@ -267,4 +269,70 @@ function updateLastLoginTime(username){
       db.close();
     });
   });
+}
+
+// Requests a password change
+exports.requestPasswordReset = function(email, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+    dbo.collection("users").findOne({email: email}, function(err, result){
+      db.close();
+      var util = require('util');
+      if(result == null){
+        console.log("Password reset requested for invalid email address '%s'", email);
+        return callback(false, util.format("No account found for '%s'", email));
+      } else {
+        // Generate the JWT token
+        var jwt = require('jsonwebtoken');
+        var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
+
+        // Create the payload
+        var payload = { username: result.username, email: result.email, tokenType: 'reset password' };
+
+        // Try to create the token
+        jwt.sign(payload, jwtSecret, {expiresIn: "15m"}, function(err, token){
+          if(err){
+            console.error("Token creation error!");
+            console.error(err);
+            return callback(false, serverErrorMessage);
+          } else {
+            // Send the email with the reset link
+            sendPasswordResetEmail(email, token);
+            return callback(true, "Password reset successfully sent.  Please check your email.");
+          }
+        });
+      }
+    });
+  });
+}
+
+// Sends a template email with a link to reset the password
+exports.sendPasswordResetEmail = sendPasswordResetEmail = function(emailTo, token, send = true, preview = false){
+  var email = require('./email.js');
+
+  // Get the url to use for the link from an environment variable
+  var appUrl = process.env.VH_APP_URL || 'http://localhost:3000';
+
+  // Set up the inputs for the email template
+  templateInputs = {
+    appUrl: appUrl,
+    token: token
+  };
+
+  // Send the email using the template
+  email.sendAppTemplateEmail(
+    emailTo,
+    'password-reset',
+    templateInputs,
+    send,
+    preview
+  );
 }
