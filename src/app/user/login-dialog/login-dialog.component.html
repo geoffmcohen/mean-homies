@@ -1,10 +1,12 @@
 <h2 mat-dialog-title>Login</h2>
 <mat-dialog-content>
-  <mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Username or Email</mat-label>
     <input matInput [(ngModel)]="usernameOrEmail" placeholder="Username or Email">
   </mat-form-field>
   <br>
-  <mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
     <input matInput [(ngModel)]="password" placeholder="Password" type="password">
   </mat-form-field>
 </mat-dialog-content>
