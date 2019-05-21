@@ -14,8 +14,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 export class SignupDialogComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email], this.validateEmailIsTaken(this.userService));
   username = new FormControl('', [Validators.required], this.validateUsernameIsTaken(this.userService));
-  // #FIXME: Password pattern rejects everything
-  password = new FormControl('', [Validators.required, Validators.pattern("^(?=.*[a-z])(?=.*[A- ?=.*[0-9])(?=.{8,})")]);
+  password = new FormControl('', [Validators.required, Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)]);
   // #FIXME: Password match needs to be on form level since it only catches when Confirm field changes but not when password changes
   passwordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.password)]);
   // #TODO: We should disable the Create Account button unless all validations are passed
