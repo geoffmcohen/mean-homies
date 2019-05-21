@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FormControl, AbstractControl, Validators, ValidatorFn, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, AbstractControl, Validators, ValidatorFn, ValidationErrors, AsyncValidatorFn } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
 import { UserService } from '../user.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
@@ -15,9 +15,7 @@ export class SignupDialogComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email], this.validateEmailIsTaken(this.userService));
   username = new FormControl('', [Validators.required], this.validateUsernameIsTaken(this.userService));
   password = new FormControl('', [Validators.required, Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)]);
-  // #FIXME: Password match needs to be on form level since it only catches when Confirm field changes but not when password changes
   passwordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.password)]);
-  // #TODO: We should disable the Create Account button unless all validations are passed
 
   public passwordRequirements = "Min 8 chars, at least 1 upper, 1 lower & 1 number";
   public message: string;
@@ -34,25 +32,29 @@ export class SignupDialogComponent implements OnInit {
   }
 
   submitSignupForm(){
-    // Show the loading dialog
-    this.showLoadingDialog();
+    if(this.checkFieldValidations()){
+      // Show the loading dialog
+      this.showLoadingDialog();
 
-    // Create the new user account
-    this.userService.createUser(this.email.value, this.username.value, this.password.value, (res: any) => {
-      // Hide the loading dialog
-      this.closeLoadingDialog();
-      this.message = null;
+      // Create the new user account
+      this.userService.createUser(this.email.value, this.username.value, this.password.value, (res: any) => {
+        // Hide the loading dialog
+        this.closeLoadingDialog();
+        this.message = null;
 
-      // Close this dialog and show snackbar if successful
-      if(res.success){
-        this.dialogRef.close();
-        this.snackBar.open(res.message, "Close");
-      } else {
-        this.password.setValue("");
-        this.passwordConfirm.setValue("");
-        this.message = res.message;
-      }
-    });
+        // Close this dialog and show snackbar if successful
+        if(res.success){
+          this.dialogRef.close();
+          this.snackBar.open(res.message, "Close");
+        } else {
+          this.password.setValue("");
+          this.passwordConfirm.setValue("");
+          this.message = res.message;
+        }
+      });
+    } else {
+      this.message = "Please clear errors above.";
+    }
   }
 
   // Displays a loading dialog
@@ -149,5 +151,18 @@ export class SignupDialogComponent implements OnInit {
         return null;
       }
     };
+  }
+
+  // Check field validations
+  checkFieldValidations() : boolean{
+      // Reset passwordConfirm in case password was edited after Confirm
+      this.passwordConfirm.updateValueAndValidity();
+
+      // Check each control
+      if (this.email.errors || this.username.errors || this.password.errors|| this.passwordConfirm.errors) {
+        return false;
+      } else {
+        return true;
+      }
   }
 }
