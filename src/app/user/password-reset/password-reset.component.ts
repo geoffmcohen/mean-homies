@@ -16,8 +16,7 @@ export class PasswordResetComponent implements OnInit {
   passwordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.password)]);
 
   public passwordRequirements = "Min 8 chars, at least 1 upper, 1 lower & 1 number";
-  //private resetToken: string;
-  public resetToken: string;
+  private resetToken: string;
   public message: string;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
