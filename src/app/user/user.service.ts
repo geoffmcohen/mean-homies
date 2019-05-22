@@ -54,4 +54,19 @@ export class UserService {
     });
   }
 
+  // Resets users password
+  public resetPassword(
+    email: string,
+    newPassword: string,
+    token: string,
+    callback: ((result: any) => void)
+  ) :  void{
+    // Make the REST call
+    this.http.post<any>('/api/user/reset_password', {email: email, newPassword: newPassword, token: token}).subscribe((res : any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
+
+
 }

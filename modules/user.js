@@ -336,3 +336,77 @@ exports.sendPasswordResetEmail = sendPasswordResetEmail = function(emailTo, toke
     preview
   );
 }
+
+// Attempts to reset the users password
+exports.resetPassword = function(email, newPassword, token, callback){
+  // Message to use for all bad token issues
+  const badTokenMessage = "Invalid or expired password reset. Please request password reset again.";
+
+  // Check token validity
+  var jwt = require('jsonwebtoken');
+  var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
+  jwt.verify(token, jwtSecret, function(err, decoded){
+    if(err){
+      console.log("Invalid password reset token");
+      console.log(err);
+      return callback(false, badTokenMessage);
+    } else {
+      // Check to make sure token has the correct payload
+      if (!decoded.tokenType || !decoded.email){
+        console.error("Password reset token has incorrect payload. Someone is trying to pull something funny here!!!");
+        return callback(false, badTokenMessage);
+      } else if(decoded.tokenType != 'reset password' || decoded.email != email){
+        console.log("Invalid password reset token: tokenType '%s' != 'reset password' or email '%s' != '%s'", decoded.tokenType, decoded.email, email);
+        return callback(false, badTokenMessage);
+      } else {
+        // Connect to the database
+        var MongoClient = require('mongodb').MongoClient;
+        var mongoURI = process.env.MONGOLAB_URI;
+        MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+          // Throw error if unable to connect
+          if(err){
+            console.log("Unable to connect to MongoDB!!!");
+            throw err;
+          }
+          var dbo = db.db();
+
+          // Update the users record with a new passwordHash
+          const bcrypt = require('bcrypt');
+          newValues = {$set: {passwordHash: bcrypt.hashSync(newPassword, 10)} };
+          dbo.collection("users").updateOne({email: decoded.email}, newValues, function(err, result){
+            db.close();
+            if(err){
+              console.error("Unable to reset users password");
+              console.error(err);
+              return callback(false, serverErrorMessage);
+            } else {
+              console.log("Succesfully reset users password");
+              // Send a confirmation email to the user
+              sendPasswordResetConfirmationEmail(decoded.email);
+              return callback(true, "Your password has successfully been reset.");
+            }
+          });
+        });
+      }
+    }
+  });
+}
+
+// Sends a template email to confirm that the users password has been reset
+exports.sendPasswordResetConfirmationEmail = sendPasswordResetConfirmationEmail = function(emailTo, send = true, preview = false){
+  var email = require('./email.js');
+
+  // Set up the inputs for the email template
+  templateInputs = {
+    email: emailTo
+  };
+
+  // Send the email using the template
+  email.sendAppTemplateEmail(
+    emailTo,
+    'password-change-confirm',
+    templateInputs,
+    send,
+    preview
+  );
+}
