@@ -17,7 +17,8 @@ import {
   MatTableModule,
   MatPaginatorModule,
   MatToolbarModule,
-  MatTabsModule
+  MatTabsModule,
+  MatCheckboxModule
 } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -40,6 +41,7 @@ import { HomeUserAreaComponent } from './home/home-user-area/home-user-area.comp
 import { LoginDialogComponent } from './user/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './user/signup-dialog/signup-dialog.component';
 import { ResetPasswordDialogComponent } from './user/reset-password-dialog/reset-password-dialog.component';
+import { UserAgreementDialogComponent } from './user/user-agreement-dialog/user-agreement-dialog.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,8 @@ import { ResetPasswordDialogComponent } from './user/reset-password-dialog/reset
     HomeUserAreaComponent,
     LoginDialogComponent,
     SignupDialogComponent,
-    ResetPasswordDialogComponent
+    ResetPasswordDialogComponent,
+    UserAgreementDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -81,9 +84,10 @@ import { ResetPasswordDialogComponent } from './user/reset-password-dialog/reset
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTableModule,
-    MatPaginatorModule,
+    MatPaginatorModule, // Not currently using
     MatToolbarModule,
-    MatTabsModule
+    MatTabsModule, // Not currently using
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent],
@@ -92,7 +96,8 @@ import { ResetPasswordDialogComponent } from './user/reset-password-dialog/reset
     LoadingDialogComponent,
     LoginDialogComponent,
     SignupDialogComponent,
-    ResetPasswordDialogComponent
+    ResetPasswordDialogComponent,
+    UserAgreementDialogComponent
   ]
 })
 export class AppModule { }

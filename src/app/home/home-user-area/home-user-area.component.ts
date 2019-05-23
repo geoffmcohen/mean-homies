@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../user/signup-dialog/signup-dialog.component';
+import { UserAgreementDialogComponent } from '../../user/user-agreement-dialog/user-agreement-dialog.component';
 
 @Component({
   selector: 'app-home-user-area',
@@ -49,14 +50,18 @@ export class HomeUserAreaComponent implements OnInit {
   }
 
   showSignupDialog(){
-    // #TODO: Show user agreement first and only display signup if accepted
-    
-    // Create the login/signup dialog
+    // Create the config to be used for the dialogs
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
-    // Show the dialog for login/logout
-    const dialogRef = this.dialog.open(SignupDialogComponent, dialogConfig)
+    // Show user agreement first and only display signup if accepted
+    var userAgreementDialogRef = this.dialog.open(UserAgreementDialogComponent, dialogConfig);
+    userAgreementDialogRef.afterClosed().subscribe(userAgrees => {
+      if(userAgrees){
+        // Show the dialog for sign up
+        var signupDialogRef = this.dialog.open(SignupDialogComponent, dialogConfig)
+      }
+    })
   }
 
   // Allow user to log out
