@@ -28,8 +28,6 @@ export class NewBlogPostComponent implements OnInit {
 
   // Call when post button is clicked
   post(){
-    console.log('Post clicked.');
-
     // Display the loading dialog
     this.showLoadingDialog();
 

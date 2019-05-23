@@ -36,4 +36,9 @@ export class HomeComponent implements OnInit {
       this.loggedInUser = null;
     }
   }
+
+  // Opens up the blog in a new window
+  openBlog(){
+    window.open('/blog', '_blank');
+  }
 }

@@ -1,8 +1,15 @@
 <span *ngIf="loggedIn">
   {{loggedInUser}}
-  <button mat-button (click)="logout()">Logout</button>
+  <button mat-icon-button [matMenuTriggerFor]="usermenu"><mat-icon>more_vert</mat-icon></button>
 </span>
 <span *ngIf="!loggedIn">
   <button mat-button (click)="showLoginDialog()">Login</button>
   <button mat-button (click)="showSignupDialog()">Sign Up</button>
 </span>
+
+<mat-menu #usermenu="matMenu">
+  <button mat-menu-item disabled>Edit Profile</button>
+  <button mat-menu-item disabled>Preferences</button>
+  <button mat-menu-item disabled>Change Password</button>
+  <button mat-menu-item (click)="logout()">Logout</button>
+</mat-menu>
