@@ -96,7 +96,6 @@ exports.sendUserAccountActivationEmail = sendUserAccountActivationEmail = functi
 }
 
 // Attempts to create a new user
-// #TODO: Validate user password requirements - can be done in frontend
 exports.createUser = function(email, username, password, callback){
   console.log("Creating user for '%s'...", username);
 
@@ -409,4 +408,56 @@ exports.sendPasswordResetConfirmationEmail = sendPasswordResetConfirmationEmail 
     send,
     preview
   );
+}
+
+// Attempts to change the users password
+exports.changePassword = function(username, oldPassword, newPassword, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Find the user record to verify the old password
+    dbo.collection("users").findOne({username: username}, function(err, user){
+      if(err){
+        console.error("Error occurred while tring to get '%s' user for password reset", username);
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else if (user == null){
+        console.error("Unable to find '%s' user record for password reset", username);
+        return callback(false, serverErrorMessage);
+      } else {
+        // Test old password first
+        const bcrypt = require('bcrypt');
+        bcrypt.compare(oldPassword, user.passwordHash, function(err, passwordMatch){
+          if(!passwordMatch){
+            console.log("User '%s' entered incorrect old password.");
+            return callback(false, "Incorrect old password.");
+          } else {
+            // Update the password
+            newValues = {$set: {passwordHash: bcrypt.hashSync(newPassword, 10)} };
+            dbo.collection("users").updateOne({username: username}, newValues, function(err, result){
+              db.close();
+              if(err){
+                console.error("Unable to reset users password");
+                console.error(err);
+                return callback(false, serverErrorMessage);
+              } else {
+                console.log("Succesfully reset users password");
+                // Send a confirmation email to the user
+                sendPasswordResetConfirmationEmail(user.email);
+                return callback(true, "Your password has successfully been changed.");
+              }
+            });
+          }
+        });
+      }
+    });
+  });
 }

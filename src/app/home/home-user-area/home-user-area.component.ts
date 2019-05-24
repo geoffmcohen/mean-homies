@@ -4,6 +4,7 @@ import { AuthenticationService } from '../../auth/authentication.service';
 import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../user/signup-dialog/signup-dialog.component';
 import { UserAgreementDialogComponent } from '../../user/user-agreement-dialog/user-agreement-dialog.component';
+import { ChangePasswordDialogComponent } from '../../user/change-password-dialog/change-password-dialog.component';
 
 @Component({
   selector: 'app-home-user-area',
@@ -77,5 +78,13 @@ export class HomeUserAreaComponent implements OnInit {
   // Notifies the parent that user has logged in or out
   notifyLoginChange(){
     this.loggedInOutput.emit(this.loggedIn);
+  }
+
+  // Shows the dialog used for updating the users password
+  showChangePasswordDialog(){
+    // Show the dialog for the user to update their password
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    this.dialog.open(ChangePasswordDialogComponent, dialogConfig);
   }
 }

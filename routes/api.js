@@ -308,6 +308,21 @@ module.exports = (function(){
     });
   });
 
+  // Change the users password
+  api.post('/user/change_password', function(req, res){
+    console.log('api/user/change_password called');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Request the password reset
+      var user = require("../modules/user.js");
+      user.changePassword(fields.username, fields.oldPassword, fields.newPassword, function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+  });
   // api.get()
   return api;
 })();

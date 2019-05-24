@@ -68,5 +68,17 @@ export class UserService {
     });
   }
 
-
+  // Changes users password
+  public changePassword(
+    username: string,
+    oldPassword: string,
+    newPassword: string,
+    callback: ((result: any) => void)
+  ) :  void{
+    // Make the REST call
+    this.http.post<any>('/api/user/change_password', {username: username, oldPassword: oldPassword, newPassword: newPassword}).subscribe((res : any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
 }

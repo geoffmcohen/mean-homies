@@ -130,9 +130,7 @@ export class PasswordResetComponent implements OnInit {
           this.clearFields();
           this.message = res.message;
         }
-
       });
-      console.log("resetPassword() called");
     }
   }
 }

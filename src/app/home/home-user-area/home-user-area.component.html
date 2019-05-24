@@ -10,6 +10,6 @@
 <mat-menu #usermenu="matMenu">
   <button mat-menu-item disabled>Edit Profile</button>
   <button mat-menu-item disabled>Preferences</button>
-  <button mat-menu-item disabled>Change Password</button>
+  <button mat-menu-item (click)="showChangePasswordDialog()">Change Password</button>
   <button mat-menu-item (click)="logout()">Logout</button>
 </mat-menu>

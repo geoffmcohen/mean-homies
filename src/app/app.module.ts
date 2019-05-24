@@ -42,6 +42,7 @@ import { LoginDialogComponent } from './user/login-dialog/login-dialog.component
 import { SignupDialogComponent } from './user/signup-dialog/signup-dialog.component';
 import { ResetPasswordDialogComponent } from './user/reset-password-dialog/reset-password-dialog.component';
 import { UserAgreementDialogComponent } from './user/user-agreement-dialog/user-agreement-dialog.component';
+import { ChangePasswordDialogComponent } from './user/change-password-dialog/change-password-dialog.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { UserAgreementDialogComponent } from './user/user-agreement-dialog/user-
     LoginDialogComponent,
     SignupDialogComponent,
     ResetPasswordDialogComponent,
-    UserAgreementDialogComponent
+    UserAgreementDialogComponent,
+    ChangePasswordDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -97,7 +99,8 @@ import { UserAgreementDialogComponent } from './user/user-agreement-dialog/user-
     LoginDialogComponent,
     SignupDialogComponent,
     ResetPasswordDialogComponent,
-    UserAgreementDialogComponent
+    UserAgreementDialogComponent,
+    ChangePasswordDialogComponent
   ]
 })
 export class AppModule { }
