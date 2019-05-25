@@ -1,0 +1,8 @@
+<div *ngIf="!loggedIn">
+  <p>Welcome to VeganHomies.com, if you have an account please use the "Login" button at the top right of the screen. Otherwise please use the "Sign Up" button to create a new account to be able to access the sites full features.</p>
+  <app-about></app-about>
+</div>
+<div *ngIf="loggedIn">
+  <!-- If the user has a profile, show one component otherwise show the create profile screen. -->
+  <p>User is logged in.</p>
+</div>

@@ -43,6 +43,9 @@ import { SignupDialogComponent } from './user/signup-dialog/signup-dialog.compon
 import { ResetPasswordDialogComponent } from './user/reset-password-dialog/reset-password-dialog.component';
 import { UserAgreementDialogComponent } from './user/user-agreement-dialog/user-agreement-dialog.component';
 import { ChangePasswordDialogComponent } from './user/change-password-dialog/change-password-dialog.component';
+import { AboutComponent } from './home/about/about.component';
+import { FaqComponent } from './home/faq/faq.component';
+import { DefaultComponent } from './home/default/default.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +69,10 @@ import { ChangePasswordDialogComponent } from './user/change-password-dialog/cha
     SignupDialogComponent,
     ResetPasswordDialogComponent,
     UserAgreementDialogComponent,
-    ChangePasswordDialogComponent
+    ChangePasswordDialogComponent,
+    AboutComponent,
+    FaqComponent,
+    DefaultComponent
   ],
   imports: [
     BrowserModule,

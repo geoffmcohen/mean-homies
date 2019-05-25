@@ -3,16 +3,16 @@
     <button mat-icon-button [matMenuTriggerFor]="mainmenu"><mat-icon>menu</mat-icon></button>
     Vegan Homies
     <span class='top-middle-spacer'></span>
-    <app-home-user-area (loggedInOutput)="updateLogin($event)"></app-home-user-area>
+    <app-home-user-area></app-home-user-area>
   </mat-toolbar>
-  <p>This is the home component (loggedIn = {{loggedIn}}).</p>
+  <router-outlet></router-outlet>
 </div>
 
 <mat-menu #mainmenu="matMenu">
   <button mat-menu-item *ngIf="loggedIn" disabled>Homie Search</button>
   <button mat-menu-item *ngIf="loggedIn" disabled>My Homies</button>
   <button mat-menu-item *ngIf="loggedIn" disabled>Messages</button>
-  <button mat-menu-item disabled>About</button>
-  <button mat-menu-item disabled>FAQ</button>
+  <button mat-menu-item [routerLink]="['about']">About</button>
+  <button mat-menu-item [routerLink]="['faq']">FAQ</button>
   <button mat-menu-item (click)="openBlog()">Blog</button>
 </mat-menu>

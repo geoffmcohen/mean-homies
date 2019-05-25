@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthenticationService } from '../auth/authentication.service';
 import { PageStatsService } from '../shared/page-stats.service';
 
@@ -12,6 +13,7 @@ export class HomeComponent implements OnInit {
   public loggedInUser: string;
 
   constructor(
+    private router: Router,
     private authService: AuthenticationService,
     private pageStatsService: PageStatsService
   ) { }
@@ -20,21 +22,27 @@ export class HomeComponent implements OnInit {
     // Increment page stats for home page
     this.pageStatsService.incrementPageCount( "home" );
 
-    // Check if a user is logged in
+    // Get initial login state and track changes
+    this.subscribeToLoginChanges();
+  }
+
+  // Set up login state and subscribe to changes
+  subscribeToLoginChanges(){
+    // Get the initial state of the login
     this.loggedIn = this.authService.checkUserIsLoggedIn();
     if(this.loggedIn){
       this.loggedInUser = this.authService.getUser();
     }
-  }
 
-  // Updates the login information based the change in state from the child component
-  updateLogin($event){
-    this.loggedIn = $event;
-    if(this.loggedIn){
-      this.loggedInUser = this.authService.getUser();
-    } else {
-      this.loggedInUser = null;
-    }
+    // Subscribe to login changes
+    this.authService.userLoginChange.subscribe(loggedIn => {
+      this.loggedIn = loggedIn;
+      if(this.loggedIn){
+        this.loggedInUser = this.authService.getUser();
+      } else {
+        this.loggedInUser = null;
+      }
+    });
   }
 
   // Opens up the blog in a new window

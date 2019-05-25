@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.component';
@@ -12,7 +12,7 @@ import { ChangePasswordDialogComponent } from '../../user/change-password-dialog
   styleUrls: ['./home-user-area.component.css']
 })
 export class HomeUserAreaComponent implements OnInit {
-  @Output() loggedInOutput = new EventEmitter<boolean>();
+  // @Output() loggedInOutput = new EventEmitter<boolean>();
 
   public loggedIn: boolean;
   public loggedInUser: string;
@@ -23,10 +23,27 @@ export class HomeUserAreaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Get initial login state and track changes
+    this.subscribeToLoginChanges();
+  }
+
+  // Set up login state and subscribe to changes
+  subscribeToLoginChanges(){
+    // Get the initial state of the login
     this.loggedIn = this.authService.checkUserIsLoggedIn();
     if(this.loggedIn){
       this.loggedInUser = this.authService.getUser();
     }
+
+    // Subscribe to login changes
+    this.authService.userLoginChange.subscribe(loggedIn => {
+      this.loggedIn = loggedIn;
+      if(this.loggedIn){
+        this.loggedInUser = this.authService.getUser();
+      } else {
+        this.loggedInUser = null;
+      }
+    });
   }
 
   showLoginDialog(){
@@ -35,19 +52,7 @@ export class HomeUserAreaComponent implements OnInit {
     dialogConfig.autoFocus = true;
 
     // Show the dialog for login
-    const dialogRef = this.dialog.open(LoginDialogComponent, dialogConfig)
-
-    // Handle actions after dialog closed
-    dialogRef.afterClosed().subscribe(loggedIn => {
-      if(loggedIn){
-        // Set the loggedIn flag and username
-        this.loggedIn = true;
-        this.loggedInUser = this.authService.getUser();
-
-        // Alert parent that user has logged in
-        this.notifyLoginChange();
-      }
-    });
+    this.dialog.open(LoginDialogComponent, dialogConfig)
   }
 
   showSignupDialog(){
@@ -68,16 +73,6 @@ export class HomeUserAreaComponent implements OnInit {
   // Allow user to log out
   logout(){
     this.authService.userLogout();
-    this.loggedIn = false;
-    this.loggedInUser = null;
-
-    // Alert parent that user has logged out
-    this.notifyLoginChange();
-  }
-
-  // Notifies the parent that user has logged in or out
-  notifyLoginChange(){
-    this.loggedInOutput.emit(this.loggedIn);
   }
 
   // Shows the dialog used for updating the users password

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as cookies from 'js-cookie';
@@ -11,6 +11,9 @@ export class AuthenticationService {
   constructor(
     private http: HttpClient
   ) { }
+
+  // Output to allow components to subscribe to login info
+  @Output() userLoginChange: EventEmitter<boolean> = new EventEmitter();
 
   // Function to attempt to login an admin user
   public adminLogin(
@@ -88,6 +91,7 @@ export class AuthenticationService {
         if(res.success){
           cookies.set('user', res.actualUsername);
           cookies.set('user-token', res.token);
+          this.userLoginChange.emit(true);
         } else {
           this.userLogout();
         }
@@ -101,6 +105,7 @@ export class AuthenticationService {
   public userLogout(){
     cookies.remove('user');
     cookies.remove('user-token');
+    this.userLoginChange.emit(false);
   }
 
   // Getter for user
