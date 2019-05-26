@@ -9,6 +9,7 @@ import { PasswordResetComponent } from './user/password-reset/password-reset.com
 import { DefaultComponent } from './home/default/default.component';
 import { AboutComponent } from './home/about/about.component';
 import { FaqComponent } from './home/faq/faq.component';
+import { EditProfileComponent } from './user/edit-profile/edit-profile.component';
 
 const routes: Routes = [
   //{path: '', component: ComingSoonComponent},
@@ -17,7 +18,8 @@ const routes: Routes = [
     children: [
       {path: '', component: DefaultComponent, pathMatch: 'full'},
       {path: 'about', component: AboutComponent},
-      {path: 'faq', component: FaqComponent}
+      {path: 'faq', component: FaqComponent},
+      {path: 'user/edit-profile', component: EditProfileComponent}
     ]
   },
   {path: 'blog', component: BlogComponent},

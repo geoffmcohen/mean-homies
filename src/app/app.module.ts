@@ -46,6 +46,8 @@ import { ChangePasswordDialogComponent } from './user/change-password-dialog/cha
 import { AboutComponent } from './home/about/about.component';
 import { FaqComponent } from './home/faq/faq.component';
 import { DefaultComponent } from './home/default/default.component';
+import { EditProfileComponent } from './user/edit-profile/edit-profile.component';
+import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavailable-feature.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +74,9 @@ import { DefaultComponent } from './home/default/default.component';
     ChangePasswordDialogComponent,
     AboutComponent,
     FaqComponent,
-    DefaultComponent
+    DefaultComponent,
+    EditProfileComponent,
+    UnavailableFeatureComponent
   ],
   imports: [
     BrowserModule,

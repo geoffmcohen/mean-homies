@@ -12,8 +12,6 @@ import { ChangePasswordDialogComponent } from '../../user/change-password-dialog
   styleUrls: ['./home-user-area.component.css']
 })
 export class HomeUserAreaComponent implements OnInit {
-  // @Output() loggedInOutput = new EventEmitter<boolean>();
-
   public loggedIn: boolean;
   public loggedInUser: string;
 

@@ -461,3 +461,166 @@ exports.changePassword = function(username, oldPassword, newPassword, callback){
     });
   });
 }
+
+// Gets a users profile if one exists
+exports.getUserProfile = getUserProfile = function(username, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Perform the search
+    dbo.collection("userProfiles").findOne({username: username}, function(err, profile){
+      db.close();
+      if(err){
+        // If there is an error throw so we don't end up inserting duplicates
+        console.error("Error occurred while trying to get profile for '%s'", username);
+        console.error(err);
+        throw err;
+      } else if (profile == null) {
+        console.log("No profile found for user '%s'", username);
+        return callback(false, null);
+      } else {
+        console.log("Profile found for user '%s'", username);
+        return callback(true, profile);
+      }
+    });
+  });
+}
+
+// Inserts a new profile for a user
+insertUserProfile = function(
+  username,
+  displayName,
+  aboutMe,
+  lookingToMeet,
+  callback
+){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Create profile object
+    profile = {
+      username: username,
+      displayName: displayName,
+      aboutMe: aboutMe,
+      lookingToMeet: lookingToMeet
+    };
+
+    // Determine whether profile should be considered activate
+    profile.active = userProfileShouldBeActive(profile);
+
+    // Insert the record
+    dbo.collection("userProfiles").insertOne(profile, function(err, res){
+      db.close();
+      if(err){
+        console.error("Error encountered while inserting user profile for '%s'", username);
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else {
+        console.log("Succesfully inserted user profile for '%s'", username);
+        // #TODO: Add to message something about whether the profile is active or not
+        return callback(true, "Your profile has successfully been created.");
+      }
+    });
+  });
+}
+
+// Check if a profile should be considered active i.e. searchable by other users
+userProfileShouldBeActive = function(profile){
+  // #TODO: This will be turned on based on all required fields having values
+  return false;
+}
+
+// Updates a users profile
+updateUserProfile = function(
+  username,
+  displayName,
+  aboutMe,
+  lookingToMeet,
+  callback
+){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Create profile object
+    profile = {
+      username: username,
+      displayName: displayName,
+      aboutMe: aboutMe,
+      lookingToMeet: lookingToMeet
+    };
+
+    // Determine whether profile should be considered activate
+    profile.active = userProfileShouldBeActive(profile);
+
+    // Update the profile to the input values
+    dbo.collection("userProfiles").updateOne({username: username}, {$set: profile}, function(err, result){
+      if(err){
+        console.error("Error encountered while trying to update user profile for '%s'", username);
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else {
+        console.log("Succesfully updated user profile for '%s'", username);
+        // #TODO: Add to message about whether profile is active or not
+        return callback(true, "Succesfully updated your profile.");
+      }
+    });
+  });
+}
+
+// Inserts or updates a users profile
+exports.saveUserProfile = saveUserProfile = function(
+  username,
+  displayName,
+  aboutMe,
+  lookingToMeet,
+  callback
+){
+  // Try to get the user profile
+  getUserProfile(username, function(profileFound, profile){
+    if(profileFound){
+      // Call update method if it exists
+      updateUserProfile(
+        username,
+        displayName,
+        aboutMe,
+        lookingToMeet,
+        function(success, message){
+        return callback(success, message);
+      });
+    } else {
+      // Call insert method if not
+      insertUserProfile(
+        username,
+        displayName,
+        aboutMe,
+        lookingToMeet,
+        function(success, message){
+        return callback(success, message);
+      });
+    }
+  });
+}

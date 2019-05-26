@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class UserService {
     username: string,
     password: string,
     callback: ((result: any) => void)
-  ) :  void{
+  ) : void{
     // Make the REST call
     this.http.post<any>(
       '/api/user/create_user',
@@ -46,7 +46,7 @@ export class UserService {
   public requestPasswordReset(
     email: string,
     callback: ((result: any) => void)
-  ) :  void{
+  ) : void{
     // Make the REST call
     this.http.post<any>('/api/user/request_password_reset', {email: email}).subscribe((res : any) => {
       // Send the results back to callback
@@ -60,7 +60,7 @@ export class UserService {
     newPassword: string,
     token: string,
     callback: ((result: any) => void)
-  ) :  void{
+  ) : void{
     // Make the REST call
     this.http.post<any>('/api/user/reset_password', {email: email, newPassword: newPassword, token: token}).subscribe((res : any) => {
       // Send the results back to callback
@@ -74,10 +74,41 @@ export class UserService {
     oldPassword: string,
     newPassword: string,
     callback: ((result: any) => void)
-  ) :  void{
+  ) : void{
     // Make the REST call
     this.http.post<any>('/api/user/change_password', {username: username, oldPassword: oldPassword, newPassword: newPassword}).subscribe((res : any) => {
       // Send the results back to callback
+      callback(res);
+    });
+  }
+
+  // Gets the user profile
+  public getUserProfile(
+    username: string,
+    callback: ((result: any) => void)
+  ) : void{
+    // Set up the parameters
+    var params = new HttpParams()
+      .set('username', username);
+
+    // Make the REST call
+    this.http.get<any>('/api/user/get_profile', {params}).subscribe((res: any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
+
+  // Saves the users profile
+  public saveUserProfile(
+    username: string,
+    displayName: string,
+    aboutMe: string,
+    lookingToMeet: string,
+    callback: ((result: any) => void)
+  ) : void{
+    // Make the REST call
+      // Send the results back to callback
+      this.http.post<any>('/api/user/save_profile', {username: username, displayName: displayName, aboutMe: aboutMe, lookingToMeet: lookingToMeet}).subscribe((res: any) => {
       callback(res);
     });
   }

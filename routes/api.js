@@ -17,7 +17,7 @@ module.exports = (function(){
 
   // Get blog posts for display
   api.get('/blog/get_posts', function(req, res){
-    console.log("getPosts called on BlogService");
+    console.log("api/blog/get_posts called");
 
     var input = {page: 1, postsPerPage: 3};
     if(req.query.page) input.page = parseInt(req.query.page);
@@ -323,6 +323,38 @@ module.exports = (function(){
       });
     });
   });
+
+  // Gets a user profile
+  api.get('/user/get_profile', function(req, res){
+    console.log('api/user/get_profile called');
+
+    var user = require("../modules/user.js");
+    user.getUserProfile(req.query.username, function(success, profile){
+      res.send({success: success, profile: profile});
+    });
+  });
+
+  // Saves a users profile
+  api.post('/user/save_profile', function(req, res){
+    console.log('api/user/save_profile called');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Request the password reset
+      var user = require("../modules/user.js");
+      user.saveUserProfile(
+        fields.username,
+        fields.displayName,
+        fields.aboutMe,
+        fields.lookingToMeet,
+        function(success, message){
+        res.send({success: success, message: message});
+      });
+    });    
+  });
+
   // api.get()
   return api;
 })();

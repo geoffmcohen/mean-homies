@@ -1,0 +1,12 @@
+.message{
+  color: red;
+  max-width: 300px;
+}
+
+.fullwidth{
+  width: 100%;
+}
+
+.smallwidth{
+  width: 400px;
+}
