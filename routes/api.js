@@ -161,6 +161,8 @@ module.exports = (function(){
 
   // Increments the page count for a page/component
   api.post('/increment_page_count', function(req, res){
+    console.log('api/increment_page_count called');
+
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files){
@@ -172,6 +174,8 @@ module.exports = (function(){
 
   // Gets the page Counts
   api.get('/admin/get_page_counts', function(req, res){
+    console.log('api/admin/get_page_counts called');
+
     var pageCounter = require('../modules/page-counter.js');
     pageCounter.getPageCounts(function(err, results){
       if (err) {
@@ -352,7 +356,7 @@ module.exports = (function(){
         function(success, message){
         res.send({success: success, message: message});
       });
-    });    
+    });
   });
 
   // api.get()
