@@ -1,0 +1,9 @@
+#!/bin/sh -e
+
+if [ "$BUILD_ENV" = "PROD" ]; then
+    echo "Building for production environment"
+    ng build --prod
+elif [ "$BUILD_ENV" = "QA" ]; then
+    echo "Building for QA environment"
+    ng build --prod
+fi
