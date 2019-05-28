@@ -7,5 +7,5 @@ if [ "$BUILD_ENV" = "PROD" ]; then
     ng build --prod
 elif [ "$BUILD_ENV" = "QA" ]; then
     echo "Building for QA environment"
-    ng build --prod
+    ng build -c qa
 fi
