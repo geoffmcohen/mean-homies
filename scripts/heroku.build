@@ -3,8 +3,8 @@
 echo "Running scripts/heroku.build script"
 echo "The current working directory: $PWD"
 
-cd ../
-rm $PWD/angular.json
+#cd ../
+#rm $PWD/angular.json
 
 if [ "$BUILD_ENV" = "PROD" ]; then
     echo "Building for production environment"
