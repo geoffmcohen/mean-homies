@@ -1,5 +1,9 @@
 #!/bin/sh -e
 
+echo "Running scripts/heroku.build script"
+
+cd ../
+
 if [ "$BUILD_ENV" = "PROD" ]; then
     echo "Building for production environment"
     ng build --prod
