@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 echo "Running scripts/heroku.build script"
+echo "The current working directory: $PWD"
 
 cd ../
 
