@@ -1,6 +1,6 @@
 .message{
   color: red;
-  max-width: 300px;
+  width: 100%;
 }
 
 .fullwidth{
@@ -9,4 +9,8 @@
 
 .smallwidth{
   width: 400px;
+}
+
+agm-map {
+    height: 350px;
 }

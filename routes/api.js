@@ -353,6 +353,12 @@ module.exports = (function(){
         fields.displayName,
         fields.aboutMe,
         fields.lookingToMeet,
+        fields.location,
+        fields.lat,
+        fields.lng,
+        fields.city,
+        fields.stateProvince,
+        fields.country,
         function(success, message){
         res.send({success: success, message: message});
       });

@@ -20,7 +20,8 @@ import {
   MatTabsModule,
   MatCheckboxModule
 } from '@angular/material';
-
+import { AgmCoreModule } from '@agm/core';
+import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminComponent } from './admin/admin.component';
@@ -99,7 +100,8 @@ import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavai
     MatPaginatorModule, // Not currently using
     MatToolbarModule,
     MatTabsModule, // Not currently using
-    MatCheckboxModule
+    MatCheckboxModule,
+    AgmCoreModule.forRoot({apiKey: environment.google_maps_key})
   ],
   providers: [],
   bootstrap: [AppComponent],

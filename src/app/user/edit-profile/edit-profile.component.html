@@ -8,7 +8,25 @@
       <mat-hint>Enter a name to display instead of your username (optional)</mat-hint>
     </mat-form-field>
     <br>
-    <!-- location here -->
+    <mat-form-field appearance="outline" class="smallwidth">
+      <mat-label>Location</mat-label>
+      <input matInput placeholder="Enter your location..." [formControl]="location" required>
+      <mat-hint>Enter your address or for privacy an address or landmark near you</mat-hint>
+    </mat-form-field>
+    &nbsp;
+    <button mat-raised-button (click)="findLocation()"><mat-icon>location_on</mat-icon> Find Me</button>
+    <br>
+    <mat-card *ngIf="locationError">
+      <div class='message'>{{locationError}}</div>
+    </mat-card>
+    <mat-card *ngIf="showMap">
+      <mat-card-title>Location Found: {{city}}, {{stateProvince}}, {{country}}</mat-card-title>
+      <agm-map [latitude]="lat" [longitude]="lng">
+        <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+      </agm-map>
+      <p>This will be the location used for location based searches. If it does not look correct try entering something else and hitting 'Find Me' again.  Your location will be displayed to other users as: {{city}}, {{stateProvince}}, {{country}}.</p>
+    </mat-card>
+    <br>
     <!-- profile picture here -->
     <mat-form-field appearance="outline" class="fullwidth">
       <mat-label>About Me</mat-label>
@@ -24,6 +42,6 @@
     <div class='message'>{{message}}</div>
   </mat-card>
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="saveProfile()">Save Profile</button>
+    <button mat-raised-button color="primary" (click)="saveProfile()"><mat-icon>save</mat-icon> Save Profile</button>
   </mat-card-actions>
 </mat-card>

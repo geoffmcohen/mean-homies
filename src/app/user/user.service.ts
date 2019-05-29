@@ -104,11 +104,28 @@ export class UserService {
     displayName: string,
     aboutMe: string,
     lookingToMeet: string,
+    location: string,
+    lat: number,
+    lng: number,
+    city: string,
+    stateProvince: string,
+    country: string,
     callback: ((result: any) => void)
   ) : void{
     // Make the REST call
       // Send the results back to callback
-      this.http.post<any>('/api/user/save_profile', {username: username, displayName: displayName, aboutMe: aboutMe, lookingToMeet: lookingToMeet}).subscribe((res: any) => {
+      this.http.post<any>('/api/user/save_profile', {
+        username: username,
+        displayName: displayName,
+        aboutMe: aboutMe,
+        lookingToMeet: lookingToMeet,
+        location: location,
+        lat: lat,
+        lng: lng,
+        city: city,
+        stateProvince: stateProvince,
+        country: country
+      }).subscribe((res: any) => {
       callback(res);
     });
   }

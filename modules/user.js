@@ -500,6 +500,12 @@ insertUserProfile = function(
   displayName,
   aboutMe,
   lookingToMeet,
+  location,
+  lat,
+  lng,
+  city,
+  stateProvince,
+  country,
   callback
 ){
   // Connect to the database
@@ -518,8 +524,20 @@ insertUserProfile = function(
       username: username,
       displayName: displayName,
       aboutMe: aboutMe,
-      lookingToMeet: lookingToMeet
+      lookingToMeet: lookingToMeet,
     };
+
+    // Add location information if it was provided
+    if(location){
+      profile.location = {
+        locationEntered: location,
+        lat: lat,
+        lng: lng,
+        city: city,
+        stateProvince: stateProvince,
+        country: country
+      }
+    }
 
     // Determine whether profile should be considered activate
     profile.active = userProfileShouldBeActive(profile);
@@ -533,8 +551,11 @@ insertUserProfile = function(
         return callback(false, serverErrorMessage);
       } else {
         console.log("Succesfully inserted user profile for '%s'", username);
-        // #TODO: Add to message something about whether the profile is active or not
-        return callback(true, "Your profile has successfully been created.");
+        if(profile.active){
+          return callback(true, "Your profile has successfully been created and is now active.");
+        } else {
+          return callback(true, "Your profile has successfully been created, but is not yet active. To activate, please enter data into all required fields.");
+        }
       }
     });
   });
@@ -542,8 +563,11 @@ insertUserProfile = function(
 
 // Check if a profile should be considered active i.e. searchable by other users
 userProfileShouldBeActive = function(profile){
-  // #TODO: This will be turned on based on all required fields having values
-  return false;
+  if(profile.location && profile.aboutMe && profile.lookingToMeet){
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // Updates a users profile
@@ -552,6 +576,12 @@ updateUserProfile = function(
   displayName,
   aboutMe,
   lookingToMeet,
+  location,
+  lat,
+  lng,
+  city,
+  stateProvince,
+  country,
   callback
 ){
   // Connect to the database
@@ -573,6 +603,18 @@ updateUserProfile = function(
       lookingToMeet: lookingToMeet
     };
 
+    // Add location information if it was provided
+    if(location){
+      profile.location = {
+        locationEntered: location,
+        lat: lat,
+        lng: lng,
+        city: city,
+        stateProvince: stateProvince,
+        country: country
+      }
+    }
+
     // Determine whether profile should be considered activate
     profile.active = userProfileShouldBeActive(profile);
 
@@ -584,8 +626,11 @@ updateUserProfile = function(
         return callback(false, serverErrorMessage);
       } else {
         console.log("Succesfully updated user profile for '%s'", username);
-        // #TODO: Add to message about whether profile is active or not
-        return callback(true, "Succesfully updated your profile.");
+        if(profile.active){
+          return callback(true, "Your profile has successfully updated and is now active.");
+        } else {
+          return callback(true, "Your profile has successfully been updated, but is not yet active. To activate, please enter data into all required fields.");
+        }
       }
     });
   });
@@ -597,6 +642,12 @@ exports.saveUserProfile = saveUserProfile = function(
   displayName,
   aboutMe,
   lookingToMeet,
+  location,
+  lat,
+  lng,
+  city,
+  stateProvince,
+  country,
   callback
 ){
   // Try to get the user profile
@@ -608,6 +659,12 @@ exports.saveUserProfile = saveUserProfile = function(
         displayName,
         aboutMe,
         lookingToMeet,
+        location,
+        lat,
+        lng,
+        city,
+        stateProvince,
+        country,
         function(success, message){
         return callback(success, message);
       });
@@ -618,6 +675,12 @@ exports.saveUserProfile = saveUserProfile = function(
         displayName,
         aboutMe,
         lookingToMeet,
+        location,
+        lat,
+        lng,
+        city,
+        stateProvince,
+        country,
         function(success, message){
         return callback(success, message);
       });
