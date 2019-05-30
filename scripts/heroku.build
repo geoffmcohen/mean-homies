@@ -7,7 +7,7 @@ echo "Creating the environment.ts file"
 node create_env.js
 
 # Fail build if create_env failed
-if [ $? ne- 0 ]; then
+if [ $? != 0 ]; then
   exit 1
 fi
 
