@@ -2,6 +2,16 @@
 
 echo "Running scripts/heroku.build script"
 
+# Create the environment.ts file with build env variables in it
+echo "Creating the environment.ts file"
+node create_env.js
+
+# Fail build if create_env failed
+if [[ $? != 0 ]]; then
+  exit 1
+fi
+
+# Now execute the build on the correct environment
 if [ "$BUILD_ENV" = "PROD" ]; then
     echo "Building for production environment"
     ng build --prod

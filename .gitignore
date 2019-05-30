@@ -47,3 +47,6 @@ Thumbs.db
 
 # Custom files
 scratch.js
+
+# We're going to dynamically create environments/environments.ts
+src/environments/environment.ts
