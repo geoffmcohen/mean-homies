@@ -1,4 +1,4 @@
-var fs = require('fs');
+var fs = require('fs-extra');
 var util = require('util');
 
 // Set production based on BUILD_ENV environment variable
@@ -30,7 +30,7 @@ export const environment = {
 );
 
 // Write the file
-fs.writeFile('./src/environments/environment.ts', content, function(err){
+fs.outputFile('./src/environments/environment.ts', content, function(err){
   if( err ){
     console.error("Unable to write environment file!!!");
     console.error(err);
