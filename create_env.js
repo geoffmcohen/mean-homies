@@ -13,7 +13,7 @@ var googleGeocoderKey = process.env.GOOGLE_GEOCODER_KEY || null;
 // Test to make sure keys are provided
 if (!googleMapsKey || !googleGeocoderKey){
   console.error("create_env.js: Missing required environnment variables!!!");
-  throw new Error("Missing required environnment variables!!!");
+  process.exit(1);
 }
 
 // Create the file content
@@ -34,7 +34,7 @@ fs.writeFile('./src/environments/environment.ts', content, function(err){
   if( err ){
     console.error("Unable to write environment file!!!");
     console.error(err);
-    throw err;
+    process.exit(1);
   }
-});
   console.log("Succesfully created /src/environments/environments.ts");
+});
