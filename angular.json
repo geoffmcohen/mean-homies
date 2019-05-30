@@ -34,6 +34,10 @@
                 {
                   "replace": "src/index.html",
                   "with": "src/index.prod.html"
+                },
+                {
+                  "replace": "src/app/app-routing.module.ts",
+                  "with": "src/app/app-routing.module.prod.ts"
                 }
               ],
               "optimization": true,
