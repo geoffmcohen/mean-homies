@@ -8,10 +8,10 @@
       <mat-hint>Enter a name to display instead of your username (optional)</mat-hint>
     </mat-form-field>
     <br>
-    <mat-form-field appearance="outline" class="smallwidth">
+    <mat-form-field appearance="outline" class="smallwidth" [matTooltip]="locationTooltipText">
       <mat-label>Location</mat-label>
       <input matInput placeholder="Enter your location..." [formControl]="location" required>
-      <mat-hint>Enter your address or for privacy an address or landmark near you</mat-hint>
+      <mat-hint>For privacy, it is recommended that you do not enter your exact home address.</mat-hint>
     </mat-form-field>
     &nbsp;
     <button mat-raised-button (click)="findLocation()"><mat-icon>location_on</mat-icon> Find Me</button>

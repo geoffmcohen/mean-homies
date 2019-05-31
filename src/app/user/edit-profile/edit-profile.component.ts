@@ -30,6 +30,8 @@ export class EditProfileComponent implements OnInit {
   aboutMe = new FormControl('', []);
   lookingToMeet = new FormControl('', []);
 
+  public locationTooltipText: string = `Instead of your home address, you can enter in the name or address of a local business in your neighborhood like "Erewhon Venice Beach", the name of a local landmark like "Brooklyn Borough Hall" or a combination of your city, state/province and country like "San Francisco, California, USA".`;
+
   constructor(
     private authService: AuthenticationService,
     private userService: UserService,
@@ -172,11 +174,11 @@ export class EditProfileComponent implements OnInit {
           foundLocation.address_components.forEach((ac) => {
             ac.types.forEach((act) => {
               if(act == "locality" || act == "sublocality"){
-                this.city = ac.short_name;
+                this.city = ac.long_name;
               } else if (act == "administrative_area_level_1"){
                 this.stateProvince = ac.short_name;
               } else if (act == "country"){
-                this.country = ac.long_name;
+                this.country = ac.short_name;
               }
             });
           });

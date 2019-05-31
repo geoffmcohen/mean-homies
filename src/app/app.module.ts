@@ -18,7 +18,8 @@ import {
   MatPaginatorModule,
   MatToolbarModule,
   MatTabsModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatTooltipModule
 } from '@angular/material';
 import { AgmCoreModule } from '@agm/core';
 import { environment } from '../environments/environment';
@@ -101,6 +102,7 @@ import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavai
     MatToolbarModule,
     MatTabsModule, // Not currently using
     MatCheckboxModule,
+    MatTooltipModule,
     AgmCoreModule.forRoot({apiKey: environment.google_maps_key})
   ],
   providers: [],
