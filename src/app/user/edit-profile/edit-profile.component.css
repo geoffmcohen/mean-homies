@@ -3,14 +3,23 @@
   width: 100%;
 }
 
-.fullwidth{
+.full-width{
   width: 100%;
 }
 
-.smallwidth{
-  width: 400px;
+.small-width{
+  width: 50%;
+}
+
+.medium-width{
+  width: 75%;
 }
 
 agm-map {
-    height: 350px;
+  height: 350px;
+}
+
+.profile-pic{
+  height: 250px;
+  width: 250px;
 }

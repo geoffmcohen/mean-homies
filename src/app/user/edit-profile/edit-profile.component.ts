@@ -6,6 +6,7 @@ import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../user.service';
 import { MapsService } from '../../maps/maps.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
+import { PictureUploadDialogComponent } from '../picture-upload-dialog/picture-upload-dialog.component';
 
 @Component({
   selector: 'app-edit-profile',
@@ -23,7 +24,9 @@ export class EditProfileComponent implements OnInit {
   public country: string;
   public locationError: string;
   public showMap: boolean;
+  public profileImage: string;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
+  private picUploadDialogRef: MatDialogRef<PictureUploadDialogComponent>;
 
   displayName = new FormControl('', []);
   location = new FormControl('', []);
@@ -71,6 +74,9 @@ export class EditProfileComponent implements OnInit {
           }
         }
       });
+
+      // Get profile image
+      this.loadProfilePicture();
     }
   }
 
@@ -204,5 +210,34 @@ export class EditProfileComponent implements OnInit {
     this.stateProvince = null;
     this.country = null;
     this.locationError = null;
+  }
+
+  // Brings up dialog to upload a profile image
+  showPictureUploadDialog(){
+    // Create the picture upload dialog
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+
+    // Show the picture upload dialog
+    this.picUploadDialogRef = this.dialog.open(PictureUploadDialogComponent, dialogConfig);
+
+    // Handle action after user uploads image
+    this.picUploadDialogRef.afterClosed().subscribe(imageChanged => {
+        // If the user has uploaded a new photo, lets show it on the page
+        if(imageChanged){
+          this.loadProfilePicture();
+        }
+    });
+  }
+
+  // Loads the profile picture from the database
+  loadProfilePicture(){
+    // Default the users profile picture if not loaded
+    if (!this.profileImage) this.profileImage = '../../../assets/images/default profile.gif';
+
+    // Try to get the users profile picture from the database
+    this.userService.getUserProfilePicture(this.loggedInUser, (res : any) => {
+      if(res.success) this.profileImage = res.imageUrl;
+    });
   }
 }

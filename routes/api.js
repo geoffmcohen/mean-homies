@@ -127,7 +127,7 @@ module.exports = (function(){
 
     // Once all of the fields are consumed now we do the real work
     form.on('end', function(){
-      // Check to make sure adminUser and adminToken were providedIn
+      // Check to make sure adminUser and adminToken were provided
       if (!adminUser || !adminToken){
         res.send({success: false, message: 'Missing parameters for adminUser and/or adminToken'})
       } else {
@@ -364,6 +364,55 @@ module.exports = (function(){
       });
     });
   });
+
+  // Gets a user profile picture
+  api.get('/user/get_profile_picture', function(req, res){
+    console.log('api/user/get_profile_picture called');
+
+    var user = require("../modules/user.js");
+    user.getUserProfilePicture(req.query.username, function(success, imageUrl){
+      res.send({success: success, imageUrl: imageUrl});
+    });
+  });
+
+  // Uploads the users profile picture
+  api.post('/user/upload_profile_picture', function(req, res){
+    console.log('api/user/upload_profile_picture called');
+
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    var username = null;
+    var imageFile = null;
+
+    // Set the file path for the image file
+    form.on('file', function(field, file){
+      if(file.size > 0) imageFile = file.path;
+    });
+
+    // Get the username
+    form.on('field', function(field, value){
+      if(field == 'username') {
+        username = value;
+      }
+    });
+
+    // Once all of the fields are consumed now we do the real work
+    form.on('end', function(){
+      // Check to make sure username and imageFile were provided
+      if (!username || !imageFile){
+        res.send({success: false, message: 'Missing parameters for username and/or imageFile'})
+      } else {
+        var user = require("../modules/user.js");
+        user.uploadUserProfilePicture(username, imageFile, function(success, message){
+          res.send({success: true, message: message});
+        });
+      }
+    });
+
+    // Parse the form to kick off the processing
+    form.parse(req);
+  });
+
 
   // api.get()
   return api;

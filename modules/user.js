@@ -463,6 +463,7 @@ exports.changePassword = function(username, oldPassword, newPassword, callback){
 }
 
 // Gets a users profile if one exists
+// #TODO: Add token verification - username doesn't have to match token
 exports.getUserProfile = getUserProfile = function(username, callback){
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
@@ -637,6 +638,7 @@ updateUserProfile = function(
 }
 
 // Inserts or updates a users profile
+// #TODO: Add token verification - username must match token
 exports.saveUserProfile = saveUserProfile = function(
   username,
   displayName,
@@ -685,5 +687,135 @@ exports.saveUserProfile = saveUserProfile = function(
         return callback(success, message);
       });
     }
+  });
+}
+
+// Uploads an image file and sets it as the users image
+// #TODO: Add token verification - username must match token
+exports.uploadUserProfilePicture = function(username, imageFile, callback){
+  console.log("Uploading new profile image for '%s'...", username);
+
+  // Upload the new user image to cloudinary
+  var cloudinary = require('cloudinary');
+  cloudinary.v2.uploader.upload(imageFile, {folder: "user/" + username}, function(err, uploadResult){
+    if(err){
+      console.error("User profile image failed to upload to cloudinary");
+      console.error(err);
+      return callback(false, serverErrorMessage);
+    } else {
+      console.log("User profile picture uploaded to '%s'", uploadResult.url);
+
+      // Update or insert the users profile image url to the database depending on whether user has one already
+      getUserProfilePicture(username, function(imageFound, oldImageUrl){
+        if(imageFound){
+          updateUserProfilePicture(username, oldImageUrl, uploadResult.url, function(success, message){
+            return callback(success, message);
+          });
+        } else {
+          insertUserProfilePicture(username, uploadResult.url, function(success, message){
+            return callback(success, message);
+          });
+        }
+      });
+    }
+  });
+}
+
+// Gets a users profile image
+// #TODO: Add token verification - username doesn't have to match token
+exports.getUserProfilePicture = getUserProfilePicture = function(username, callback){
+  console.log("Retrieving profile image for '%s'...", username);
+
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Perform the search
+    dbo.collection("userImages").findOne({username: username}, function(err, record){
+      db.close();
+      if(err){
+        // If there is an error throw so we don't end up inserting duplicates
+        console.error("Error occurred while trying to get profile picture  for '%s'", username);
+        console.error(err);
+        throw err;
+      } else if (record == null) {
+        console.log("No profile picture found for user '%s'", username);
+        return callback(false, null);
+      } else {
+        console.log("Profile picture found for user '%s'", username);
+        return callback(true, record.imageUrl);
+      }
+    });
+  });
+}
+
+// Updates the users profile image url and removes old image from cloudinary
+updateUserProfilePicture = function(username, oldImageUrl, newImageUrl, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+    dbo.collection("userImages").updateOne({username: username}, {$set: {imageUrl: newImageUrl}}, function(err, updateResult){
+      db.close();
+      if(err){
+        console.error("Error occurred while trying to update user profile picture for '%s'", username);
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else {
+        // Remove old image from cloudinary
+        var cloudinary = require('cloudinary');
+        cloudinary.v2.uploader.destroy(oldImageUrl, function(err, destroyResult){
+          if(err){
+            console.error("Unable to delete user image '%s'", oldImageUrl);
+            console.erorr(err);
+          } else {
+            console.log("Succesfully deleted user image '%s'", oldImageUrl);
+          }
+        });
+
+        console.log("Succesfully uploaded new profile picture for '%s'", username);
+        return callback(true, "Your profile picture has been successfully upldated.");
+      }
+    });
+  });
+
+}
+
+// Inserts the users profile image url
+insertUserProfilePicture = function(username, imageUrl, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+    dbo.collection("userImages").insertOne({username: username, imageUrl: imageUrl}, function(err, insertResult){
+      db.close();
+      if(err){
+        console.error("Unable to insert user profile image '%s'", imageUrl);
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else {
+        console.log("Succesfully inserted user profile image for user '%s'", username);
+        return callback(true, "Your profile picture has been successfully uploaded.");
+      }
+    });
   });
 }

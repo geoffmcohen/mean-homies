@@ -75,7 +75,7 @@ export class LoginDialogComponent implements OnInit {
 
   // Show password reset dialog
   showPasswordResetDialog(){
-    // Create the loading dialog
+    // Create the password reset dialog
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 

@@ -50,6 +50,7 @@ import { FaqComponent } from './home/faq/faq.component';
 import { DefaultComponent } from './home/default/default.component';
 import { EditProfileComponent } from './user/edit-profile/edit-profile.component';
 import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavailable-feature.component';
+import { PictureUploadDialogComponent } from './user/picture-upload-dialog/picture-upload-dialog.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavai
     FaqComponent,
     DefaultComponent,
     EditProfileComponent,
-    UnavailableFeatureComponent
+    UnavailableFeatureComponent,
+    PictureUploadDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -114,7 +116,8 @@ import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavai
     SignupDialogComponent,
     ResetPasswordDialogComponent,
     UserAgreementDialogComponent,
-    ChangePasswordDialogComponent
+    ChangePasswordDialogComponent,
+    PictureUploadDialogComponent
   ]
 })
 export class AppModule { }

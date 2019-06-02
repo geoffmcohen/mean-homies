@@ -29,7 +29,6 @@ export class BlogService {
     blogPostTitle: string,
     blogPostBody: string,
     blogImage: File,
-    // Need to add the file somehow
     callback: ((result: any) => void)
   ): void{
     // Create form data to hold parameters

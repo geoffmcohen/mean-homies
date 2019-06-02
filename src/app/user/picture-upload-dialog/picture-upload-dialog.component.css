@@ -1,0 +1,17 @@
+.picture-upload-dialog{
+  width: 400px;
+}
+
+mat-form-field{
+  width: 100%;
+}
+
+.message{
+  color: red;
+  width: 100%;
+}
+
+.hidden{
+  /*visibility: hidden;*/
+  display: none;
+}

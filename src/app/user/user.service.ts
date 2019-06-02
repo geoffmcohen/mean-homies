@@ -129,4 +129,37 @@ export class UserService {
       callback(res);
     });
   }
+
+  // Gets the users profile picture
+  public getUserProfilePicture(
+    username: string,
+    callback: ((result: any) => void)
+  ) : void{
+    // Set up the parameters
+    var params = new HttpParams()
+      .set('username', username);
+
+    // Make the REST call
+    this.http.get<any>('/api/user/get_profile_picture', {params}).subscribe((res: any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
+
+  // Uploads the users profile picture
+  public uploadUserProfilePicture(
+    username: string,
+    imageFile: File,
+    callback: ((result: any) => void)
+  ) : void{
+    // Create form data to hold parameters
+    var formData = new FormData();
+    formData.append('username', username);
+    formData.append('imageFile', imageFile, imageFile.name);
+
+    // Make the rest call to upload the profile picture
+    this.http.post<any>('api/user/upload_profile_picture', formData).subscribe((res : any) => {
+      callback(res);
+    });
+  }
 }
