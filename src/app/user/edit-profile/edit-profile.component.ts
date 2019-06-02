@@ -49,34 +49,7 @@ export class EditProfileComponent implements OnInit {
 
     // If logged in, get and set the existing values
     if(this.loggedIn){
-      // Show loading dialog
-      this.showLoadingDialog();
-
-      this.userService.getUserProfile(this.loggedInUser, (res : any) => {
-        // Hide loading dialog
-        this.closeLoadingDialog();
-
-        // If a profile exists, set the form values
-        if(res.success){
-          this.displayName.setValue(res.profile.displayName);
-          this.aboutMe.setValue(res.profile.aboutMe);
-          this.lookingToMeet.setValue(res.profile.lookingToMeet);
-
-          // If we have the location display it
-          if(res.profile.location){
-            this.location.setValue(res.profile.location.locationEntered);
-            this.lat = res.profile.location.lat;
-            this.lng = res.profile.location.lng;
-            this.city = res.profile.location.city;
-            this.stateProvince = res.profile.location.stateProvince;
-            this.country = res.profile.location.country;
-            this.showMap = true;
-          }
-        }
-      });
-
-      // Get profile image
-      this.loadProfilePicture();
+      this.loadProfile();
     }
   }
 
@@ -92,11 +65,48 @@ export class EditProfileComponent implements OnInit {
     this.authService.userLoginChange.subscribe(loggedIn => {
       this.loggedIn = loggedIn;
       if(this.loggedIn){
+        // Get the user that was logged in
         this.loggedInUser = this.authService.getUser();
+
+        // Load the users profile
+        this.loadProfile();
       } else {
         this.loggedInUser = null;
+        this.clearFields();
       }
     });
+  }
+
+  // Gets the values from the database and sets all of the input values
+  loadProfile(){
+    // Show loading dialog
+    this.showLoadingDialog();
+
+    this.userService.getUserProfile(this.loggedInUser, (res : any) => {
+      // Hide loading dialog
+      this.closeLoadingDialog();
+
+      // If a profile exists, set the form values
+      if(res.success){
+        this.displayName.setValue(res.profile.displayName);
+        this.aboutMe.setValue(res.profile.aboutMe);
+        this.lookingToMeet.setValue(res.profile.lookingToMeet);
+
+        // If we have the location display it
+        if(res.profile.location){
+          this.location.setValue(res.profile.location.locationEntered);
+          this.lat = res.profile.location.lat;
+          this.lng = res.profile.location.lng;
+          this.city = res.profile.location.city;
+          this.stateProvince = res.profile.location.stateProvince;
+          this.country = res.profile.location.country;
+          this.showMap = true;
+        }
+      }
+    });
+
+    // Get profile image
+    this.loadProfilePicture();
   }
 
   // Displays a loading dialog
@@ -210,6 +220,17 @@ export class EditProfileComponent implements OnInit {
     this.stateProvince = null;
     this.country = null;
     this.locationError = null;
+    this.showMap = false;
+  }
+
+  // Clears all of the fields in the form
+  clearFields(){
+    this.displayName.setValue(null);
+    this.location.setValue(null);
+    this.aboutMe.setValue(null);
+    this.lookingToMeet.setValue(null);
+    this.clearLocationFields();
+    this.profileImage = null;
   }
 
   // Brings up dialog to upload a profile image
