@@ -63,7 +63,11 @@ export class PictureUploadDialogComponent implements OnInit {
       this.showLoadingDialog();
 
       // Make service call to upload
-      this.userService.uploadUserProfilePicture(this.authService.getUser(), this.imageFile, (res : any) => {
+      this.userService.uploadUserProfilePicture(
+        this.authService.getUserToken(),
+        this.authService.getUser(),
+        this.imageFile,
+        (res : any) => {
         // Hide loading dialog
         this.closeLoadingDialog();
         this.message = null;

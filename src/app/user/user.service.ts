@@ -84,11 +84,13 @@ export class UserService {
 
   // Gets the user profile
   public getUserProfile(
+    token: string,
     username: string,
     callback: ((result: any) => void)
   ) : void{
     // Set up the parameters
     var params = new HttpParams()
+      .set('token', token)
       .set('username', username);
 
     // Make the REST call
@@ -100,6 +102,7 @@ export class UserService {
 
   // Saves the users profile
   public saveUserProfile(
+    token: string,
     username: string,
     displayName: string,
     aboutMe: string,
@@ -115,6 +118,7 @@ export class UserService {
     // Make the REST call
       // Send the results back to callback
       this.http.post<any>('/api/user/save_profile', {
+        token: token,
         username: username,
         displayName: displayName,
         aboutMe: aboutMe,
@@ -132,11 +136,13 @@ export class UserService {
 
   // Gets the users profile picture
   public getUserProfilePicture(
+    token: string,
     username: string,
     callback: ((result: any) => void)
   ) : void{
     // Set up the parameters
     var params = new HttpParams()
+      .set('token', token)
       .set('username', username);
 
     // Make the REST call
@@ -148,12 +154,14 @@ export class UserService {
 
   // Uploads the users profile picture
   public uploadUserProfilePicture(
+    token: string,
     username: string,
     imageFile: File,
     callback: ((result: any) => void)
   ) : void{
     // Create form data to hold parameters
     var formData = new FormData();
+    formData.append('token', token);
     formData.append('username', username);
     formData.append('imageFile', imageFile, imageFile.name);
 

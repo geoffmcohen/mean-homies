@@ -71,10 +71,10 @@ exports.verifyUser = function(token, username, userType, callback){
     if(err){
       callback(err, false);
     } else {
-      // Ensure username and userType match token data
-      if(decoded.username != username) {
+      // Ensure username and userType match token data if provided
+      if(username && decoded.username != username) {
         callback(new Error('Wrong user for token'), false);
-      } else if (decoded.userType != userType) {
+      } else if (userType && decoded.userType != userType) {
         callback(new Error('Wrong userType for token'), false);
       } else {
         callback(null, true);

@@ -82,7 +82,7 @@ export class EditProfileComponent implements OnInit {
     // Show loading dialog
     this.showLoadingDialog();
 
-    this.userService.getUserProfile(this.loggedInUser, (res : any) => {
+    this.userService.getUserProfile(this.authService.getUserToken(), this.loggedInUser, (res : any) => {
       // Hide loading dialog
       this.closeLoadingDialog();
 
@@ -136,6 +136,7 @@ export class EditProfileComponent implements OnInit {
 
       // Make the call to the user service to save the profile
       this.userService.saveUserProfile(
+        this.authService.getUserToken(),
         this.loggedInUser,
         this.displayName.value,
         this.aboutMe.value,
@@ -257,7 +258,7 @@ export class EditProfileComponent implements OnInit {
     if (!this.profileImage) this.profileImage = '../../../assets/images/default profile.gif';
 
     // Try to get the users profile picture from the database
-    this.userService.getUserProfilePicture(this.loggedInUser, (res : any) => {
+    this.userService.getUserProfilePicture(this.authService.getUserToken(), this.loggedInUser, (res : any) => {
       if(res.success) this.profileImage = res.imageUrl;
     });
   }

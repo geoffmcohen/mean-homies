@@ -333,7 +333,7 @@ module.exports = (function(){
     console.log('api/user/get_profile called');
 
     var user = require("../modules/user.js");
-    user.getUserProfile(req.query.username, function(success, profile){
+    user.getUserProfile(req.query.token, req.query.username, function(success, profile){
       res.send({success: success, profile: profile});
     });
   });
@@ -349,6 +349,7 @@ module.exports = (function(){
       // Request the password reset
       var user = require("../modules/user.js");
       user.saveUserProfile(
+        fields.token,
         fields.username,
         fields.displayName,
         fields.aboutMe,
@@ -370,7 +371,7 @@ module.exports = (function(){
     console.log('api/user/get_profile_picture called');
 
     var user = require("../modules/user.js");
-    user.getUserProfilePicture(req.query.username, function(success, imageUrl){
+    user.getUserProfilePicture(req.query.token, req.query.username, function(success, imageUrl){
       res.send({success: success, imageUrl: imageUrl});
     });
   });
@@ -382,6 +383,7 @@ module.exports = (function(){
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
     var username = null;
+    var token = null;
     var imageFile = null;
 
     // Set the file path for the image file
@@ -393,17 +395,19 @@ module.exports = (function(){
     form.on('field', function(field, value){
       if(field == 'username') {
         username = value;
+      } else if (field == 'token') {
+        token = value;
       }
     });
 
     // Once all of the fields are consumed now we do the real work
     form.on('end', function(){
       // Check to make sure username and imageFile were provided
-      if (!username || !imageFile){
-        res.send({success: false, message: 'Missing parameters for username and/or imageFile'})
+      if (!token || !username || !imageFile){
+        res.send({success: false, message: 'Missing parameters for token, username and/or imageFile'})
       } else {
         var user = require("../modules/user.js");
-        user.uploadUserProfilePicture(username, imageFile, function(success, message){
+        user.uploadUserProfilePicture(token, username, imageFile, function(success, message){
           res.send({success: true, message: message});
         });
       }

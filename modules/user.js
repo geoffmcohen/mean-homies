@@ -1,5 +1,6 @@
 // Error message to return if something goes wrong on the server side
 const serverErrorMessage = "Server error occurred, please contact geoff@veganhomies.com if you continue to encounter this issue.";
+const invalidTokenMessage = "Invalid user token provided. Please log out and back in and try again.";
 
 // Checks the user collection to see if a user already exists with the username
 exports.checkIfUsernameIsTaken = checkIfUsernameIsTaken = function(username, callback){
@@ -463,35 +464,43 @@ exports.changePassword = function(username, oldPassword, newPassword, callback){
 }
 
 // Gets a users profile if one exists
-// #TODO: Add token verification - username doesn't have to match token
-exports.getUserProfile = getUserProfile = function(username, callback){
-  // Connect to the database
-  var MongoClient = require('mongodb').MongoClient;
-  var mongoURI = process.env.MONGOLAB_URI;
-  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
-    // Throw error if unable to connect
-    if(err){
-      console.log("Unable to connect to MongoDB!!!");
-      throw err;
-    }
-    var dbo = db.db();
+exports.getUserProfile = getUserProfile = function(token, username, callback){
+  // Check to make sure a user token is valid
+  require('./auth.js').verifyUser(token, null, null, function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      // Connect to the database
+      var MongoClient = require('mongodb').MongoClient;
+      var mongoURI = process.env.MONGOLAB_URI;
+      MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+        // Throw error if unable to connect
+        if(err){
+          console.log("Unable to connect to MongoDB!!!");
+          throw err;
+        }
+        var dbo = db.db();
 
-    // Perform the search
-    dbo.collection("userProfiles").findOne({username: username}, function(err, profile){
-      db.close();
-      if(err){
-        // If there is an error throw so we don't end up inserting duplicates
-        console.error("Error occurred while trying to get profile for '%s'", username);
-        console.error(err);
-        throw err;
-      } else if (profile == null) {
-        console.log("No profile found for user '%s'", username);
-        return callback(false, null);
-      } else {
-        console.log("Profile found for user '%s'", username);
-        return callback(true, profile);
-      }
-    });
+        // Perform the search
+        dbo.collection("userProfiles").findOne({username: username}, function(err, profile){
+          db.close();
+          if(err){
+            // If there is an error throw so we don't end up inserting duplicates
+            console.error("Error occurred while trying to get profile for '%s'", username);
+            console.error(err);
+            throw err;
+          } else if (profile == null) {
+            console.log("No profile found for user '%s'", username);
+            return callback(false, null);
+          } else {
+            console.log("Profile found for user '%s'", username);
+            return callback(true, profile);
+          }
+        });
+      });
+    }
   });
 }
 
@@ -638,8 +647,8 @@ updateUserProfile = function(
 }
 
 // Inserts or updates a users profile
-// #TODO: Add token verification - username must match token
 exports.saveUserProfile = saveUserProfile = function(
+  token,
   username,
   displayName,
   aboutMe,
@@ -652,67 +661,45 @@ exports.saveUserProfile = saveUserProfile = function(
   country,
   callback
 ){
-  // Try to get the user profile
-  getUserProfile(username, function(profileFound, profile){
-    if(profileFound){
-      // Call update method if it exists
-      updateUserProfile(
-        username,
-        displayName,
-        aboutMe,
-        lookingToMeet,
-        location,
-        lat,
-        lng,
-        city,
-        stateProvince,
-        country,
-        function(success, message){
-        return callback(success, message);
-      });
-    } else {
-      // Call insert method if not
-      insertUserProfile(
-        username,
-        displayName,
-        aboutMe,
-        lookingToMeet,
-        location,
-        lat,
-        lng,
-        city,
-        stateProvince,
-        country,
-        function(success, message){
-        return callback(success, message);
-      });
-    }
-  });
-}
-
-// Uploads an image file and sets it as the users image
-// #TODO: Add token verification - username must match token
-exports.uploadUserProfilePicture = function(username, imageFile, callback){
-  console.log("Uploading new profile image for '%s'...", username);
-
-  // Upload the new user image to cloudinary
-  var cloudinary = require('cloudinary');
-  cloudinary.v2.uploader.upload(imageFile, {folder: "user/" + username}, function(err, uploadResult){
-    if(err){
-      console.error("User profile image failed to upload to cloudinary");
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
       console.error(err);
-      return callback(false, serverErrorMessage);
+      return callback(false, invalidTokenMessage);
     } else {
-      console.log("User profile picture uploaded to '%s'", uploadResult.url);
-
-      // Update or insert the users profile image url to the database depending on whether user has one already
-      getUserProfilePicture(username, function(imageFound, oldImageUrl){
-        if(imageFound){
-          updateUserProfilePicture(username, oldImageUrl, uploadResult.url, function(success, message){
+      // Try to get the user profile
+      getUserProfile(token, username, function(profileFound, profile){
+        if(profileFound){
+          // Call update method if it exists
+          updateUserProfile(
+            username,
+            displayName,
+            aboutMe,
+            lookingToMeet,
+            location,
+            lat,
+            lng,
+            city,
+            stateProvince,
+            country,
+            function(success, message){
             return callback(success, message);
           });
         } else {
-          insertUserProfilePicture(username, uploadResult.url, function(success, message){
+          // Call insert method if not
+          insertUserProfile(
+            username,
+            displayName,
+            aboutMe,
+            lookingToMeet,
+            location,
+            lat,
+            lng,
+            city,
+            stateProvince,
+            country,
+            function(success, message){
             return callback(success, message);
           });
         }
@@ -721,38 +708,85 @@ exports.uploadUserProfilePicture = function(username, imageFile, callback){
   });
 }
 
+// Uploads an image file and sets it as the users image
+exports.uploadUserProfilePicture = function(token, username, imageFile, callback){
+  console.log("Uploading new profile image for '%s'...", username);
+
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, invalidTokenMessage);
+    } else {
+      // Upload the new user image to cloudinary
+      var cloudinary = require('cloudinary');
+      cloudinary.v2.uploader.upload(imageFile, {folder: "user/" + username}, function(err, uploadResult){
+        if(err){
+          console.error("User profile image failed to upload to cloudinary");
+          console.error(err);
+          return callback(false, serverErrorMessage);
+        } else {
+          console.log("User profile picture uploaded to '%s'", uploadResult.url);
+
+          // Update or insert the users profile image url to the database depending on whether user has one already
+          getUserProfilePicture(token, username, function(imageFound, oldImageUrl){
+            if(imageFound){
+              updateUserProfilePicture(username, oldImageUrl, uploadResult.url, function(success, message){
+                return callback(success, message);
+              });
+            } else {
+              insertUserProfilePicture(username, uploadResult.url, function(success, message){
+                return callback(success, message);
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+}
+
 // Gets a users profile image
-// #TODO: Add token verification - username doesn't have to match token
-exports.getUserProfilePicture = getUserProfilePicture = function(username, callback){
+exports.getUserProfilePicture = getUserProfilePicture = function(token, username, callback){
   console.log("Retrieving profile image for '%s'...", username);
 
-  // Connect to the database
-  var MongoClient = require('mongodb').MongoClient;
-  var mongoURI = process.env.MONGOLAB_URI;
-  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
-    // Throw error if unable to connect
-    if(err){
-      console.log("Unable to connect to MongoDB!!!");
-      throw err;
-    }
-    var dbo = db.db();
+  // Check to make sure a user token is valid
+  require('./auth.js').verifyUser(token, null, null, function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      // Connect to the database
+      var MongoClient = require('mongodb').MongoClient;
+      var mongoURI = process.env.MONGOLAB_URI;
+      MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+        // Throw error if unable to connect
+        if(err){
+          console.log("Unable to connect to MongoDB!!!");
+          throw err;
+        }
+        var dbo = db.db();
 
-    // Perform the search
-    dbo.collection("userImages").findOne({username: username}, function(err, record){
-      db.close();
-      if(err){
-        // If there is an error throw so we don't end up inserting duplicates
-        console.error("Error occurred while trying to get profile picture  for '%s'", username);
-        console.error(err);
-        throw err;
-      } else if (record == null) {
-        console.log("No profile picture found for user '%s'", username);
-        return callback(false, null);
-      } else {
-        console.log("Profile picture found for user '%s'", username);
-        return callback(true, record.imageUrl);
-      }
-    });
+        // Perform the search
+        dbo.collection("userImages").findOne({username: username}, function(err, record){
+          db.close();
+          if(err){
+            // If there is an error throw so we don't end up inserting duplicates
+            console.error("Error occurred while trying to get profile picture  for '%s'", username);
+            console.error(err);
+            throw err;
+          } else if (record == null) {
+            console.log("No profile picture found for user '%s'", username);
+            return callback(false, null);
+          } else {
+            console.log("Profile picture found for user '%s'", username);
+            return callback(true, record.imageUrl);
+          }
+        });
+      });
+    }
   });
 }
 
