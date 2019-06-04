@@ -417,6 +417,25 @@ module.exports = (function(){
     form.parse(req);
   });
 
+  // Gets user profiles near the user
+  api.get('/search/get_users_near_user', function(req, res){
+    console.log('api/search/get_users_near_user');
+
+    var search = require("../modules/search.js");
+    search.searchForUsersNearUser(req.query.token, req.query.username, req.query.radius, req.query.useMiles, function(message, nearbyProfiles){
+      res.send({message: message, nearbyProfiles: nearbyProfiles});
+    });
+  });
+
+  // Gets user profiles near a user input location
+  api.get('/search/get_users_near_location', function(req, res){
+    console.log('api/search/get_users_near_location');
+
+    var search = require("../modules/search.js");
+    search.searchForUsersNearLocation(req.query.token, req.query.username, req.query.location, req.query.radius, req.query.useMiles, function(message, nearbyProfiles){
+      res.send({message: message, nearbyProfiles: nearbyProfiles});
+    });
+  });
 
   // api.get()
   return api;
