@@ -51,6 +51,7 @@ import { DefaultComponent } from './home/default/default.component';
 import { EditProfileComponent } from './user/edit-profile/edit-profile.component';
 import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavailable-feature.component';
 import { PictureUploadDialogComponent } from './user/picture-upload-dialog/picture-upload-dialog.component';
+import { SearchComponent } from './search/search/search.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { PictureUploadDialogComponent } from './user/picture-upload-dialog/pictu
     DefaultComponent,
     EditProfileComponent,
     UnavailableFeatureComponent,
-    PictureUploadDialogComponent
+    PictureUploadDialogComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

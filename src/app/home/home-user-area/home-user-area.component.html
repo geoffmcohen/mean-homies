@@ -2,7 +2,12 @@
   <!--<mat-icon>account_circle</mat-icon>-->
   {{loggedInUser}}
   <!-- <button mat-icon-button [matMenuTriggerFor]="usermenu"><mat-icon>more_vert</mat-icon></button>-->
+  <button mat-icon-button [routerLink]="['search']"><mat-icon>search</mat-icon></button>
+  <button mat-icon-button><mat-icon>people</mat-icon></button>
+  <button mat-icon-button><mat-icon>message</mat-icon></button>
   <button mat-icon-button [matMenuTriggerFor]="usermenu"><mat-icon>account_circle</mat-icon></button>
+
+
 </span>
 <span *ngIf="!loggedIn">
   <button mat-button (click)="showLoginDialog()">Login</button>

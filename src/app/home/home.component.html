@@ -9,7 +9,7 @@
 </div>
 
 <mat-menu #mainmenu="matMenu">
-  <button mat-menu-item *ngIf="loggedIn" disabled>Homie Search</button>
+  <button mat-menu-item *ngIf="loggedIn" [routerLink]="['search']">Homie Search</button>
   <button mat-menu-item *ngIf="loggedIn" disabled>My Homies</button>
   <button mat-menu-item *ngIf="loggedIn" disabled>Messages</button>
   <button mat-menu-item [routerLink]="['about']">About</button>
