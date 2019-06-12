@@ -1,0 +1,17 @@
+.mat-select.unit-select{
+  width: 75px;
+}
+
+.mat-form-field.distance{
+  width: 50px;
+  text-align: right;
+}
+
+.mat-form-field.distance-unit{
+  width: 50px;
+}
+
+.message{
+  color: red;
+  width: 100%;
+}

@@ -1,3 +1,49 @@
-<p>
-  search works!
-</p>
+<app-unavailable-feature *ngIf="!loggedIn"></app-unavailable-feature>
+<mat-card *ngIf="loggedIn">
+  <mat-card-title>Search</mat-card-title>
+  Near:&nbsp;&nbsp;
+  <mat-radio-group [(ngModel)]="nearRadioValue">
+    <mat-radio-button value="me">Me</mat-radio-button>&nbsp;
+    <mat-radio-button value="location"></mat-radio-button>
+  </mat-radio-group>
+  <mat-form-field>
+    <mat-label>Location</mat-label>
+    <input matInput [(ngModel)]="nearLocation" placeholder="Enter location...">
+  </mat-form-field>
+  <br>
+  <!-- Need to limit this input to positive integers somehow -->
+  <mat-form-field class="distance">
+    <mat-label>Distance</mat-label>
+    <input matInput [(ngModel)]="distance" [matAutocomplete]="distanceauto" placeholder="Enter Distance...">
+  </mat-form-field>
+  <mat-autocomplete #distanceauto="matAutocomplete">
+    <mat-option [value]="5">5</mat-option>
+    <mat-option [value]="10">10</mat-option>
+    <mat-option [value]="25">25</mat-option>
+    <mat-option [value]="50">50</mat-option>
+    <mat-option [value]="100">100</mat-option>
+  </mat-autocomplete>
+  &nbsp;
+  <mat-form-field class="distance-unit">
+    <mat-label>Unit</mat-label>
+    <mat-select [(value)]="distanceUnit" class='unit-select'>
+      <mat-option value="Miles">Miles</mat-option>
+      <mat-option value="KM">KM</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- Additional search options here in expandable pane-->
+  <!-- Optional message here? -->
+  <mat-card *ngIf="message">
+    <div class='message'>{{message}}</div>
+  </mat-card>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="performSearch()"><mat-icon>search</mat-icon> Search</button>
+  </mat-card-actions>
+</mat-card>
+<!-- Results here -->
+<mat-card *ngIf="searchResults">
+  <mat-card-title>{{searchResults.length}} Results</mat-card-title>
+  <mat-card *ngFor="let foundUser of searchResults">
+    <mat-card-title>{{foundUser.username}}</mat-card-title>
+  </mat-card>
+</mat-card>

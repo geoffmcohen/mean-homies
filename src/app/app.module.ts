@@ -19,7 +19,10 @@ import {
   MatToolbarModule,
   MatTabsModule,
   MatCheckboxModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatRadioModule,
+  MatAutocompleteModule,
+  MatSelectModule
 } from '@angular/material';
 import { AgmCoreModule } from '@agm/core';
 import { environment } from '../environments/environment';
@@ -107,6 +110,9 @@ import { SearchComponent } from './search/search/search.component';
     MatTabsModule, // Not currently using
     MatCheckboxModule,
     MatTooltipModule,
+    MatRadioModule,
+    MatAutocompleteModule,
+    MatSelectModule,
     AgmCoreModule.forRoot({apiKey: environment.google_maps_key})
   ],
   providers: [],

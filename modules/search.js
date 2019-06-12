@@ -125,7 +125,8 @@ exports.findCoordsForLocation = function(location, callback){
       console.error("Error occurred while trying to get coordinates using Google Geocoder API");
       console.error(err);
       return callback(util.format("Unable to find location '%s' with Google Maps", location), null);
-    } else if(response.status = "OK"){
+    } else if(response.status = "OK" && response.results[0]){
+      console.log("Found location '%s'", location);
       var foundLocation = response.results[0];
       return callback("Found location", {latitude: foundLocation.geometry.location.lat, longitude: foundLocation.geometry.location.lng});
     } else {
@@ -143,8 +144,14 @@ exports.getUsersNearLocation = function(username, location, radius, useMiles, ca
       return callback(message, null);
     } else {
       // Now search for nearby users
-      exports.getUsersNearCoords(username, coords.latitude, coords.longitude, radius, useMiles, function(message, nearbyProfiles){
-        return callback(message, nearbyProfiles);
+      exports.getUsersNearCoords(username, coords.latitude, coords.longitude, radius, useMiles, function(success, nearbyProfiles){
+        if(!success){
+          console.error("Unable to find users near '%s'", username);
+          return callback(serverErrorMessage, null);
+        } else{
+          console.log("Found %d users near '%s'", nearbyProfiles.length, username);
+          return callback(require('util').format("Found %d users near you.", nearbyProfiles.length), nearbyProfiles);
+        }
       });
     }
   });

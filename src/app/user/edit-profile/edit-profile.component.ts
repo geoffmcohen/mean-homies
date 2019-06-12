@@ -38,7 +38,7 @@ export class EditProfileComponent implements OnInit {
   constructor(
     private authService: AuthenticationService,
     private userService: UserService,
-    private MapsService: MapsService,
+    private mapsService: MapsService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) { }
@@ -176,7 +176,7 @@ export class EditProfileComponent implements OnInit {
       this.message = null;
 
       // Make the service call to Google geocoder api
-      this.MapsService.findLocation(this.location.value, (res : any) => {
+      this.mapsService.findLocation(this.location.value, (res : any) => {
         // Hide the loading dialog
         this.closeLoadingDialog();
 
