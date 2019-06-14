@@ -55,6 +55,7 @@ import { EditProfileComponent } from './user/edit-profile/edit-profile.component
 import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavailable-feature.component';
 import { PictureUploadDialogComponent } from './user/picture-upload-dialog/picture-upload-dialog.component';
 import { SearchComponent } from './search/search/search.component';
+import { ProfileViewComponent } from './search/profile-view/profile-view.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,8 @@ import { SearchComponent } from './search/search/search.component';
     EditProfileComponent,
     UnavailableFeatureComponent,
     PictureUploadDialogComponent,
-    SearchComponent
+    SearchComponent,
+    ProfileViewComponent
   ],
   imports: [
     BrowserModule,

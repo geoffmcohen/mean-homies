@@ -43,7 +43,8 @@
 <!-- Results here -->
 <mat-card *ngIf="searchResults">
   <mat-card-title>{{searchResults.length}} Results</mat-card-title>
-  <mat-card *ngFor="let foundUser of searchResults">
+  <!-- <mat-card *ngFor="let foundUser of searchResults">
     <mat-card-title>{{foundUser.username}}</mat-card-title>
-  </mat-card>
+  </mat-card> -->
+  <app-profile-view *ngFor="let profile of searchResults" [profile]="profile"></app-profile-view>
 </mat-card>

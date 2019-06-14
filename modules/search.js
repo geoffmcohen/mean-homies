@@ -47,7 +47,12 @@ exports.getUsersNearCoords = function(
       profiles.forEach(function(profile){
         distance = exports.getDistance(fromLat, fromLng, profile.location.lat, profile.location.lng, useMiles);
         if(distance <= radius){
+          // Store the distance and unit
           profile.distance = distance;
+          profile.distanceUnit = "Miles"
+          if(!useMiles) profile.distanceUnit = "KM";
+
+          // Add the profile to the array to return
           nearbyProfiles.push(profile);
         }
       }, function(err){

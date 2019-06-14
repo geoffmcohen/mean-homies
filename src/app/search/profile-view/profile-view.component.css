@@ -1,0 +1,24 @@
+.profile{
+  display: table-row;
+}
+
+.username{
+  font-weight: bold;
+}
+
+.profile-image{
+  width: 150px;
+  height: 150px;
+}
+
+.pic-and-name{
+  display: table-cell;
+  max-width: 200px;
+  padding: 5px;
+}
+
+.about-and-looking{
+  display: table-cell;
+  vertical-align: top;
+  padding: 5px;
+}

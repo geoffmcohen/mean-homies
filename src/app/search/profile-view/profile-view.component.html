@@ -1,0 +1,24 @@
+<br>
+<mat-card>
+  <mat-card-title>{{profile.displayName ? profile.displayName : profile.username}}</mat-card-title>
+  <div class="profile">
+    <div class="pic-and-name">
+      <!--
+      <span class="name">{{profile.displayName ? profile.displayName : profile.username}}</span>
+      <br>
+      -->
+      <img class="profile-image" [src]="profileImage">
+      <br>
+      <span class="username">{{profile.username}}</span>
+      <br>
+      {{profile.distance.toFixed(3)}}&nbsp;{{profile.distanceUnit}}
+      <!-- Actions go here? -->
+    </div>
+    <div class="about-and-looking">
+      <h3>About Me</h3>
+      <p>{{profile.aboutMe}}</p>
+      <h3>Looking To Meet</h3>
+      <p>{{profile.lookingToMeet}}</p>
+    </div>
+  </div>
+</mat-card>

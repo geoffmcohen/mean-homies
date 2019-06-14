@@ -422,7 +422,7 @@ module.exports = (function(){
     console.log('api/search/get_users_near_user');
 
     var search = require("../modules/search.js");
-    search.searchForUsersNearUser(req.query.token, req.query.username, req.query.radius, req.query.useMiles, function(message, nearbyProfiles){
+    search.searchForUsersNearUser(req.query.token, req.query.username, Number(req.query.radius), req.query.useMiles == 'true', function(message, nearbyProfiles){
       res.send({message: message, nearbyProfiles: nearbyProfiles});
     });
   });
@@ -432,7 +432,7 @@ module.exports = (function(){
     console.log('api/search/get_users_near_location');
 
     var search = require("../modules/search.js");
-    search.searchForUsersNearLocation(req.query.token, req.query.username, req.query.location, req.query.radius, req.query.useMiles, function(message, nearbyProfiles){
+    search.searchForUsersNearLocation(req.query.token, req.query.username, req.query.location, Number(req.query.radius), req.query.useMiles == 'true', function(message, nearbyProfiles){
       res.send({message: message, nearbyProfiles: nearbyProfiles});
     });
   });

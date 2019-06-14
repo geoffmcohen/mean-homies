@@ -47,6 +47,11 @@ export class SearchComponent implements OnInit {
     // Subscribe to login changes
     this.authService.userLoginChange.subscribe(loggedIn => {
       this.loggedIn = loggedIn;
+
+      // Clears the search results if not logged in
+      if(!loggedIn){
+        this.clearSearchResults();
+      }
     });
   }
 
@@ -68,27 +73,28 @@ export class SearchComponent implements OnInit {
 
   // Performs search for other users
   performSearch(){
-    // #TODO: Make sure field values are appropriate
-    
-    // Show the loading dialog
-    this.showLoadingDialog();
-    this.message = null;
-    this.searchResults = null;
+    // Make sure field values are appropriate
+    if(this.validateSearchInput()){
 
-    // Set useMiles flag based on distanceUnit
-    var useMiles = true;
-    if(this.distanceUnit != 'Miles') useMiles = false;
+      // Show the loading dialog
+      this.showLoadingDialog();
+      this.clearSearchResults();
 
-    // Make the appropriate call to the search service
-    if(this.nearRadioValue == 'me'){
-      this.searchService.searchForUsersNearUser(this.authService.getUserToken(), this.authService.getUser(), parseInt(this.distance), useMiles, (res: any) => {
-        this.handleSearchResults(res);
-      });
+      // Set useMiles flag based on distanceUnit
+      var useMiles = true;
+      if(this.distanceUnit != 'Miles') useMiles = false;
 
-    } else {
-      this.searchService.searchForUsersNearLocation(this.authService.getUserToken(), this.authService.getUser(), this.nearLocation, parseInt(this.distance), useMiles, (res: any) => {
-        this.handleSearchResults(res);
-      });
+      // Make the appropriate call to the search service
+      if(this.nearRadioValue == 'me'){
+        this.searchService.searchForUsersNearUser(this.authService.getUserToken(), this.authService.getUser(), Number(this.distance), useMiles, (res: any) => {
+          this.handleSearchResults(res);
+        });
+
+      } else {
+        this.searchService.searchForUsersNearLocation(this.authService.getUserToken(), this.authService.getUser(), this.nearLocation, Number(this.distance), useMiles, (res: any) => {
+          this.handleSearchResults(res);
+        });
+      }
     }
   }
 
@@ -101,10 +107,28 @@ export class SearchComponent implements OnInit {
     if(res.nearbyProfiles){
       this.searchResults = res.nearbyProfiles;
 
-      // #TODO: Add user images
+      // #TODO: Add pagination
     } else {
       this.message = res.message;
     }
   }
 
+  // Clears the search results
+  clearSearchResults(){
+    this.searchResults = null;
+    this.message = null;
+  }
+
+  // Checks input fields
+  validateSearchInput(){
+    if(this.nearRadioValue == 'location' && !this.nearLocation){
+      this.message = "Please enter a 'Location' for the search.";
+      return false;
+    } else if (!/^\d+(\.\d+)?$/.test(this.distance)){
+      this.message = "Please enter a valid number for 'Distance'."
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
