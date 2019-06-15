@@ -10,6 +10,8 @@ import { UserService } from '../../user/user.service';
 export class ProfileViewComponent implements OnInit {
   @Input() profile: any;
   public profileImage: string;
+  public aboutMe: string;
+  public lookingToMeet: string;
 
   constructor(
     private authService: AuthenticationService,
@@ -17,6 +19,10 @@ export class ProfileViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Add line breaks to aboutMe and lookingToMeet
+    this.aboutMe = this.profile.aboutMe.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    this.lookingToMeet = this.profile.lookingToMeet.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
     // Set the profile image to the default
     this.profileImage = '../../../assets/images/default profile.gif';
 

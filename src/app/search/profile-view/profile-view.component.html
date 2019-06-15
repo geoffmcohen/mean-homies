@@ -3,10 +3,6 @@
   <mat-card-title>{{profile.displayName ? profile.displayName : profile.username}}</mat-card-title>
   <div class="profile">
     <div class="pic-and-name">
-      <!--
-      <span class="name">{{profile.displayName ? profile.displayName : profile.username}}</span>
-      <br>
-      -->
       <img class="profile-image" [src]="profileImage">
       <br>
       <span class="username">{{profile.username}}</span>
@@ -16,9 +12,9 @@
     </div>
     <div class="about-and-looking">
       <h3>About Me</h3>
-      <p>{{profile.aboutMe}}</p>
+      <p [innerHtml]="aboutMe"></p>
       <h3>Looking To Meet</h3>
-      <p>{{profile.lookingToMeet}}</p>
+      <p [innerHtml]="lookingToMeet"></p>
     </div>
   </div>
 </mat-card>

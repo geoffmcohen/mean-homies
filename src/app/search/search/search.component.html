@@ -1,5 +1,6 @@
 <app-unavailable-feature *ngIf="!loggedIn"></app-unavailable-feature>
-<mat-card *ngIf="loggedIn">
+<mat-card *ngIf="loggedIn && hasActiveProfile == false"><h3>You must have an active profile to be able to use this feature.  Please create or edit your profile.</h3></mat-card>
+<mat-card *ngIf="loggedIn && hasActiveProfile">
   <mat-card-title>Search</mat-card-title>
   Near:&nbsp;&nbsp;
   <mat-radio-group [(ngModel)]="nearRadioValue">
@@ -11,7 +12,6 @@
     <input matInput [(ngModel)]="nearLocation" placeholder="Enter location...">
   </mat-form-field>
   <br>
-  <!-- Need to limit this input to positive integers somehow -->
   <mat-form-field class="distance">
     <mat-label>Distance</mat-label>
     <input matInput [(ngModel)]="distance" [matAutocomplete]="distanceauto" placeholder="Enter Distance...">
@@ -32,7 +32,6 @@
     </mat-select>
   </mat-form-field>
   <!-- Additional search options here in expandable pane-->
-  <!-- Optional message here? -->
   <mat-card *ngIf="message">
     <div class='message'>{{message}}</div>
   </mat-card>
@@ -40,11 +39,8 @@
     <button mat-raised-button color="primary" (click)="performSearch()"><mat-icon>search</mat-icon> Search</button>
   </mat-card-actions>
 </mat-card>
-<!-- Results here -->
+<br>
 <mat-card *ngIf="searchResults">
   <mat-card-title>{{searchResults.length}} Results</mat-card-title>
-  <!-- <mat-card *ngFor="let foundUser of searchResults">
-    <mat-card-title>{{foundUser.username}}</mat-card-title>
-  </mat-card> -->
   <app-profile-view *ngFor="let profile of searchResults" [profile]="profile"></app-profile-view>
 </mat-card>

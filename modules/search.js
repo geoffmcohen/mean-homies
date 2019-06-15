@@ -38,8 +38,14 @@ exports.getUsersNearCoords = function(
     }
     var dbo = db.db();
 
-    // Search for users excluding this user
-    dbo.collection("userProfiles").find({username: {$ne : username}}, function(err, profiles){
+    // Set up search query to exclude this user and only show active users
+    searchQuery = {
+      username: {$ne : username},
+      active: true
+    };
+
+    // Search for users
+    dbo.collection("userProfiles").find(searchQuery, function(err, profiles){
       // Create an array to store results that are within the search area
       var nearbyProfiles = [];
 

@@ -170,4 +170,22 @@ export class UserService {
       callback(res);
     });
   }
+
+  // Returns if the user has an active profile
+  public hasActiveProfile(
+    token: string,
+    username: string,
+    callback: ((isActive: boolean) => void)
+  ) : void{
+    // Set up the parameters
+    var params = new HttpParams()
+      .set('token', token)
+      .set('username', username);
+
+    // Make the REST call
+    this.http.get<any>('/api/user/has_active_profile', {params}).subscribe((res: any) => {
+      // Send the results back to callback
+      callback(res.isActive);
+    });
+  }
 }

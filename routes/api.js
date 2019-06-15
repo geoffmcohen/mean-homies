@@ -437,6 +437,16 @@ module.exports = (function(){
     });
   });
 
+  // Checks if a users profile has been activated
+  api.get('/user/has_active_profile', function(req, res){
+    console.log('api/user/has_active_profile called');
+
+    var user = require("../modules/user.js");
+    user.hasActiveProfile(req.query.token, req.query.username, function(isActive){
+      res.send({isActive: isActive});
+    });
+  });
+
   // api.get()
   return api;
 })();

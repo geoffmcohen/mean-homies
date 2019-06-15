@@ -12,6 +12,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 })
 export class SearchComponent implements OnInit {
   public loggedIn: boolean;
+  public hasActiveProfile: boolean;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   public nearRadioValue: string;
@@ -44,6 +45,9 @@ export class SearchComponent implements OnInit {
     // Get the initial state of the login
     this.loggedIn = this.authService.checkUserIsLoggedIn();
 
+    // If the user is logged in, see if they have an active profile
+    this.checkIfUserHasActiveProfile();
+
     // Subscribe to login changes
     this.authService.userLoginChange.subscribe(loggedIn => {
       this.loggedIn = loggedIn;
@@ -51,6 +55,9 @@ export class SearchComponent implements OnInit {
       // Clears the search results if not logged in
       if(!loggedIn){
         this.clearSearchResults();
+      } else {
+        // Otherwise set the active profile flag
+        this.checkIfUserHasActiveProfile();
       }
     });
   }
@@ -129,6 +136,23 @@ export class SearchComponent implements OnInit {
       return false;
     } else {
       return true;
+    }
+  }
+
+  // Sets the hasActiveProfile flag if a user is logged in
+  checkIfUserHasActiveProfile(){
+    if(this.loggedIn){
+      // Show loading screen
+      this.showLoadingDialog();
+
+      // Check if the user has an active profile
+      this.userService.hasActiveProfile(this.authService.getUserToken(), this.authService.getUser(), (hasActiveProfile) => {
+        // Set the active profile status
+        this.hasActiveProfile = hasActiveProfile;
+
+        // Close the loading dialog
+        this.closeLoadingDialog();
+      });
     }
   }
 }
