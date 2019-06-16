@@ -21,7 +21,10 @@ export class SearchComponent implements OnInit {
   public distanceUnit: string;
   public message: string;
 
+  public pageSize = 10;
+  public currentPage = 0;
   public searchResults: any[];
+  public pagedResults: any[];
 
   constructor(
       private authService: AuthenticationService,
@@ -114,7 +117,8 @@ export class SearchComponent implements OnInit {
     if(res.nearbyProfiles){
       this.searchResults = res.nearbyProfiles;
 
-      // #TODO: Add pagination
+      // Paginate the results
+      this.paginateResults();
     } else {
       this.message = res.message;
     }
@@ -154,5 +158,23 @@ export class SearchComponent implements OnInit {
         this.closeLoadingDialog();
       });
     }
+  }
+
+  // Handles changes in paginator
+  handlePage(event: any){
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.paginateResults();
+  }
+
+  // Setup paged data
+  paginateResults(){
+    // Determine the beginning and end of the paged array
+    var start = this.currentPage * this.pageSize;
+    var end = start + this.pageSize;
+    if(end > this.searchResults.length) end = this.searchResults.length;
+
+    // Create a subarray for the paged data
+    this.pagedResults = this.searchResults.slice(start, end);
   }
 }

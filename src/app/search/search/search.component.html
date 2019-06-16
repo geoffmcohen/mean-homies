@@ -41,6 +41,13 @@
 </mat-card>
 <br>
 <mat-card *ngIf="searchResults">
-  <mat-card-title>{{searchResults.length}} Results</mat-card-title>
-  <app-profile-view *ngFor="let profile of searchResults" [profile]="profile"></app-profile-view>
+  <mat-card-title>Found {{searchResults.length}} users.</mat-card-title>
+  <app-profile-view *ngFor="let profile of pagedResults" [profile]="profile"></app-profile-view>
+  <mat-paginator
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 50, 100]"
+    [length]="searchResults.length"
+    [pageIndex]="currentPage"
+    (page)="pageEvent = handlePage($event)">
+  </mat-paginator>
 </mat-card>

@@ -7,7 +7,9 @@
       <br>
       <span class="username">{{profile.username}}</span>
       <br>
-      {{profile.distance.toFixed(3)}}&nbsp;{{profile.distanceUnit}}
+      {{profile.distance.toFixed(2)}}&nbsp;{{profile.distanceUnit}}
+      <br>
+      <span class="location">{{profile.location.city}}, {{profile.location.stateProvince}}, {{profile.location.country}}</span>
       <!-- Actions go here? -->
     </div>
     <div class="about-and-looking">
