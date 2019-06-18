@@ -341,7 +341,7 @@ exports.getUsersHomies = function(token, username, callback){
   });
 }
 
-// Finds all of the hommies for an input user
+// Finds all of the homies for an input user
 // #TODO: Remove any blocked users
 exports.getHomies = function(username, callback){
   console.log("Finding homies for '%s'", username);
