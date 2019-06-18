@@ -391,3 +391,71 @@ exports.getHomies = function(username, callback){
     });
   });
 }
+
+// Gets the pending homie requests for a user
+exports.getUsersHomieRequests = function(token, username, callback){
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      // Call the function to get the homies requests for the user
+      exports.getHomieRequests(username, function(success, homieRequests){
+        return callback(true, homieRequests);
+      });
+    }
+  });
+}
+
+// Gets pending homie requests for the user, split by 'pending' and 'waiting'
+exports.getHomieRequests = function(username, callback){
+  console.log("Getting homieRequests for '%s'", username);
+
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Find all of a users homies
+    searchCriteria = {$or: [ {requestUser: username}, {acceptUser: username} ]};
+    dbo.collection("homieRequests").find(searchCriteria, function(err, homieRequests){
+      if(err){
+        console.error("An error occurred getting homies for '%s'", username);
+        console.error(err);
+        return callback(false, null);
+      } else {
+        // Create a json with two arrays to split the results by who made the request
+        var retVal = {pending: [], waiting: []};
+        homieRequests.forEach(function(homieRequest){
+          if(homieRequest.requestUser == username){
+            retVal.waiting.push(homieRequest);
+          } else {
+            retVal.pending.push(homieRequest);
+          }
+        }, function(err){
+          if(err){
+            console.error("Unable to get homie requests for '%s'", username);
+            console.error(err);
+            return callback(false, null);
+          } else {
+            db.close();
+            // Sort both arrays by the other users name
+            retVal.pending.sort(function(a, b){return a.requestUser > b.requestUser});
+            retVal.waiting.sort(function(a, b){return a.acceptUser > b.acceptUser});
+
+            console.log("Found %d pending and %d waiting homieRequests for '%s'", retVal.pending.length, retVal.waiting.length, username);
+            return callback(true, retVal);
+          }
+        });
+      }
+    });
+  });
+}
