@@ -323,3 +323,71 @@ exports.declineRequest = function(username, targetUser, callback){
     };
   });
 }
+
+// Gets the users homies
+exports.getUsersHomies = function(token, username, callback){
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      // Call the function to get the homies for the user
+      exports.getHomies(username, function(success, homies){
+        return callback(true, homies);
+      });
+    }
+  });
+}
+
+// Finds all of the hommies for an input user
+// #TODO: Remove any blocked users
+exports.getHomies = function(username, callback){
+  console.log("Finding homies for '%s'", username);
+
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Find all of a users homies
+    searchCriteria = {$or: [ {requestUser: username}, {acceptUser: username} ]};
+    dbo.collection("homies").find(searchCriteria, function(err, homiesRecords){
+      if(err){
+        console.error("An error occurred getting homies for '%s'", username);
+        console.error(err);
+        return callback(false, null);
+      } else {
+        var homies = [];
+        // Loop through the records adding each homie to the array to return
+        homiesRecords.forEach(function(homieRecord){
+          if(homieRecord.requestUser == username){
+            homies.push(homieRecord.acceptUser);
+          } else {
+            homies.push(homieRecord.requestUser);
+          }
+        }, function(err){
+          db.close();
+          if(err){
+            console.error("Error occurred while tying to loop through homies for '%s'", username);
+            console.error(err);
+            return callback(false, null);
+          } else {
+            // Sort the homies in alphabetical order
+            homies.sort(function(a, b){return a > b});
+
+            // Callback with the results
+            return callback(true, homies);
+          }
+        });
+      }
+    });
+  });
+}
