@@ -392,7 +392,7 @@ exports.getHomies = function(username, callback){
   });
 }
 
-// Gets the pending homie requests for a user
+// Gets the pending  and waiting homie requests for a user
 exports.getUsersHomieRequests = function(token, username, callback){
   // Check to make sure this is the users token
   require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){

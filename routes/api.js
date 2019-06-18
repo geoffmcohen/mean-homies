@@ -447,6 +447,85 @@ module.exports = (function(){
     });
   });
 
+  // Returns the relationship between two users
+  api.get('/homies/get_homie_status', function(req, res){
+    console.log('api/homies/get_homie_status');
+
+    var homies = require("../modules/homies.js");
+    homies.getHomieStatus(req.query.token, req.query.username, req.query.targetUser, function(success, status){
+      res.send({success: success, status: status});
+    });
+  });
+
+  // Sends a Homie request to the target user
+  api.post('/homies/send_homie_request', function(req, res){
+    console.log('api/homies/send_homie_request');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the homie request
+      var homies = require("../modules/homies.js");
+      homies.sendHomieRequest(fields.token, fields.username, fields.targetUser, fields.message, function(success, msg){
+        res.send({success: success, message: msg});
+      });
+    });
+  });
+
+  // Accepts a Homie request from the target user
+  api.post('/homies/accept_homie_request', function(req, res){
+    console.log('api/homies/accept_homie_request');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the homie request
+      var homies = require("../modules/homies.js");
+      homies.acceptHomieRequest(fields.token, fields.username, fields.targetUser, function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+  });
+
+  // Declines a Homie request from the target user
+  api.post('/homies/decline_homie_request', function(req, res){
+    console.log('api/homies/decline_homie_request');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the homie request
+      var homies = require("../modules/homies.js");
+      homies.declineHomieRequest(fields.token, fields.username, fields.targetUser, function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+
+  });
+
+  // Gets the users homies
+  api.get('/homies/get_users_homies', function(req, res){
+    console.log('api/homies/get_users_homies');
+
+    var homies = require("../modules/homies.js");
+    homies.getUsersHomies(req.query.token, req.query.username,function(success, homies){
+      res.send({success: success, homies: homies});
+    });
+  });
+
+  // Gets the pending  and waiting homie requests for a user
+  api.get('/homies/get_users_homie_requests', function(req, res){
+    console.log('api/homies/get_users_homie_requests');
+
+    var homies = require("../modules/homies.js");
+    homies.getUsersHomieRequests(req.query.token, req.query.username,function(success, homieRequests){
+      res.send({success: success, homieRequests: homieRequests});
+    });
+  });
+
   // api.get()
   return api;
 })();
