@@ -6,11 +6,9 @@
       <input class='hidden' type='file' #hidden_file_input accept="image/*" [(ngModel)]="imageFilename" (change)="onFileChange($event)" />
       <input matInput readonly [(ngModel)]="imageFilename" placeholder="" >
     </mat-form-field>
-  <!--  <mat-card-actions> -->
     <br>
       <button type="button" mat-button (click)="hidden_file_input.click()"><mat-icon>attach_file</mat-icon>Choose File</button>
       <button type="button" mat-button (click)="clearSelectedFile()"><mat-icon>clear</mat-icon>Clear</button>
-  <!--  </mat-card-actions> -->
   </mat-dialog-content>
   <mat-card *ngIf="message">
     <div class='message'>{{message}}</div>

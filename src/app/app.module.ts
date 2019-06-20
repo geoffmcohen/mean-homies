@@ -56,6 +56,8 @@ import { UnavailableFeatureComponent } from './shared/unavailable-feature/unavai
 import { PictureUploadDialogComponent } from './user/picture-upload-dialog/picture-upload-dialog.component';
 import { SearchComponent } from './search/search/search.component';
 import { ProfileViewComponent } from './search/profile-view/profile-view.component';
+import { ProfileViewDialogComponent } from './user/profile-view-dialog/profile-view-dialog.component';
+import { CreateHomieRequestDialogComponent } from './homies/create-homie-request-dialog/create-homie-request-dialog.component';
 
 @NgModule({
   declarations: [
@@ -87,7 +89,9 @@ import { ProfileViewComponent } from './search/profile-view/profile-view.compone
     UnavailableFeatureComponent,
     PictureUploadDialogComponent,
     SearchComponent,
-    ProfileViewComponent
+    ProfileViewComponent,
+    ProfileViewDialogComponent,
+    CreateHomieRequestDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -107,7 +111,7 @@ import { ProfileViewComponent } from './search/profile-view/profile-view.compone
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTableModule,
-    MatPaginatorModule, // Not currently using
+    MatPaginatorModule,
     MatToolbarModule,
     MatTabsModule, // Not currently using
     MatCheckboxModule,
@@ -127,7 +131,9 @@ import { ProfileViewComponent } from './search/profile-view/profile-view.compone
     ResetPasswordDialogComponent,
     UserAgreementDialogComponent,
     ChangePasswordDialogComponent,
-    PictureUploadDialogComponent
+    PictureUploadDialogComponent,
+    ProfileViewDialogComponent,
+    CreateHomieRequestDialogComponent
   ]
 })
 export class AppModule { }

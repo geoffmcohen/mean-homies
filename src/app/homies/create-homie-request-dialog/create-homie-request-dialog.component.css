@@ -1,0 +1,15 @@
+/*
+request-dialog{
+  width: 400px;
+  height: 200px;
+}
+*/
+
+.message{
+  color: red;
+  width: 100%;
+}
+
+.full-width{
+  width: 100%;
+}
