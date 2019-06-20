@@ -90,6 +90,8 @@ export class ProfileViewComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.data = {profile: this.profile};
+    dialogConfig.minWidth =  400;
+
 
     // Show the homie request dialog
     this.requestDialogRef = this.dialog.open(CreateHomieRequestDialogComponent, dialogConfig);

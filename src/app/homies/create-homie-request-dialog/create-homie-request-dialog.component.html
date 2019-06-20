@@ -1,5 +1,6 @@
 <div class="request-dialog">
   <h2 mat-dialog-title>Send Homie Request</h2>
+  <h3>To: {{profile.displayName ? profile.displayName : profile.username}}</h3>
   <mat-dialog-content>
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Message (optional)</mat-label>
