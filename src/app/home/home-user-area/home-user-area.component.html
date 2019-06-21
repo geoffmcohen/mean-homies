@@ -1,14 +1,11 @@
 <span *ngIf="loggedIn">
-  <!--<mat-icon>account_circle</mat-icon>-->
-  {{loggedInUser}}
-  <!-- <button mat-icon-button [matMenuTriggerFor]="usermenu"><mat-icon>more_vert</mat-icon></button>-->
-  <button mat-icon-button [routerLink]="['search']"><mat-icon>search</mat-icon></button>
-  <button mat-icon-button><mat-icon>people</mat-icon></button>
-  <button mat-icon-button><mat-icon>message</mat-icon></button>
+  {{loggedInUser}} <!-- For testing only -->
+  <button mat-icon-button [routerLink]="['search']" [disabled]="!hasActiveProfile"><mat-icon>search</mat-icon></button>
+  <button mat-icon-button [disabled]="!hasActiveProfile"><mat-icon>people</mat-icon></button>
+  <button mat-icon-button [disabled]="!hasActiveProfile"><mat-icon>message</mat-icon></button>
   <button mat-icon-button [matMenuTriggerFor]="usermenu"><mat-icon>account_circle</mat-icon></button>
-
-
 </span>
+
 <span *ngIf="!loggedIn">
   <button mat-button (click)="showLoginDialog()">Login</button>
   <button mat-button (click)="showSignupDialog()">Sign Up</button>

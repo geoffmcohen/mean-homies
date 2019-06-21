@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -10,6 +10,9 @@ export class UserService {
   constructor(
     private http: HttpClient
   ) { }
+
+  // Output to allow components to subscribe to hasActiveProfile
+  @Output() hasActiveProfileChange: EventEmitter<boolean> = new EventEmitter();
 
   // Creates a new user
   public createUser(
@@ -130,6 +133,10 @@ export class UserService {
         stateProvince: stateProvince,
         country: country
       }).subscribe((res: any) => {
+      // Emit the value of whether the profile is active
+      this.hasActiveProfileChange.emit(res.isActive);
+      
+      // Return results back to caller
       callback(res);
     });
   }
@@ -184,6 +191,9 @@ export class UserService {
 
     // Make the REST call
     this.http.get<any>('/api/user/has_active_profile', {params}).subscribe((res: any) => {
+      // Emit any change to the profile activeness
+      this.hasActiveProfileChange.emit(res.isActive);
+
       // Send the results back to callback
       callback(res.isActive);
     });

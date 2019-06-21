@@ -360,8 +360,8 @@ module.exports = (function(){
         fields.city,
         fields.stateProvince,
         fields.country,
-        function(success, message){
-        res.send({success: success, message: message});
+        function(success, message, isActive){
+        res.send({success: success, message: message, isActive: isActive});
       });
     });
   });

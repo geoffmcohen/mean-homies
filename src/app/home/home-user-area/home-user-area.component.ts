@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AuthenticationService } from '../../auth/authentication.service';
+import { UserService } from '../../user/user.service';
 import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../user/signup-dialog/signup-dialog.component';
 import { UserAgreementDialogComponent } from '../../user/user-agreement-dialog/user-agreement-dialog.component';
@@ -14,10 +15,12 @@ import { ChangePasswordDialogComponent } from '../../user/change-password-dialog
 export class HomeUserAreaComponent implements OnInit {
   public loggedIn: boolean;
   public loggedInUser: string;
+  public hasActiveProfile: boolean;
 
   constructor(
     private dialog: MatDialog,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
@@ -31,6 +34,9 @@ export class HomeUserAreaComponent implements OnInit {
     this.loggedIn = this.authService.checkUserIsLoggedIn();
     if(this.loggedIn){
       this.loggedInUser = this.authService.getUser();
+
+      // Get the inital state of active profile and track changes
+      this.subscribeToHasActiveProfileChanges();
     }
 
     // Subscribe to login changes
@@ -38,9 +44,25 @@ export class HomeUserAreaComponent implements OnInit {
       this.loggedIn = loggedIn;
       if(this.loggedIn){
         this.loggedInUser = this.authService.getUser();
+
+        // Get the inital state of active profile and track changes
+        this.subscribeToHasActiveProfileChanges();
       } else {
         this.loggedInUser = null;
       }
+    });
+  }
+
+  // Setup profile active state and subscribe to changes
+  subscribeToHasActiveProfileChanges(){
+    // Get initial state of hasActiveProfile
+    this.userService.hasActiveProfile(this.authService.getUserToken(), this.authService.getUser(), function(isActive){
+      this.hasActiveProfile = isActive;
+    });
+
+    // Subscribe to changes in active profile
+    this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
+      this.hasActiveProfile = hasActiveProfile;
     });
   }
 

@@ -9,9 +9,9 @@
 </div>
 
 <mat-menu #mainmenu="matMenu">
-  <button mat-menu-item *ngIf="loggedIn" [routerLink]="['search']">Homie Search</button>
-  <button mat-menu-item *ngIf="loggedIn" disabled>My Homies</button>
-  <button mat-menu-item *ngIf="loggedIn" disabled>Messages</button>
+  <button mat-menu-item *ngIf="loggedIn" [routerLink]="['search']" [disabled]="!hasActiveProfile">Homie Search</button>
+  <button mat-menu-item *ngIf="loggedIn" [disabled]="!hasActiveProfile">My Homies</button>
+  <button mat-menu-item *ngIf="loggedIn" [disabled]="!hasActiveProfile">Messages</button>
   <button mat-menu-item [routerLink]="['about']">About</button>
   <button mat-menu-item [routerLink]="['faq']">FAQ</button>
   <button mat-menu-item (click)="openBlog()">Blog</button>

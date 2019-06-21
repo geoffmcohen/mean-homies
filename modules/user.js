@@ -580,13 +580,13 @@ insertUserProfile = function(
       if(err){
         console.error("Error encountered while inserting user profile for '%s'", username);
         console.error(err);
-        return callback(false, serverErrorMessage);
+        return callback(false, serverErrorMessage, false);
       } else {
         console.log("Succesfully inserted user profile for '%s'", username);
         if(profile.active){
-          return callback(true, "Your profile has successfully been created and is now active.");
+          return callback(true, "Your profile has successfully been created and is now active.", profile.active);
         } else {
-          return callback(true, "Your profile has successfully been created, but is not yet active. To activate, please enter data into all required fields.");
+          return callback(true, "Your profile has successfully been created, but is not yet active. To activate, please enter data into all required fields.", profile.active);
         }
       }
     });
@@ -655,13 +655,13 @@ updateUserProfile = function(
       if(err){
         console.error("Error encountered while trying to update user profile for '%s'", username);
         console.error(err);
-        return callback(false, serverErrorMessage);
+        return callback(false, serverErrorMessage, false);
       } else {
         console.log("Succesfully updated user profile for '%s'", username);
         if(profile.active){
-          return callback(true, "Your profile has successfully updated and is now active.");
+          return callback(true, "Your profile has successfully updated and is now active.", profile.active);
         } else {
-          return callback(true, "Your profile has successfully been updated, but is not yet active. To activate, please enter data into all required fields.");
+          return callback(true, "Your profile has successfully been updated, but is not yet active. To activate, please enter data into all required fields.", profile.active);
         }
       }
     });
@@ -705,8 +705,8 @@ exports.saveUserProfile = saveUserProfile = function(
             city,
             stateProvince,
             country,
-            function(success, message){
-            return callback(success, message);
+            function(success, message, isActive){
+            return callback(success, message, isActive);
           });
         } else {
           // Call insert method if not
@@ -721,8 +721,8 @@ exports.saveUserProfile = saveUserProfile = function(
             city,
             stateProvince,
             country,
-            function(success, message){
-            return callback(success, message);
+            function(success, message, isActive){
+            return callback(success, message, isActive);
           });
         }
       });
