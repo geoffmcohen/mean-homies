@@ -22,7 +22,8 @@ import {
   MatTooltipModule,
   MatRadioModule,
   MatAutocompleteModule,
-  MatSelectModule
+  MatSelectModule,
+  MatBadgeModule
 } from '@angular/material';
 import { AgmCoreModule } from '@agm/core';
 import { environment } from '../environments/environment';
@@ -119,6 +120,7 @@ import { CreateHomieRequestDialogComponent } from './homies/create-homie-request
     MatRadioModule,
     MatAutocompleteModule,
     MatSelectModule,
+    MatBadgeModule,
     AgmCoreModule.forRoot({apiKey: environment.google_maps_key})
   ],
   providers: [],
