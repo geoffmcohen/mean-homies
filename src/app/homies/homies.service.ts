@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import * as socketIo from 'socket.io-client';
+import { AuthenticationService } from '../auth/authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,8 +9,25 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 export class HomiesService {
 
   constructor(
-    private http: HttpClient
-  ) { }
+    private http: HttpClient,
+    private authService: AuthenticationService
+  ) {
+    // Create a socket to see when pending homie requests count changes
+    const socket = socketIo('');
+    socket.on('homie request count change', response => {
+      // If a user is loggedin, then check if the request was for them
+      if(authService.getUser()){
+        if(response.acceptUser == authService.getUser()){
+          this.getUsersPendingHomieRequestCount(authService.getUserToken(), authService.getUser(), (success : boolean, count: number) => {
+            if(success) this.homieRequestCountChange.emit(count);
+          });
+        }
+      }
+    });
+  }
+
+  // Used for the badge to display how many homie requests a user has
+  @Output() homieRequestCountChange: EventEmitter<number> = new EventEmitter();
 
   // Returns the relationship between two users
   public getHomieStatus(
@@ -100,7 +119,7 @@ export class HomiesService {
     });
   }
 
-  // Gets the pending  and waiting homie requests for a user
+  // Gets the pending and waiting homie requests for a user
   public getUsersHomieRequests(
     token: string,
     username: string,
@@ -117,4 +136,19 @@ export class HomiesService {
       callback(res);
     });
   }
+
+  // Gets number of pending homie requests for the user
+  public getUsersPendingHomieRequestCount(
+      token: string,
+      username: string,
+      callback: ((success: boolean, count: number) => void)
+    ) : void{
+      this.getUsersHomieRequests(token, username, (res : any) => {
+        if(res.success){
+          callback(res.success, res.homieRequests.pending.length);
+        } else {
+          callback(res.success, null);
+        }
+      });
+    }
 }

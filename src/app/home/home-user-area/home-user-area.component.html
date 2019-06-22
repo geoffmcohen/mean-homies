@@ -1,5 +1,7 @@
 <span *ngIf="loggedIn">
   {{loggedInUser}} <!-- For testing only -->
+  &nbsp;
+  {{pendingHomieRequestCount ? pendingHomieRequestCount : '' }}
   <button mat-icon-button [routerLink]="['search']" [disabled]="!hasActiveProfile"><mat-icon>search</mat-icon></button>
   <button mat-icon-button [disabled]="!hasActiveProfile"><mat-icon>people</mat-icon></button>
   <button mat-icon-button [disabled]="!hasActiveProfile"><mat-icon>message</mat-icon></button>

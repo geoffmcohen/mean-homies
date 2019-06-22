@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
+import { HomiesService } from '../../homies/homies.service';
 import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../user/signup-dialog/signup-dialog.component';
 import { UserAgreementDialogComponent } from '../../user/user-agreement-dialog/user-agreement-dialog.component';
@@ -16,11 +17,13 @@ export class HomeUserAreaComponent implements OnInit {
   public loggedIn: boolean;
   public loggedInUser: string;
   public hasActiveProfile: boolean;
+  public pendingHomieRequestCount: number;
 
   constructor(
     private dialog: MatDialog,
     private authService: AuthenticationService,
-    private userService: UserService
+    private userService: UserService,
+    private homiesService: HomiesService
   ) { }
 
   ngOnInit() {
@@ -35,8 +38,15 @@ export class HomeUserAreaComponent implements OnInit {
     if(this.loggedIn){
       this.loggedInUser = this.authService.getUser();
 
-      // Get the inital state of active profile and track changes
-      this.subscribeToHasActiveProfileChanges();
+      // Subscribe to all other data change events
+      this.subscribeToChanges();
+
+      // // Get the inital state of active profile and track changes
+      // this.subscribeToHasActiveProfileChanges();
+      //
+      // // Get the initial count of homie requests and track changes
+      // this.subscribeToHomieRequest
+
     }
 
     // Subscribe to login changes
@@ -45,24 +55,48 @@ export class HomeUserAreaComponent implements OnInit {
       if(this.loggedIn){
         this.loggedInUser = this.authService.getUser();
 
-        // Get the inital state of active profile and track changes
-        this.subscribeToHasActiveProfileChanges();
+        // Subscribe to all other data change events
+        this.subscribeToChanges();
+
+        // // Get the inital state of active profile and track changes
+        // this.subscribeToHasActiveProfileChanges();
       } else {
         this.loggedInUser = null;
       }
     });
   }
 
+  subscribeToChanges(){
+    // Get the inital state of active profile and track changes
+    this.subscribeToHasActiveProfileChanges();
+
+    // Get the initial count of homie requests and track changes
+    this.subscribeToHomieRequestChanges();
+  }
+
   // Setup profile active state and subscribe to changes
   subscribeToHasActiveProfileChanges(){
     // Get initial state of hasActiveProfile
-    this.userService.hasActiveProfile(this.authService.getUserToken(), this.authService.getUser(), function(isActive){
+    this.userService.hasActiveProfile(this.authService.getUserToken(), this.authService.getUser(), (isActive : boolean) => {
       this.hasActiveProfile = isActive;
-    });
 
-    // Subscribe to changes in active profile
-    this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
-      this.hasActiveProfile = hasActiveProfile;
+      // Subscribe to changes in active profile
+      this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
+        this.hasActiveProfile = hasActiveProfile;
+      });
+    });
+  }
+
+  // Subscribes to the count of active homie requests to display as a badge
+  subscribeToHomieRequestChanges(){
+    // Get initial state of pendingHomieRequestCount
+    this.homiesService.getUsersPendingHomieRequestCount(this.authService.getUserToken(), this.authService.getUser(), (success: boolean, count: number) => {
+      this.pendingHomieRequestCount = count;
+
+      // Subscribe to changes to the change in homie request count
+      this.homiesService.homieRequestCountChange.subscribe((newCount) => {
+        this.pendingHomieRequestCount = newCount;
+      });
     });
   }
 

@@ -110,6 +110,10 @@ exports.sendHomieRequest = function(token, username, targetUser, message, callba
     } else {
       // Call function to actually make the request
       exports.sendRequest(username, targetUser, message, function(success, msg){
+        // Notify the targetUser in real time of request
+        require('./real-time.js').emitEvent('homie request count change', {requestUser: username, acceptUser: targetUser});
+
+        // Callback with success
         return callback(success, msg);
       });
     }
@@ -174,6 +178,8 @@ exports.acceptHomieRequest = function(token, username, targetUser, callback){
     } else {
       // Call the actual function to make the request
       exports.acceptRequest(username, targetUser, function(success, message){
+        // Notify the users client that the count has changed
+        require('./real-time.js').emitEvent('homie request count change', {requestUser: targetUser, acceptUser: username});
         return callback(success, message);
       });
     }
@@ -256,6 +262,8 @@ exports.declineHomieRequest = function(token, username, targetUser, callback){
     } else {
       // Call the actual function to make the request
       exports.declineRequest(username, targetUser, function(success, message){
+        // Notify the users client that the count has changed
+        require('./real-time.js').emitEvent('homie request count change', {requestUser: targetUser, acceptUser: username});
         return callback(success, message);
       });
     }

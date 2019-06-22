@@ -57,15 +57,16 @@ export class HomeComponent implements OnInit {
   // Setup profile active state and subscribe to changes
   subscribeToHasActiveProfileChanges(){
     // Get initial state of hasActiveProfile
-    this.userService.hasActiveProfile(this.authService.getUserToken(), this.authService.getUser(), function(isActive){
+    this.userService.hasActiveProfile(this.authService.getUserToken(), this.authService.getUser(), (isActive : boolean) => {
       this.hasActiveProfile = isActive;
-    });
 
-    // Subscribe to changes in active profile
-    this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
-      this.hasActiveProfile = hasActiveProfile;
+      // Subscribe to changes in active profile
+      this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
+        this.hasActiveProfile = hasActiveProfile;
+      });
     });
   }
+
   // Opens up the blog in a new window
   openBlog(){
     window.open('/blog', '_blank');
