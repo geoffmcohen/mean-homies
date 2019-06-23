@@ -23,7 +23,8 @@ import {
   MatRadioModule,
   MatAutocompleteModule,
   MatSelectModule,
-  MatBadgeModule
+  MatBadgeModule,
+  MatExpansionModule
 } from '@angular/material';
 import { AgmCoreModule } from '@agm/core';
 import { environment } from '../environments/environment';
@@ -123,6 +124,7 @@ import { HomiesComponent } from './homies/homies/homies.component';
     MatAutocompleteModule,
     MatSelectModule,
     MatBadgeModule,
+    MatExpansionModule,
     AgmCoreModule.forRoot({apiKey: environment.google_maps_key})
   ],
   providers: [],
