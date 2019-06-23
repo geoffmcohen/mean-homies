@@ -59,6 +59,7 @@ import { SearchComponent } from './search/search/search.component';
 import { ProfileViewComponent } from './search/profile-view/profile-view.component';
 import { ProfileViewDialogComponent } from './user/profile-view-dialog/profile-view-dialog.component';
 import { CreateHomieRequestDialogComponent } from './homies/create-homie-request-dialog/create-homie-request-dialog.component';
+import { HomiesComponent } from './homies/homies/homies.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { CreateHomieRequestDialogComponent } from './homies/create-homie-request
     SearchComponent,
     ProfileViewComponent,
     ProfileViewDialogComponent,
-    CreateHomieRequestDialogComponent
+    CreateHomieRequestDialogComponent,
+    HomiesComponent
   ],
   imports: [
     BrowserModule,

@@ -8,18 +8,33 @@ exports.init = function(server){
 
   // Set up socket.io listeners
   io.on('connection', (socket) => {
-    console.log('user connected');
+    // Gets the username from the cookies
+    user = getUserFromCookies(socket);
+    console.log("User '%s' has connected to real time service", user);
 
     socket.on('disconnect', () => {
-      console.log('user disconnected');
+      console.log("User '%s' has disconnected from real time service", user);
     });
   });
 
   console.log('real-time.js has been initiliazed');
 }
 
+// Gets the username from the cookies
+getUserFromCookies = function(socket){
+  // Get the cookie string
+  var cookieString = socket.handshake.headers.cookie;
+
+  // Use a regex to get the value
+  var re = new RegExp("user=([^;]+)");
+  var value = re.exec(cookieString);
+
+  // Return the value
+  return (value != null) ? unescape(value[1]) : null;
+}
+
 // Wrapper for the io.emit
-exports.emitEvent =function(eventName, eventArgs){
+exports.emitEvent = function(eventName, eventArgs){
   if(!io){
     console.error("Unable to emit '%s' real-time.js has not been initiliazed", eventName);
   } else {

@@ -40,13 +40,6 @@ export class HomeUserAreaComponent implements OnInit {
 
       // Subscribe to all other data change events
       this.subscribeToChanges();
-
-      // // Get the inital state of active profile and track changes
-      // this.subscribeToHasActiveProfileChanges();
-      //
-      // // Get the initial count of homie requests and track changes
-      // this.subscribeToHomieRequest
-
     }
 
     // Subscribe to login changes
@@ -57,9 +50,6 @@ export class HomeUserAreaComponent implements OnInit {
 
         // Subscribe to all other data change events
         this.subscribeToChanges();
-
-        // // Get the inital state of active profile and track changes
-        // this.subscribeToHasActiveProfileChanges();
       } else {
         this.loggedInUser = null;
       }
@@ -126,7 +116,11 @@ export class HomeUserAreaComponent implements OnInit {
 
   // Allow user to log out
   logout(){
+    // Log the user out
     this.authService.userLogout();
+
+    // Redirect to home page
+    window.open('/home', '_self');
   }
 
   // Shows the dialog used for updating the users password

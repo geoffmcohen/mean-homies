@@ -11,7 +11,7 @@ import { AboutComponent } from './home/about/about.component';
 import { FaqComponent } from './home/faq/faq.component';
 import { EditProfileComponent } from './user/edit-profile/edit-profile.component';
 import { SearchComponent } from './search/search/search.component';
-
+import { HomiesComponent } from './homies/homies/homies.component';
 
 const routes: Routes = [
   //{path: '', component: ComingSoonComponent},
@@ -22,7 +22,8 @@ const routes: Routes = [
       {path: 'about', component: AboutComponent},
       {path: 'faq', component: FaqComponent},
       {path: 'user/edit-profile', component: EditProfileComponent},
-      {path: 'search', component: SearchComponent}
+      {path: 'search', component: SearchComponent},
+      {path: 'homies', component: HomiesComponent}
     ]
   },
   {path: 'blog', component: BlogComponent},

@@ -1,0 +1,7 @@
+<app-unavailable-feature *ngIf="!loggedIn"></app-unavailable-feature>
+<mat-card *ngIf="loggedIn && hasActiveProfile == false"><h3>You must have an active profile to be able to use this feature.  Please create or edit your profile.</h3></mat-card>
+<mat-card *ngIf="loggedIn && hasActiveProfile">
+  <p *ngIf="pendingHomieRequests">pendingHomieRequests.length = {{pendingHomieRequests.length}}</p>
+  <p *ngIf="waitingHomieRequests">waitingHomieRequests.length = {{waitingHomieRequests.length}}</p>
+  <p *ngIf="homies">homies.length = {{homies.length}}</p>
+</mat-card>
