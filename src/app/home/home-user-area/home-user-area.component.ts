@@ -84,7 +84,7 @@ export class HomeUserAreaComponent implements OnInit {
       this.pendingHomieRequestCount = count;
 
       // Subscribe to changes to the change in homie request count
-      this.homiesService.homieRequestCountChange.subscribe((newCount) => {
+      this.homiesService.pendingRequestCountChange.subscribe((newCount) => {
         this.pendingHomieRequestCount = newCount;
       });
     });

@@ -4,25 +4,25 @@
   <mat-card *ngIf="pendingHomieRequests && pendingHomieRequests.length==0 && waitingHomieRequests && waitingHomieRequests.length == 0 && homies && homies.length==0">
     <h3>You have no homies or outstanding homie requests. Use the Search feature to find some people to connect with.</h3>
   </mat-card>
-  <mat-expansion-panel *ngIf="pendingHomieRequests && pendingHomieRequests.length>0">
+  <mat-expansion-panel *ngIf="pendingHomieRequests && pendingHomieRequests.length>0" [expanded]="true">
     <mat-expansion-panel-header>
-      <mat-panel-title>Pending Homie Requests</mat-panel-title>
-      <mat-panel-description>Users Who Want to Be Your Homies</mat-panel-description>
+      <mat-panel-title>Pending Homie Requests ({{pendingHomieRequests.length}}) </mat-panel-title>
+      <!--<mat-panel-description>({{pendingHomieRequests.length}}) Users Who Want to Be Your Homies</mat-panel-description>-->
     </mat-expansion-panel-header>
-    pendingHomieRequests.length = {{pendingHomieRequests.length}}
+    <app-homie-request *ngFor="let request of pendingHomieRequests" [homieRequest]="request" requestType="pending"></app-homie-request>
   </mat-expansion-panel>
-  <mat-expansion-panel *ngIf="waitingHomieRequests && waitingHomieRequests.length>0">
+  <mat-expansion-panel *ngIf="waitingHomieRequests && waitingHomieRequests.length>0" [expanded]="true">
     <mat-expansion-panel-header>
-      <mat-panel-title>Waiting Homie Requests</mat-panel-title>
-      <mat-panel-description>Users You Have Asked to Be Your Homie</mat-panel-description>
+      <mat-panel-title>Waiting Homie Requests ({{waitingHomieRequests.length}})</mat-panel-title>
+      <!--<mat-panel-description>({{waitingHomieRequests.length}}) Users You Have Asked to Be Your Homie</mat-panel-description>-->
     </mat-expansion-panel-header>
-    waitingHomieRequests.length = {{waitingHomieRequests.length}}
+    <app-homie-request *ngFor="let request of waitingHomieRequests" [homieRequest]="request" requestType="waiting"></app-homie-request>
   </mat-expansion-panel>
-  <mat-expansion-panel *ngIf="homies && homies.length>0">
+  <mat-expansion-panel *ngIf="homies && homies.length>0" [expanded]="true">
     <mat-expansion-panel-header>
-      <mat-panel-title>Homies</mat-panel-title>
-      <mat-panel-description>Your Homies</mat-panel-description>
+      <mat-panel-title>Your Homies ({{homies.length}})</mat-panel-title>
+      <!--<mat-panel-description>({{homies.length}}) Homies</mat-panel-description>-->
     </mat-expansion-panel-header>
-    homies.length = {{homies.length}}
+    <app-homie-view *ngFor="let homie of homies" [homie]="homie"></app-homie-view>
   </mat-expansion-panel>
 </mat-card>

@@ -39,6 +39,9 @@ export class HomiesComponent implements OnInit {
     // If the user is logged in, get the data for the screen
     this.getData();
 
+    // Subscribe to changes in pending and waiting homie requests
+    this.subscribeToHomieRequestChanges();
+
     // Subscribe to login changes
     this.authService.userLoginChange.subscribe(loggedIn => {
       this.loggedIn = loggedIn;
@@ -49,8 +52,26 @@ export class HomiesComponent implements OnInit {
       } else {
         // Otherwise get the data for the screen
         this.getData();
+
+        // Subscribe to changes in pending and waiting homie requests
+        this.subscribeToHomieRequestChanges();
       }
     });
+  }
+
+  // Subscribe to changes in pending and waiting homie requests
+  subscribeToHomieRequestChanges(){
+    if(this.loggedIn){
+      // Refresh the data if pending count changes
+      this.homiesService.pendingRequestCountChange.subscribe(count => {
+        this.getData();
+      });
+
+      // Refresh the data if waiting count changes
+      this.homiesService.waitingRequestCountChange.subscribe(count => {
+        this.getData();
+      });
+    }
   }
 
   // Displays a loading dialog

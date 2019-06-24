@@ -19,15 +19,21 @@ export class HomiesService {
       if(authService.getUser()){
         if(response.acceptUser == authService.getUser()){
           this.getUsersPendingHomieRequestCount(authService.getUserToken(), authService.getUser(), (success : boolean, count: number) => {
-            if(success) this.homieRequestCountChange.emit(count);
+            if(success) this.pendingRequestCountChange.emit(count);
           });
+        }
+        else if(response.requestUser == authService.getUser()){
+          this.getUsersWaitingHomieRequestCount(authService.getUserToken(), authService.getUser(), (success: boolean, count: number) => {
+            if(success) this.waitingRequestCountChange.emit(count);
+          })
         }
       }
     });
   }
 
   // Used for the badge to display how many homie requests a user has
-  @Output() homieRequestCountChange: EventEmitter<number> = new EventEmitter();
+  @Output() pendingRequestCountChange: EventEmitter<number> = new EventEmitter();
+  @Output() waitingRequestCountChange: EventEmitter<number> = new EventEmitter();
 
   // Returns the relationship between two users
   public getHomieStatus(
@@ -142,13 +148,28 @@ export class HomiesService {
       token: string,
       username: string,
       callback: ((success: boolean, count: number) => void)
-    ) : void{
-      this.getUsersHomieRequests(token, username, (res : any) => {
-        if(res.success){
-          callback(res.success, res.homieRequests.pending.length);
-        } else {
-          callback(res.success, null);
-        }
-      });
-    }
+  ) : void{
+    this.getUsersHomieRequests(token, username, (res : any) => {
+      if(res.success){
+        callback(res.success, res.homieRequests.pending.length);
+      } else {
+        callback(res.success, null);
+      }
+    });
+  }
+
+  // Gets number of waiting homie requests for the user
+  public getUsersWaitingHomieRequestCount(
+      token: string,
+      username: string,
+      callback: ((success: boolean, count: number) => void)
+  ) : void{
+    this.getUsersHomieRequests(token, username, (res : any) => {
+      if(res.success){
+        callback(res.success, res.homieRequests.waiting.length);
+      } else {
+        callback(res.success, null);
+      }
+    });
+  }
 }
