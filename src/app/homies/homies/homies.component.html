@@ -2,7 +2,7 @@
 <mat-card *ngIf="loggedIn && hasActiveProfile == false"><h3>You must have an active profile to be able to use this feature.  Please create or edit your profile.</h3></mat-card>
 <mat-card *ngIf="loggedIn && hasActiveProfile">
   <mat-card *ngIf="pendingHomieRequests && pendingHomieRequests.length==0 && waitingHomieRequests && waitingHomieRequests.length == 0 && homies && homies.length==0">
-    <h3>You have no homies or outstanding homie requests. Use the Search feature to find some people to connect with.</h3>
+    <h3>You have no homies or outstanding homie requests. Use the <a [routerLink]="['../search']" >Search</a> feature to find some people to connect with.</h3>
   </mat-card>
   <mat-expansion-panel *ngIf="pendingHomieRequests && pendingHomieRequests.length>0" [expanded]="true">
     <mat-expansion-panel-header>

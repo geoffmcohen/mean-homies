@@ -96,11 +96,6 @@ export class HomieRequestComponent implements OnInit {
       // Hide the loding dialog
       this.closeLoadingDialog();
 
-      // If successful, refresh the homie status
-      // if(res.success){
-      //   this.refreshHomieStatus();
-      // }
-
       // Show a snackbar with the message returned
       this.snackBar.open(res.message, "Close");
     });
@@ -115,11 +110,6 @@ export class HomieRequestComponent implements OnInit {
     this.homiesService.declineHomieRequest(this.authService.getUserToken(), this.authService.getUser(), this.profile.username, (res : any) => {
       // Hide the loding dialog
       this.closeLoadingDialog();
-
-      // // If successful, refresh the homie status
-      // if(res.success){
-      //   this.refreshHomieStatus();
-      // }
 
       // Show a snackbar with the message returned
       this.snackBar.open(res.message, "Close");
