@@ -37,3 +37,9 @@
   font-size: 120%;
   font-weight: bold;
 }
+
+.small-br{
+   height:1px;
+   visibility:hidden;
+   margin-bottom:-8px;
+}

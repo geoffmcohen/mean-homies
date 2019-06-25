@@ -39,3 +39,14 @@
 .waiting-request{
   width: 100%;
 }
+
+.small-br{
+   height:1px;
+   visibility:hidden;
+   margin-bottom:-8px;
+}
+
+/deep/ .mat-raised-button{
+  /*width: 160px!important;*/
+  min-width: 160px!important;
+}

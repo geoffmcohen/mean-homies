@@ -1,3 +1,4 @@
+<hr class="small-br">
 <mat-card *ngIf="profile">
   <div class="homie-view">
     <div class="pic-and-name">
@@ -11,11 +12,11 @@
       <span class="location">{{profile.location.city}}, {{profile.location.stateProvince}}, {{profile.location.country}}</span>
     </div>
     <div class="actions-div">
-      <button mat-raised-button color="primary" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon> View Profile</button>
-      <br>
-      <button mat-raised-button color="primary" (click)="sendHomieMessage()"><mat-icon>message</mat-icon> Send Message</button>
-      <br>
-      <button mat-raised-button color="warn" (click)="removeHomie()"><mat-icon>clear</mat-icon> Remove Homie</button>
+      <button mat-raised-button color="primary" style="width:160px;text-align:left" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon> View Profile</button>
+      <hr class="small-br">
+      <button mat-raised-button color="primary" style="width:160px;text-align:left" (click)="sendHomieMessage()"><mat-icon>message</mat-icon> Send Message</button>
+      <hr class="small-br">
+      <button mat-raised-button color="warn" style="width:160px;text-align:left" (click)="removeHomie()"><mat-icon>clear</mat-icon> Remove Homie</button>
     </div>
   </div>
 </mat-card>
