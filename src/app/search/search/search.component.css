@@ -15,3 +15,9 @@
   color: red;
   width: 100%;
 }
+
+.small-br{
+   height:1px;
+   visibility:hidden;
+   margin-bottom:-8px;
+}

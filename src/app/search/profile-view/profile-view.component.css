@@ -21,8 +21,19 @@
   display: table-cell;
   vertical-align: top;
   padding: 5px;
+  width: 100%;
 }
 
 .location{
  font-size: 80%;
+}
+
+.small-br{
+   height:1px;
+   visibility:hidden;
+   margin-bottom:-8px;
+}
+
+.full-width{
+  width: 100%;
 }

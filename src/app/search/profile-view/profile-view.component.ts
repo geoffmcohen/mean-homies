@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { ProfileViewDialogComponent } from '../../user/profile-view-dialog/profile-view-dialog.component';
 import { CreateHomieRequestDialogComponent } from '../../homies/create-homie-request-dialog/create-homie-request-dialog.component';
-
 
 @Component({
   selector: 'app-profile-view',
@@ -16,8 +16,6 @@ import { CreateHomieRequestDialogComponent } from '../../homies/create-homie-req
 export class ProfileViewComponent implements OnInit {
   @Input() profile: any;
   public profileImage: string;
-  public aboutMe: string;
-  public lookingToMeet: string;
   public homieStatus: string;
 
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
@@ -33,10 +31,6 @@ export class ProfileViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Add line breaks to aboutMe and lookingToMeet
-    this.aboutMe = this.profile.aboutMe.replace(/(?:\r\n|\r|\n)/g, '<br>');
-    this.lookingToMeet = this.profile.lookingToMeet.replace(/(?:\r\n|\r|\n)/g, '<br>');
-
     // Set the profile image to the default
     this.profileImage = '../../../assets/images/default profile.gif';
 

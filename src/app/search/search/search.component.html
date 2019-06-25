@@ -39,7 +39,7 @@
     <button mat-raised-button color="primary" (click)="performSearch()"><mat-icon>search</mat-icon> Search</button>
   </mat-card-actions>
 </mat-card>
-<br>
+<hr class="small-br">
 <mat-card *ngIf="searchResults">
   <mat-card-title>Found {{searchResults.length}} users.</mat-card-title>
   <app-profile-view *ngFor="let profile of pagedResults" [profile]="profile"></app-profile-view>

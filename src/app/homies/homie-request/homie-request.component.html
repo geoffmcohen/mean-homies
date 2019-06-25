@@ -23,7 +23,7 @@
       <div *ngIf="requestType=='waiting'" class="waiting-request">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Message</mat-label>
-          <textarea matInput placeholder="" cdkTextareaAutosize cdkAutosizeMinRows="6" cdkAutosizeMaxnRows="6" readonly>{{homieRequest.message}}</textarea>
+          <textarea matInput placeholder="" cdkTextareaAutosize cdkAutosizeMinRows="6" cdkAutosizeMaxRows="6" readonly>{{homieRequest.message}}</textarea>
         </mat-form-field>
         <button mat-raised-button color="primary" disabled><mat-icon>hourglass_empty</mat-icon> Waiting for {{homieRequest.acceptUser}}...</button>&nbsp;
         <button mat-raised-button color="warn" (click)="deleteRequest()"><mat-icon>delete</mat-icon> Delete Request</button>

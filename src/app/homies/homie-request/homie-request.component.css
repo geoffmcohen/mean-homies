@@ -45,8 +45,3 @@
    visibility:hidden;
    margin-bottom:-8px;
 }
-
-/deep/ .mat-raised-button{
-  /*width: 160px!important;*/
-  min-width: 160px!important;
-}

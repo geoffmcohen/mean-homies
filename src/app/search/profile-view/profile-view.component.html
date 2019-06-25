@@ -1,4 +1,4 @@
-<br>
+<hr class="small-br">
 <mat-card>
   <mat-card-title><a (click)="showProfileDialog()">{{profile.displayName ? profile.displayName : profile.username}}</a></mat-card-title>
   <div class="profile">
@@ -34,11 +34,14 @@
       </div>
     </div>
     <div class="about-and-looking">
-      <!-- #TODO: These might look better as material textareas -->
-      <h3>About Me</h3>
-      <p [innerHtml]="aboutMe"></p>
-      <h3>Looking To Meet</h3>
-      <p [innerHtml]="lookingToMeet"></p>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>About Me</mat-label>
+        <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5" readonly>{{profile.aboutMe}}</textarea>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Looking To Meet</mat-label>
+        <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5" readonly>{{profile.lookingToMeet}}</textarea>
+      </mat-form-field>
     </div>
   </div>
 </mat-card>
