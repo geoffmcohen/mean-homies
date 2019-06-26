@@ -6,6 +6,7 @@ import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { ProfileViewDialogComponent } from '../../user/profile-view-dialog/profile-view-dialog.component';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-homie-request',
@@ -17,8 +18,10 @@ export class HomieRequestComponent implements OnInit {
   @Input() requestType: string;
   public profile: any;
   public profileImage: string;
+
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private profileDialogRef: MatDialogRef<ProfileViewDialogComponent>;
+  private confirmationDialogRef: MatDialogRef<ConfirmationDialogComponent>;
 
   constructor(
     private authService: AuthenticationService,
@@ -123,8 +126,34 @@ export class HomieRequestComponent implements OnInit {
   }
 
   // Deletes the request this user sent
-  // #TODO: This needs to be implemented
   deleteRequest(){
-     console.log('deleteRequest() called');
-   }
+   // Display confirmation dialog
+   const dialogConfig = new MatDialogConfig();
+   dialogConfig.autoFocus = true;
+   dialogConfig.data = {
+     title: 'Confirm Homie Request Delete',
+     message: 'Are you sure you would like to delete the Homie Request you sent to ' + this.homieRequest.acceptUser + "?"
+   };
+   //dialogConfig.minWidth = "90%";
+
+   // Show the profile dislay dialog
+   this.confirmationDialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+
+   // If the user confirmed, then delete the request
+   this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+     if(confirmed){
+       // Show the loading dialog
+       this.showLoadingDialog();
+
+       // Make the call to delete the request
+       this.homiesService.deleteHomieRequest(this.authService.getUserToken(), this.authService.getUser(), this.profile.username, (res : any) => {
+         // Hide the loaidng dialog
+         this.closeLoadingDialog();
+
+         // Show a snackbar with the message returned
+         this.snackBar.open(res.message, "Close");
+       });
+     }
+   });
+ }
 }

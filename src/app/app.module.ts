@@ -63,6 +63,7 @@ import { CreateHomieRequestDialogComponent } from './homies/create-homie-request
 import { HomiesComponent } from './homies/homies/homies.component';
 import { HomieRequestComponent } from './homies/homie-request/homie-request.component';
 import { HomieViewComponent } from './homies/homie-view/homie-view.component';
+import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { HomieViewComponent } from './homies/homie-view/homie-view.component';
     CreateHomieRequestDialogComponent,
     HomiesComponent,
     HomieRequestComponent,
-    HomieViewComponent
+    HomieViewComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -143,7 +145,8 @@ import { HomieViewComponent } from './homies/homie-view/homie-view.component';
     ChangePasswordDialogComponent,
     PictureUploadDialogComponent,
     ProfileViewDialogComponent,
-    CreateHomieRequestDialogComponent
+    CreateHomieRequestDialogComponent,
+    ConfirmationDialogComponent
   ]
 })
 export class AppModule { }

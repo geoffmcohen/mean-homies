@@ -467,3 +467,74 @@ exports.getHomieRequests = function(username, callback){
     });
   });
 }
+
+// Deletes a request that the user has sent
+exports.deleteHomieRequest = function(token, username, targetUser, callback){
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, invalidTokenMessage);
+    } else {
+      // Call function to actually make the request
+      exports.deleteRequest(username, targetUser, function(success, msg){
+        // Notify the targetUser in real time of request
+        require('./real-time.js').emitEvent('homie request count change', {requestUser: username, acceptUser: targetUser});
+
+        // Callback with success
+        return callback(success, msg);
+      });
+    }
+  });
+}
+
+// Removes the homie request sent by the user
+exports.deleteRequest = function(username, targetUser, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Find the homieRequest
+    searchCriteria = {requestUser: username, acceptUser: targetUser};
+    dbo.collection("homieRequests").findOne(searchCriteria, function(err, homieRequest){
+      if (!homieRequest)
+      {
+        console.log("Unable to find homieRequest between '%s' and '%s'", targetUser, username);
+        return callback(false, serverErrorMessage);
+      } else {
+        // Create the record to insert into homies
+        homieRequest.deleteTime = Date.now();
+
+        // Insert into homies
+        dbo.collection("deletedHomieRequests").insertOne(homieRequest, function(err, insertResult){
+          if(err){
+            console.error("Unable to insert into deletedHomieRequests");
+            console.error(err);
+            return callback(false, serverErrorMessage);
+          } else {
+            // Remove from homieRequest
+            dbo.collection("homieRequests").deleteOne(searchCriteria, function(err, deleteResult){
+              db.close();
+              if(err){
+                console.error("Unable to remove from homieRequests");
+                console.error(err);
+                return callback(false, serverErrorMessage);
+              } else {
+                console.log("Succesfully deleted homie request '%s' >>> '%s'", targetUser, username);
+                return callback(true, "Succesfully deleted Homie Request");
+              };
+            });
+          }
+        });
+      }
+    });
+  });
+}

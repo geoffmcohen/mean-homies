@@ -172,4 +172,21 @@ export class HomiesService {
       }
     });
   }
+
+  // Deletes a Homie request sent from the user to the target user
+  public deleteHomieRequest(
+    token: string,
+    username: string,
+    targetUser: string,
+    callback: ((result: any) => void)
+  ) : void{
+    // Make the REST call
+    this.http.post<any>(
+      '/api/homies/delete_homie_request',
+      {token: token, username: username, targetUser: targetUser}
+    ).subscribe((res : any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
 }

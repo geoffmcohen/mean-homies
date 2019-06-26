@@ -503,7 +503,6 @@ module.exports = (function(){
         res.send({success: success, message: message});
       });
     });
-
   });
 
   // Gets the users homies
@@ -523,6 +522,22 @@ module.exports = (function(){
     var homies = require("../modules/homies.js");
     homies.getUsersHomieRequests(req.query.token, req.query.username,function(success, homieRequests){
       res.send({success: success, homieRequests: homieRequests});
+    });
+  });
+
+  // Deletes a Homie request sent from the user to the target user
+  api.post('/homies/delete_homie_request', function(req, res){
+    console.log('api/homies/delete_homie_request');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the homie request
+      var homies = require("../modules/homies.js");
+      homies.deleteHomieRequest(fields.token, fields.username, fields.targetUser, function(success, message){
+        res.send({success: success, message: message});
+      });
     });
   });
 
