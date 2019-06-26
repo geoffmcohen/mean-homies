@@ -13,19 +13,21 @@
     <div class="request-display">
       <div *ngIf="requestType=='pending'" class="pending-request">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Message</mat-label>
+          <mat-label>{{profile.displayName ? profile.displayName : profile.username}}'s Message To You</mat-label>
           <textarea matInput placeholder="" cdkTextareaAutosize cdkAutosizeMinRows="6" cdkAutosizeMaxRows="6" readonly>{{homieRequest.message}}</textarea>
         </mat-form-field>
+        <button mat-raised-button color="primary" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon> View Profile</button>&nbsp;
         <button mat-raised-button color="primary" (click)="acceptHomieRequest()"><mat-icon>thumb_up</mat-icon> Accept Request</button>&nbsp;
         <button mat-raised-button color="primary" (click)="declineHomieRequest()"><mat-icon>thumb_down</mat-icon> Decline Request</button>&nbsp;
         <button mat-raised-button color="warn" (click)="blockUser()"><mat-icon>block</mat-icon> Block User</button>
       </div>
       <div *ngIf="requestType=='waiting'" class="waiting-request">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Message</mat-label>
+          <mat-label>Your Message to {{profile.displayName ? profile.displayName : profile.username}}</mat-label>
           <textarea matInput placeholder="" cdkTextareaAutosize cdkAutosizeMinRows="6" cdkAutosizeMaxRows="6" readonly>{{homieRequest.message}}</textarea>
         </mat-form-field>
-        <button mat-raised-button color="primary" disabled><mat-icon>hourglass_empty</mat-icon> Waiting for {{homieRequest.acceptUser}}...</button>&nbsp;
+        <button mat-raised-button color="primary" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon> View Profile</button>&nbsp;
+        <button mat-raised-button disabled><mat-icon>hourglass_empty</mat-icon> Waiting for {{homieRequest.acceptUser}}...</button>&nbsp;
         <button mat-raised-button color="warn" (click)="deleteRequest()"><mat-icon>delete</mat-icon> Delete Request</button>
       </div>
     </div>
