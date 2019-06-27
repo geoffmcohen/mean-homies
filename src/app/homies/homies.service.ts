@@ -37,9 +37,9 @@ export class HomiesService {
       // If a user is logged in, check if this request pertains to them
       if(authService.getUser()){
         if(response.user == authService.getUser()){
-          removeUserFromHomies.emit(response.targetUser);
+          this.removeUserFromHomies.emit(response.targetUser);
         } else if(response.targetUser == authService.getUser()){
-          removeUserFromHomies.emit(response.user);
+          this.removeUserFromHomies.emit(response.user);
         }
       }
     });
