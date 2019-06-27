@@ -669,6 +669,7 @@ exports.createUserBlock = function(username, targetUser, callback){
 
 // Finds all of the users that this user has blocked or that have blocked this user
 exports.getBlocks = function(username, callback){
+  // #TODO: Does this logically belong in this module?
   console.log("Finding blocks for '%s'", username);
 
   // Connect to the database
