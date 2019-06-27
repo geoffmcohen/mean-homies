@@ -5,6 +5,7 @@ import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { ProfileViewDialogComponent } from '../../user/profile-view-dialog/profile-view-dialog.component';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-homie-view',
@@ -18,6 +19,7 @@ export class HomieViewComponent implements OnInit {
 
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private profileDialogRef: MatDialogRef<ProfileViewDialogComponent>;
+  private confirmationDialogRef: MatDialogRef<ConfirmationDialogComponent>;
 
   constructor(
     private authService: AuthenticationService,
@@ -79,6 +81,68 @@ export class HomieViewComponent implements OnInit {
     this.profileDialogRef = this.dialog.open(ProfileViewDialogComponent, dialogConfig);
   }
 
+  // Removes the homie from your list
+  removeHomie(){
+    // Show a confirmation dialog to make sure the user wants to remove their homie
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = {
+      title: 'Confirm Homie Removal',
+      message: "Are you sure you would like to remove " + this.profile.username + " from your homies?"
+    };
+
+    // Show the profile dislay dialog
+    this.confirmationDialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+
+    // If the user confirmed, then delete the request and block the user
+    this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+      if(confirmed){
+        // Show the loading dialog
+        this.showLoadingDialog();
+
+        // Call the homie removal method first
+        this.homiesService.removeHomie(this.authService.getUserToken(), this.authService.getUser(), this.profile.username, (res : any) => {
+          // Hide the loading dialog
+          this.closeLoadingDialog();
+
+          if(res.success){
+            // Prompt the user to ask if they would also like to block this user
+            const dialogConfig = new MatDialogConfig();
+            dialogConfig.autoFocus = true;
+            dialogConfig.data = {
+              title: 'Block User',
+              message: res.message + "  Would you also like to block " + this.profile.username + "?  This will mean you will no longer be able to see or contact each other."
+            };
+
+            // Show the profile dislay dialog
+            this.confirmationDialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+
+            // If the user confirmed, then create the block
+            this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+              if(confirmed){
+                // Show the loading dialog
+                this.showLoadingDialog();
+
+                // Call the block method
+                this.homiesService.blockUser(this.authService.getUserToken(), this.authService.getUser(), this.profile.username, (res : any) =>{
+                  // Hide the loading dialog
+                  this.closeLoadingDialog();
+
+                  // Show a snackbar with the message returned
+                  this.snackBar.open(res.message, "Close");
+                });
+              }
+            });
+          } else {
+            // Show a snackbar with the message returned
+            this.snackBar.open(res.message, "Close");
+          }
+        });
+      }
+    });
+  }
+
+  // Sends the homie a message
+  // #TODO: This needs to be implemented
   sendHomieMessage(){ console.log("sendHomieMessage() called"); }
-  removeHomie(){ console.log("removeHomie() called"); }
 }

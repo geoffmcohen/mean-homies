@@ -588,7 +588,7 @@ exports.removeHomie = function(username, targetUser, callback){
         homiesRecord.deleteTime = Date.now();
 
         // Insert the delete record into the deletedHomies collection
-        dbo.collection("deletedHomies").insertOne(homieRecord, function(err, insertResult){
+        dbo.collection("deletedHomies").insertOne(homiesRecord, function(err, insertResult){
           if(err){
             console.error("Unable to insert into deletedHomies");
             console.error(err);
@@ -603,7 +603,7 @@ exports.removeHomie = function(username, targetUser, callback){
                 return callback(false, serverErrorMessage);
               } else {
                 console.log("Succesfully deleted homie relationship '%s' <=> '%s'", username, targetUser);
-                return callback(true, "Succesfully removed '" + targetUser + "' from your homies");
+                return callback(true, "Succesfully removed '" + targetUser + "' from your homies.");
               }
             });
           }

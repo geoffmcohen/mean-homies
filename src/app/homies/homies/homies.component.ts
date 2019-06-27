@@ -71,6 +71,13 @@ export class HomiesComponent implements OnInit {
       this.homiesService.waitingRequestCountChange.subscribe(count => {
         this.getData();
       });
+
+      // Remove a homie from the list
+      this.homiesService.removeUserFromHomies.subscribe(username => {
+        this.homies = this.homies.filter(function(value, index, arr){
+          return value != username;
+        });
+      });
     }
   }
 

@@ -120,9 +120,37 @@ export class HomieRequestComponent implements OnInit {
   }
 
   // Blocks a user from contacting this user again
-  // #TODO: This needs to be implemented
   blockUser(){
-     console.log('blockUser() called');
+     // Display confirmation dialog
+     const dialogConfig = new MatDialogConfig();
+     dialogConfig.autoFocus = true;
+     dialogConfig.data = {
+       title: 'Confirm User Block',
+       message: "Are you sure you would like to block " + this.homieRequest.requestUser + "?  This will mean you will no longer be able to see or contact each other."
+     };
+
+     // Show the profile dislay dialog
+     this.confirmationDialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+
+     // If the user confirmed, then delete the request and block the user
+     this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+       if(confirmed){
+        // Show the loading dialog
+        this.showLoadingDialog();
+
+        // Decline the request first
+        this.homiesService.declineHomieRequest(this.authService.getUserToken(), this.authService.getUser(), this.profile.username, (res : any) => {
+          // Make the call to block the user
+          this.homiesService.blockUser(this.authService.getUserToken(), this.authService.getUser(), this.profile.username, (res : any) => {
+            // Hide the loaidng dialog
+            this.closeLoadingDialog();
+
+            // Show a snackbar with the message returned
+            this.snackBar.open(res.message, "Close");
+          });
+        });
+      }
+    });
   }
 
   // Deletes the request this user sent
@@ -134,7 +162,6 @@ export class HomieRequestComponent implements OnInit {
      title: 'Confirm Homie Request Delete',
      message: 'Are you sure you would like to delete the Homie Request you sent to ' + this.homieRequest.acceptUser + "?"
    };
-   //dialogConfig.minWidth = "90%";
 
    // Show the profile dislay dialog
    this.confirmationDialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
