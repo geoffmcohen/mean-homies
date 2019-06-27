@@ -3,7 +3,7 @@ const serverErrorMessage = "Server error occurred, please contact geoff@veganhom
 const invalidTokenMessage = "Invalid user token provided. Please log out and back in and try again.";
 
 // Gets the distance between two coordinates
-exports.getDistance = function( fromLat, fromLng, toLat, toLng, convertToMiles = true){
+exports.getDistance = function(fromLat, fromLng, toLat, toLng, convertToMiles = true){
   // Calculate the distance in meters
   var distanceInMeters = require('geolib').getDistance(
     {latitude: fromLat, longitude: fromLng},
@@ -27,62 +27,72 @@ exports.getUsersNearCoords = function(
   useMiles,
   callback
 ){
-  // Connect to the database
-  var MongoClient = require('mongodb').MongoClient;
-  var mongoURI = process.env.MONGOLAB_URI;
-  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
-    // Throw error if unable to connect
-    if(err){
-      console.log("Unable to connect to MongoDB!!!");
-      throw err;
-    }
-    var dbo = db.db();
-
-    // Set up search query to exclude this user and only show active users
-    searchQuery = {
-      username: {$ne : username},
-      active: true
-    };
-
-    // Search for users
-    dbo.collection("userProfiles").find(searchQuery, function(err, profiles){
-      // Create an array to store results that are within the search area
-      var nearbyProfiles = [];
-
-      // Calculate the distance for each result and add it to the array if its in the search area
-      profiles.forEach(function(profile){
-        distance = exports.getDistance(fromLat, fromLng, profile.location.lat, profile.location.lng, useMiles);
-        if(distance <= radius){
-          // Store the distance and unit
-          profile.distance = distance;
-          profile.distanceUnit = "Miles"
-          if(!useMiles) profile.distanceUnit = "KM";
-
-          // Add the profile to the array to return
-          nearbyProfiles.push(profile);
-        }
-      }, function(err){
-        db.close();
+  // Get a list of blocked users to remove them from the final results
+  require('./homies').getBlocks(username, function(success, blocks){
+    if(!success){
+      return callback(false, null);
+    } else {
+      // Connect to the database
+      var MongoClient = require('mongodb').MongoClient;
+      var mongoURI = process.env.MONGOLAB_URI;
+      MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+        // Throw error if unable to connect
         if(err){
-          console.error("Error occurred while trying to do location based search");
-          console.error(err);
-          return callback(false, null);
+          console.log("Unable to connect to MongoDB!!!");
+          throw err;
         }
-        else {
-          // Sort the results by distance and username
-          nearbyProfiles.sort(function(a, b){
-            if (a.distance == b.distance){
-              return a.username > b.username;
-            } else {
-              return a.distance > b.distance;
+        var dbo = db.db();
+
+        // Set up search query to exclude this user and only show active users
+        searchQuery = {
+          username: {$ne : username},
+          active: true
+        };
+
+        // Search for users
+        dbo.collection("userProfiles").find(searchQuery, function(err, profiles){
+          // Create an array to store results that are within the search area
+          var nearbyProfiles = [];
+
+          // Calculate the distance for each result and add it to the array if its in the search area
+          profiles.forEach(function(profile){
+            // Only include if not found in blocks
+            if(!blocks.includes(profile.username)){
+              distance = exports.getDistance(fromLat, fromLng, profile.location.lat, profile.location.lng, useMiles);
+              if(distance <= radius){
+                // Store the distance and unit
+                profile.distance = distance;
+                profile.distanceUnit = "Miles"
+                if(!useMiles) profile.distanceUnit = "KM";
+
+                // Add the profile to the array to return
+                nearbyProfiles.push(profile);
+              }
+            }
+          }, function(err){
+            db.close();
+            if(err){
+              console.error("Error occurred while trying to do location based search");
+              console.error(err);
+              return callback(false, null);
+            }
+            else {
+              // Sort the results by distance and username
+              nearbyProfiles.sort(function(a, b){
+                if (a.distance == b.distance){
+                  return a.username > b.username;
+                } else {
+                  return a.distance > b.distance;
+                }
+              });
+
+              // Callback with the results
+              return callback(true, nearbyProfiles);
             }
           });
-
-          // Callback with the results
-          return callback(true, nearbyProfiles);
-        }
+        });
       });
-    });
+    }
   });
 }
 

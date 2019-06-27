@@ -350,7 +350,6 @@ exports.getUsersHomies = function(token, username, callback){
 }
 
 // Finds all of the homies for an input user
-// #TODO: Remove any blocked users
 exports.getHomies = function(username, callback){
   console.log("Finding homies for '%s'", username);
 
@@ -663,6 +662,56 @@ exports.createUserBlock = function(username, targetUser, callback){
       } else {
         console.log("User '%s' blocked '%s'", username, targetUser);
         return callback(true, "successfully blocked user '" + targetUser + "'. You will no longer be able to see or contact each other.");
+      }
+    });
+  });
+}
+
+// Finds all of the users that this user has blocked or that have blocked this user
+exports.getBlocks = function(username, callback){
+  console.log("Finding blocks for '%s'", username);
+
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Find all of a users blocks
+    searchCriteria = {$or: [ {username: username}, {blockedUser: username} ]};
+    dbo.collection("userBlocks").find(searchCriteria, function(err, blockRecords){
+      if(err){
+        console.error("An error occurred getting blocks for '%s'", username);
+        console.error(err);
+        return callback(false, null);
+      } else {
+        var blocks = [];
+        // Loop through the records adding each homie to the array to return
+        blockRecords.forEach(function(blockRecord){
+          if(blockRecord.username == username){
+            blocks.push(blockRecord.blockedUser);
+          } else {
+            blocks.push(blockRecord.username);
+          }
+        }, function(err){
+          db.close();
+          if(err){
+            console.error("Error occurred while tying to loop through blocks for '%s'", username);
+            console.error(err);
+            return callback(false, null);
+          } else {
+            // Sort the homies in alphabetical order
+            blocks.sort(function(a, b){return a > b});
+
+            // Callback with the results
+            return callback(true, blocks);
+          }
+        });
       }
     });
   });

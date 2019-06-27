@@ -127,6 +127,7 @@ export class SearchComponent implements OnInit {
   // Clears the search results
   clearSearchResults(){
     this.searchResults = null;
+    this.pagedResults = null;
     this.message = null;
   }
 
