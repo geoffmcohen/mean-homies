@@ -538,3 +538,132 @@ exports.deleteRequest = function(username, targetUser, callback){
     });
   });
 }
+
+// Removes the target user from the users homie list
+exports.removeUsersHomie = function(token, username, targetUser, callback){
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, invalidTokenMessage);
+    } else {
+      // Call function to actually make the request
+      exports.removeHomie(username, targetUser, function(success, msg){
+        // Notify the targetUser in real time of request
+        require('./real-time.js').emitEvent('homie removal', {user: username, targetUser: targetUser});
+
+        // Callback with success
+        return callback(success, msg);
+      });
+    }
+  });
+}
+
+// Removes the users homie relationship
+exports.removeHomie = function(username, targetUser, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+    // Get the homie record
+    searchCriteria = {$or: [
+      {requestUser: username, acceptUser: targetUser},
+      {requestUser: targetUser, acceptUser: username}
+    ]};
+    dbo.collection("homies").findOne(searchCriteria, function(err, homiesRecord){
+      if(err){
+        console.error("Error occurred while checking homies");
+        console.error(err);
+        return callback(false, null);
+      } else {
+        // Set up the delete record
+        homiesRecord.deleteUser = username;
+        homiesRecord.deleteTime = Date.now();
+
+        // Insert the delete record into the deletedHomies collection
+        dbo.collection("deletedHomies").insertOne(homieRecord, function(err, insertResult){
+          if(err){
+            console.error("Unable to insert into deletedHomies");
+            console.error(err);
+            return callback(false, serverErrorMessage);
+          } else {
+            // Delete frome the homies collection
+            dbo.collection("homies").deleteOne(searchCriteria, function(err, deleteResult){
+              db.close();
+              if(err){
+                console.error("Unable to delete from homies");
+                console.error(err);
+                return callback(false, serverErrorMessage);
+              } else {
+                console.log("Succesfully deleted homie relationship '%s' <=> '%s'", username, targetUser);
+                return callback(true, "Succesfully removed '" + targetUser + "' from your homies");
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+}
+
+// Blocks a the target user from contacting this user
+// #TODO: Does this logically belong in this module?
+exports.blockUser = function(token, username, targetUser, callback){
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, invalidTokenMessage);
+    } else {
+      // Call function to actually make the request
+      exports.createUserBlock(username, targetUser, function(success, msg){
+        // Callback with success
+        return callback(success, msg);
+      });
+    }
+  });
+}
+
+// Creates a record in userBlocks
+// #TODO: Does this logically belong in this module?
+exports.createUserBlock = function(username, targetUser, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Create a record to insert into the user blocks
+    blockRecord = {
+      username: username,
+      blockedUser: targetUser,
+      creationTime: Date.now()
+    };
+
+    // Insert the record into the userBlocks
+    dbo.collection("userBlocks").insertOne(blockRecord, function(err, insertResult){
+      db.close();
+      if(err){
+        console.error("Unable to insert into userBlocks");
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else {
+        console.log("User '%s' blocked '%s'", username, targetUser);
+        return callback(true, "successfully blocked user '" + targetUser + "'. You will no longer be able to see or contact each other.");
+      }
+    });
+  });
+}

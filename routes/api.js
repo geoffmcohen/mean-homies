@@ -541,6 +541,38 @@ module.exports = (function(){
     });
   });
 
+  // Removes the target user from the users homie list
+  api.post('/homies/remove_homie', function(req, res){
+    console.log('api/homies/remove_homie');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the homie request
+      var homies = require("../modules/homies.js");
+      homies.removeUsersHomie(fields.token, fields.username, fields.targetUser, function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+  });
+
+  // Blocks a the target user from contacting this user
+  api.post('/homies/block_user', function(req, res){
+    console.log('api/homies/block_user');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the homie request
+      var homies = require("../modules/homies.js");
+      homies.blockUser(fields.token, fields.username, fields.targetUser, function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+  });
+
   // api.get()
   return api;
 })();

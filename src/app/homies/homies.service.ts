@@ -12,8 +12,10 @@ export class HomiesService {
     private http: HttpClient,
     private authService: AuthenticationService
   ) {
-    // Create a socket to see when pending homie requests count changes
+    // Create a socket to check for changes in homies and homie requests
     const socket = socketIo('');
+
+    // When the count of homie requests changes
     socket.on('homie request count change', response => {
       // If a user is loggedin, then check if the request was for them
       if(authService.getUser()){
@@ -29,11 +31,24 @@ export class HomiesService {
         }
       }
     });
+
+    // When a homie user removes another user from their homie list
+    socket.on('homie removal', response => {
+      // If a user is logged in, check if this request pertains to them
+      if(authService.getUser()){
+        if(response.user == authService.getUser()){
+          removeUserFromHomies.emit(response.targetUser);
+        } else if(response.targetUser == authService.getUser()){
+          removeUserFromHomies.emit(response.user);
+        }
+      }
+    });
   }
 
-  // Used for the badge to display how many homie requests a user has
+  // Event emitters to notify when changes to homies and homie requests occur
   @Output() pendingRequestCountChange: EventEmitter<number> = new EventEmitter();
   @Output() waitingRequestCountChange: EventEmitter<number> = new EventEmitter();
+  @Output() removeUserFromHomies: EventEmitter<string> = new EventEmitter();
 
   // Returns the relationship between two users
   public getHomieStatus(
@@ -189,4 +204,40 @@ export class HomiesService {
       callback(res);
     });
   }
+
+  // Removes the users homie relationship
+  public removeHomie(
+    token: string,
+    username: string,
+    targetUser: string,
+    callback: ((result: any) => void)
+  ) : void{
+    // Make the REST call
+    this.http.post<any>(
+      '/api/homies/remove_homie',
+      {token: token, username: username, targetUser: targetUser}
+    ).subscribe((res : any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
+
+  // Blocks a the target user from contacting this user
+  public blockUser(
+    token: string,
+    username: string,
+    targetUser: string,
+    callback: ((result: any) => void)
+  ) : void{
+    // Make the REST call
+    this.http.post<any>(
+      '/api/homies/block_user',
+      {token: token, username: username, targetUser: targetUser}
+    ).subscribe((res : any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
+
+
 }
