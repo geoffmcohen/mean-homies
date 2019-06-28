@@ -12,7 +12,7 @@ exports.getHomieStatus = function(token, username, targetUser, callback){
       return callback(false, invalidTokenMessage);
     } else {
       // Call the function to get the status
-      exports.getStatus(username, targetUser, function(success, status){
+      exports.getHomieStatusNoToken(username, targetUser, function(success, status){
         return callback(success, status);
       });
     }
@@ -25,7 +25,7 @@ exports.getHomieStatus = function(token, username, targetUser, callback){
 //   waiting - Waiting for targetUser to accept
 //   pending - Waiting for username to accept`
 //   n/a - No relationship exists between the users
-exports.getStatus = function(username, targetUser, callback){
+exports.getHomieStatusNoToken = function(username, targetUser, callback){
   console.log("Getting homie status between '%s' and '%s'", username, targetUser);
 
   // Connect to the database
@@ -45,10 +45,12 @@ exports.getStatus = function(username, targetUser, callback){
     ]};
     dbo.collection("userBlocks").findOne(searchCriteria, function(err, blockRecord){
       if(err){
+        db.close();
         console.error("Error occurred while checking userBlocks");
         console.error(err);
         return callback(false, null);
       } else if(blockRecord){
+        db.close();
         console.log("User '%s' has blocked '%s'", blockRecord.username, blockRecord.blockedUser);
         return callback(true, 'blocked');
       } else {
@@ -59,10 +61,12 @@ exports.getStatus = function(username, targetUser, callback){
         ]};
         dbo.collection("homies").findOne(searchCriteria, function(err, homiesRecord){
           if(err){
+            db.close();
             console.error("Error occurred while checking homies");
             console.error(err);
             return callback(false, null);
           } else if (homiesRecord){
+            db.close();
             console.log("User '%s' and '%s' are homies", username, targetUser);
             return callback(true, 'homies');
           } else {
@@ -109,7 +113,7 @@ exports.sendHomieRequest = function(token, username, targetUser, message, callba
       return callback(false, invalidTokenMessage);
     } else {
       // Call function to actually make the request
-      exports.sendRequest(username, targetUser, message, function(success, msg){
+      exports.sendHomieRequestNoToken(username, targetUser, message, function(success, msg){
         // Notify the targetUser in real time of request
         require('./real-time.js').emitEvent('homie request count change', {requestUser: username, acceptUser: targetUser});
 
@@ -121,11 +125,11 @@ exports.sendHomieRequest = function(token, username, targetUser, message, callba
 }
 
 // Creates the actual homie request between two users
-exports.sendRequest = function(username, targetUser, message, callback){
+exports.sendHomieRequestNoToken = function(username, targetUser, message, callback){
   console.log("Sending Homie Request '%s' >>> '%s'", username, targetUser);
 
   // Get the status between the users
-  exports.getStatus(username, targetUser, function(success, status){
+  exports.getHomieStatusNoToken(username, targetUser, function(success, status){
       if(!success){
         return callback(false, serverErrorMessage);
       } else if(status != 'n/a'){
@@ -177,7 +181,7 @@ exports.acceptHomieRequest = function(token, username, targetUser, callback){
       return callback(false, invalidTokenMessage);
     } else {
       // Call the actual function to make the request
-      exports.acceptRequest(username, targetUser, function(success, message){
+      exports.acceptHomieRequestNoToken(username, targetUser, function(success, message){
         // Notify the users client that the count has changed
         require('./real-time.js').emitEvent('homie request count change', {requestUser: targetUser, acceptUser: username});
         return callback(success, message);
@@ -187,11 +191,11 @@ exports.acceptHomieRequest = function(token, username, targetUser, callback){
 }
 
 // Function to allow users to accept friend requests
-exports.acceptRequest = function(username, targetUser, callback){
+exports.acceptHomieRequestNoToken = function(username, targetUser, callback){
   console.log("Accepting Homie Request '%s' >>> '%s'", targetUser, username);
 
   // Get the status between the users
-  exports.getStatus(username, targetUser, function(success, status){
+  exports.getHomieStatusNoToken(username, targetUser, function(success, status){
     if(!success){
       return callback(false, serverErrorMessage);
     } else if(status != 'pending'){
@@ -261,7 +265,7 @@ exports.declineHomieRequest = function(token, username, targetUser, callback){
       return callback(false, invalidTokenMessage);
     } else {
       // Call the actual function to make the request
-      exports.declineRequest(username, targetUser, function(success, message){
+      exports.declineHomieRequestNoToken(username, targetUser, function(success, message){
         // Notify the users client that the count has changed
         require('./real-time.js').emitEvent('homie request count change', {requestUser: targetUser, acceptUser: username});
         return callback(success, message);
@@ -271,11 +275,11 @@ exports.declineHomieRequest = function(token, username, targetUser, callback){
 }
 
 // Function to allow users to decline friend requests
-exports.declineRequest = function(username, targetUser, callback){
+exports.declineHomieRequestNoToken = function(username, targetUser, callback){
   console.log("Declining Homie Request '%s' >>> '%s'", targetUser, username);
 
   // Get the status between the users
-  exports.getStatus(username, targetUser, function(success, status){
+  exports.getHomieStatusNoToken(username, targetUser, function(success, status){
     if(!success){
       return callback(false, serverErrorMessage);
     } else if(status != 'pending'){
@@ -342,7 +346,7 @@ exports.getUsersHomies = function(token, username, callback){
       return callback(false, null);
     } else {
       // Call the function to get the homies for the user
-      exports.getHomies(username, function(success, homies){
+      exports.getUsersHomiesNoToken(username, function(success, homies){
         return callback(true, homies);
       });
     }
@@ -350,7 +354,7 @@ exports.getUsersHomies = function(token, username, callback){
 }
 
 // Finds all of the homies for an input user
-exports.getHomies = function(username, callback){
+exports.getUsersHomiesNoToken = function(username, callback){
   console.log("Finding homies for '%s'", username);
 
   // Connect to the database
@@ -409,7 +413,7 @@ exports.getUsersHomieRequests = function(token, username, callback){
       return callback(false, null);
     } else {
       // Call the function to get the homies requests for the user
-      exports.getHomieRequests(username, function(success, homieRequests){
+      exports.getUsersHomieRequestsNoToken(username, function(success, homieRequests){
         return callback(true, homieRequests);
       });
     }
@@ -417,7 +421,7 @@ exports.getUsersHomieRequests = function(token, username, callback){
 }
 
 // Gets pending homie requests for the user, split by 'pending' and 'waiting'
-exports.getHomieRequests = function(username, callback){
+exports.getUsersHomieRequestsNoToken = function(username, callback){
   console.log("Getting homieRequests for '%s'", username);
 
   // Connect to the database
@@ -477,7 +481,7 @@ exports.deleteHomieRequest = function(token, username, targetUser, callback){
       return callback(false, invalidTokenMessage);
     } else {
       // Call function to actually make the request
-      exports.deleteRequest(username, targetUser, function(success, msg){
+      exports.deleteHomieRequestNoToken(username, targetUser, function(success, msg){
         // Notify the targetUser in real time of request
         require('./real-time.js').emitEvent('homie request count change', {requestUser: username, acceptUser: targetUser});
 
@@ -489,7 +493,7 @@ exports.deleteHomieRequest = function(token, username, targetUser, callback){
 }
 
 // Removes the homie request sent by the user
-exports.deleteRequest = function(username, targetUser, callback){
+exports.deleteHomieRequestNoToken = function(username, targetUser, callback){
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
   var mongoURI = process.env.MONGOLAB_URI;
@@ -548,7 +552,7 @@ exports.removeUsersHomie = function(token, username, targetUser, callback){
       return callback(false, invalidTokenMessage);
     } else {
       // Call function to actually make the request
-      exports.removeHomie(username, targetUser, function(success, msg){
+      exports.removeUsersHomieNoToken(username, targetUser, function(success, msg){
         // Notify the targetUser in real time of request
         require('./real-time.js').emitEvent('homie removal', {user: username, targetUser: targetUser});
 
@@ -560,7 +564,7 @@ exports.removeUsersHomie = function(token, username, targetUser, callback){
 }
 
 // Removes the users homie relationship
-exports.removeHomie = function(username, targetUser, callback){
+exports.removeUsersHomieNoToken = function(username, targetUser, callback){
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
   var mongoURI = process.env.MONGOLAB_URI;
@@ -623,7 +627,7 @@ exports.blockUser = function(token, username, targetUser, callback){
       return callback(false, invalidTokenMessage);
     } else {
       // Call function to actually make the request
-      exports.createUserBlock(username, targetUser, function(success, msg){
+      exports.blockUserNoToken(username, targetUser, function(success, msg){
         // Callback with success
         return callback(success, msg);
       });
@@ -633,7 +637,7 @@ exports.blockUser = function(token, username, targetUser, callback){
 
 // Creates a record in userBlocks
 // #TODO: Does this logically belong in this module?
-exports.createUserBlock = function(username, targetUser, callback){
+exports.blockUserNoToken = function(username, targetUser, callback){
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
   var mongoURI = process.env.MONGOLAB_URI;
@@ -661,7 +665,7 @@ exports.createUserBlock = function(username, targetUser, callback){
         return callback(false, serverErrorMessage);
       } else {
         console.log("User '%s' blocked '%s'", username, targetUser);
-        return callback(true, "successfully blocked user '" + targetUser + "'. You will no longer be able to see or contact each other.");
+        return callback(true, "Successfully blocked user '" + targetUser + "'. You will no longer be able to see or contact each other.");
       }
     });
   });
