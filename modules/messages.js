@@ -59,7 +59,7 @@ exports.sendMessageNoToken = function(username, targetUser, messageText, callbac
 
         // Create the message
         message = {
-          conversationId: username < targetUser ? username + '-' + targetUser : targetUser + '-' + username,
+          conversationId: createConversationId(username, targetUser),
           sendUser: username,
           recieveUser: targetUser,
           messageText: messageText,
@@ -84,22 +84,130 @@ exports.sendMessageNoToken = function(username, targetUser, messageText, callbac
   });
 }
 
+// Returns a string with the usernames appended with a dash with the usernames sorted in order
+createConversationId = function(user1, user2){
+  return user1 < user2 ? user1 + '-' + user2 : user2 + '-' + user1;
+}
+
 // Sends the user an email notification
-// #TODO: This needs to be implemented
 exports.sendMessageNotificationEmail = function(username, targetUser, messageText, send = true, preview = false ){
   console.error("sendMessageNotificationEmail has been called, but not yet implemented");
 }
 
 // Function called by the api to get all the messages between the user and targetUser sent after the startTime
 exports.getMessages = function(token, username, targetUser, startTime, callback){
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      // Call the actual function to retreive the messages from the database
+      exports.getMessagesNoToken(username, targetUser, startTime, function(success, messages){
+        return callback(success, messages);
+      });
+    };
+  });
 }
 
 // Gets the messages between the user and the targetUser
 exports.getMessagesNoToken = function(username, targetUser, startTime, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Set up search query to get the messages
+    searchQuery = {
+      conversationId: createConversationId(username, targetUser),
+      sendTimestamp: {$gt: startTime}
+    };
+
+    // Search for messages in the conversation
+    dbo.collection("messages").find(searchQuery, function(err, messages){
+      if(err){
+        db.close();
+        console.error("Error occurred trying to get messages between '%s' and '%s'", username, targetUser);
+        console.error(err);
+        return callback(false, null);
+      } else {
+        // Create an array of the messages to return to the callback that will be sorted by sendTimestamp
+        var sortedMessages = [];
+
+        // Go through each message
+        messages.forEach(function(message){
+          // Mark the message as read if it's unread and sent to this user
+          if(message.recieveUser == username && message.status == 'sent'){
+            markMessageAsRead(message);
+          }
+
+          // Add the message to the array to return
+          sortedMessages.push(message);
+        }, function(err){
+          db.close();
+          if(err){
+            console.error("Error occurred while trying iterate through messages between '%s' and '%s'", username, targetUser);
+            console.error(err);
+            return callback(false, null);
+          } else {
+            // Sort the results by sendTimestamp
+            sortedMessages.sort(function(a, b){
+              if(a.sendTimestamp == b.sendTimestamp){
+                return a.sendUser > b.sendUser;
+              } else {
+                return a.sendTimestamp > b.sendTimestamp;
+              }
+            });
+
+            // Callback with the results
+            return callback(true, sortedMessages);
+          }
+        });
+      }
+    });
+  });
 }
 
 // Marks a message as read in the database once it's been retreived
-markMessageAsRead = function(message, callback){
+markMessageAsRead = function(message){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Create a new JSON to represent the updated data
+    var updatedMessage = JSON.parse(JSON.stringify(message));
+    delete updatedMessage._id;
+    updatedMessage.status = 'read';
+    updatedMessage.readTimestamp = Date.now();
+
+    // Update the message
+    dbo.collection("messages").updateOne(message, {$set: updatedMessage}, function(err, updateResult){
+      db.close();
+      if(err){
+        console.error("Unable to mark message '%s-%s' as read", message.conversationId, message.sendTimestamp);
+        console.error(err);
+      } else {
+        console.log("Message '%s-%s' marked as read", message.conversationId, message.sendTimestamp);
+
+        // Notify the sender that the user has read their message
+        require('./real-time.js').emitEvent('message marked as read', updatedMessage);
+      }
+    });
+  });
 }
 
 // Gets all unread messages for the user
