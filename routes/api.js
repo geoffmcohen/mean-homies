@@ -333,7 +333,7 @@ module.exports = (function(){
     console.log('api/user/get_profile called');
 
     var user = require("../modules/user.js");
-    user.getUserProfile(req.query.token, req.query.username, function(success, profile){
+    user.getUserProfile(req.query.token, req.query.username, req.query.targetUser, function(success, profile){
       res.send({success: success, profile: profile});
     });
   });

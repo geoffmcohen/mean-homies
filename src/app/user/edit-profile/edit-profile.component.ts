@@ -82,7 +82,7 @@ export class EditProfileComponent implements OnInit {
     // Show loading dialog
     this.showLoadingDialog();
 
-    this.userService.getUserProfile(this.authService.getUserToken(), this.loggedInUser, (res : any) => {
+    this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), this.loggedInUser, (res : any) => {
       // Hide loading dialog
       this.closeLoadingDialog();
 

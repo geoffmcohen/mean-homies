@@ -20,87 +20,93 @@ exports.getHomieStatus = function(token, username, targetUser, callback){
 }
 
 // Function to get the status between two users - possible values:
+//   same - The user and target user are the same
 //   blocked - One of the two users has blocked the other
 //   homies - The two users are indeed homies
 //   waiting - Waiting for targetUser to accept
 //   pending - Waiting for username to accept`
 //   n/a - No relationship exists between the users
 exports.getHomieStatusNoToken = function(username, targetUser, callback){
-  console.log("Getting homie status between '%s' and '%s'", username, targetUser);
+  // If the function is called on the same user return same
+  if(username == targetUser){
+    return callback(true, 'same');
+  } else {
+    console.log("Getting homie status between '%s' and '%s'", username, targetUser);
 
-  // Connect to the database
-  var MongoClient = require('mongodb').MongoClient;
-  var mongoURI = process.env.MONGOLAB_URI;
-  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
-    // Throw error if unable to connect
-    if(err){
-      console.error("Unable to connect to MongoDB!!!");
-      throw err;
-    }
-    var dbo = db.db();
-    // Check if one user blocked the other
-    searchCriteria = {$or: [
-      {username: username, blockedUser: targetUser},
-      {username: targetUser, blockedUser: username}
-    ]};
-    dbo.collection("userBlocks").findOne(searchCriteria, function(err, blockRecord){
+    // Connect to the database
+    var MongoClient = require('mongodb').MongoClient;
+    var mongoURI = process.env.MONGOLAB_URI;
+    MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+      // Throw error if unable to connect
       if(err){
-        db.close();
-        console.error("Error occurred while checking userBlocks");
-        console.error(err);
-        return callback(false, null);
-      } else if(blockRecord){
-        db.close();
-        console.log("User '%s' has blocked '%s'", blockRecord.username, blockRecord.blockedUser);
-        return callback(true, 'blocked');
-      } else {
-        // Now check if the users are homies
-        searchCriteria = {$or: [
-          {requestUser: username, acceptUser: targetUser},
-          {requestUser: targetUser, acceptUser: username}
-        ]};
-        dbo.collection("homies").findOne(searchCriteria, function(err, homiesRecord){
-          if(err){
-            db.close();
-            console.error("Error occurred while checking homies");
-            console.error(err);
-            return callback(false, null);
-          } else if (homiesRecord){
-            db.close();
-            console.log("User '%s' and '%s' are homies", username, targetUser);
-            return callback(true, 'homies');
-          } else {
-            // Finally check if one user has homie requested the other users
-            searchCriteria = {$or: [
-              {requestUser: username, acceptUser: targetUser},
-              {requestUser: targetUser, acceptUser: username}
-            ]};
-            dbo.collection("homieRequests").findOne(searchCriteria, function(err, requestRecord){
-              db.close();
-              if(err){
-                console.error("Error occurred while checking homieRequests");
-                console.error(err);
-                return callback(false, null)
-              } else if (requestRecord){
-                  // Now check who requested who
-                  if(requestRecord.requestUser == username){
-                    console.log("User '%s' is waiting for '%s' to accept homie request", username, targetUser);
-                    return callback(true, 'waiting');
-                  } else {
-                    console.log("User '%s' can accept request from '%s'", username, targetUser);
-                    return callback(true, 'pending');
-                  }
-              } else {
-                // Otherwise return a n/a status indicating no relationship between users
-                console.log("No relationship found between '%s' and '%s's", username, targetUser);
-                return callback(true, 'n/a');
-              }
-            });
-          }
-        });
+        console.error("Unable to connect to MongoDB!!!");
+        throw err;
       }
+      var dbo = db.db();
+      // Check if one user blocked the other
+      searchCriteria = {$or: [
+        {username: username, blockedUser: targetUser},
+        {username: targetUser, blockedUser: username}
+      ]};
+      dbo.collection("userBlocks").findOne(searchCriteria, function(err, blockRecord){
+        if(err){
+          db.close();
+          console.error("Error occurred while checking userBlocks");
+          console.error(err);
+          return callback(false, null);
+        } else if(blockRecord){
+          db.close();
+          console.log("User '%s' has blocked '%s'", blockRecord.username, blockRecord.blockedUser);
+          return callback(true, 'blocked');
+        } else {
+          // Now check if the users are homies
+          searchCriteria = {$or: [
+            {requestUser: username, acceptUser: targetUser},
+            {requestUser: targetUser, acceptUser: username}
+          ]};
+          dbo.collection("homies").findOne(searchCriteria, function(err, homiesRecord){
+            if(err){
+              db.close();
+              console.error("Error occurred while checking homies");
+              console.error(err);
+              return callback(false, null);
+            } else if (homiesRecord){
+              db.close();
+              console.log("User '%s' and '%s' are homies", username, targetUser);
+              return callback(true, 'homies');
+            } else {
+              // Finally check if one user has homie requested the other users
+              searchCriteria = {$or: [
+                {requestUser: username, acceptUser: targetUser},
+                {requestUser: targetUser, acceptUser: username}
+              ]};
+              dbo.collection("homieRequests").findOne(searchCriteria, function(err, requestRecord){
+                db.close();
+                if(err){
+                  console.error("Error occurred while checking homieRequests");
+                  console.error(err);
+                  return callback(false, null)
+                } else if (requestRecord){
+                    // Now check who requested who
+                    if(requestRecord.requestUser == username){
+                      console.log("User '%s' is waiting for '%s' to accept homie request", username, targetUser);
+                      return callback(true, 'waiting');
+                    } else {
+                      console.log("User '%s' can accept request from '%s'", username, targetUser);
+                      return callback(true, 'pending');
+                    }
+                } else {
+                  // Otherwise return a n/a status indicating no relationship between users
+                  console.log("No relationship found between '%s' and '%s'", username, targetUser);
+                  return callback(true, 'n/a');
+                }
+              });
+            }
+          });
+        }
+      });
     });
-  });
+  }
 }
 
 // Sends a Homie request to the target user

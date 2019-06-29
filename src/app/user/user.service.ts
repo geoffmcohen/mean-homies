@@ -89,12 +89,14 @@ export class UserService {
   public getUserProfile(
     token: string,
     username: string,
+    targetUser: string,
     callback: ((result: any) => void)
   ) : void{
     // Set up the parameters
     var params = new HttpParams()
       .set('token', token)
-      .set('username', username);
+      .set('username', username)
+      .set('targetUser', targetUser);
 
     // Make the REST call
     this.http.get<any>('/api/user/get_profile', {params}).subscribe((res: any) => {
@@ -135,7 +137,7 @@ export class UserService {
       }).subscribe((res: any) => {
       // Emit the value of whether the profile is active
       this.hasActiveProfileChange.emit(res.isActive);
-      
+
       // Return results back to caller
       callback(res);
     });

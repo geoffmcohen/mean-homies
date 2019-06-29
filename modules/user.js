@@ -483,15 +483,30 @@ exports.changePassword = function(username, oldPassword, newPassword, callback){
 }
 
 // Gets a users profile if one exists
-exports.getUserProfile = getUserProfile = function(token, username, callback){
+exports.getUserProfile = function(token, username, targetUser, callback){
   // Force username to be lowercase
   username = username.toLowerCase();
 
   // Check to make sure a user token is valid
-  require('./auth.js').verifyUser(token, null, null, function(err, isTokenValid){
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
     if(!isTokenValid){
       console.error('Error encountered while trying to verify user token');
       console.error(err);
+      return callback(false, null);
+    } else {
+      exports.getUserProfileNoToken(username, targetUser, function(err, profile){
+        return callback(err, profile);
+      });
+    }
+  });
+}
+
+// Retreives the profile if it isn't blocked
+exports.getUserProfileNoToken = function(username, targetUser, callback){
+  require('./homies.js').getHomieStatusNoToken(username, targetUser, function(success, homieStatus){
+    //  Don't allow a user to be able to get the profile of a user that has blocked them or that they have blocked
+    if(homieStatus == 'blocked'){
+      console.warn("User '%s' attempted to get the profile of blocked user '%s'", username, targetUser);
       return callback(false, null);
     } else {
       // Connect to the database
@@ -506,18 +521,18 @@ exports.getUserProfile = getUserProfile = function(token, username, callback){
         var dbo = db.db();
 
         // Perform the search
-        dbo.collection("userProfiles").findOne({username: username}, function(err, profile){
+        dbo.collection("userProfiles").findOne({username: targetUser}, function(err, profile){
           db.close();
           if(err){
             // If there is an error throw so we don't end up inserting duplicates
-            console.error("Error occurred while trying to get profile for '%s'", username);
+            console.error("Error occurred while trying to get profile for '%s'", targetUser);
             console.error(err);
             throw err;
           } else if (profile == null) {
-            console.log("No profile found for user '%s'", username);
+            console.log("No profile found for user '%s'", targetUser);
             return callback(false, null);
           } else {
-            console.log("Profile found for user '%s'", username);
+            console.log("Profile found for user '%s'", targetUser);
             return callback(true, profile);
           }
         });
@@ -691,7 +706,7 @@ exports.saveUserProfile = saveUserProfile = function(
       return callback(false, invalidTokenMessage);
     } else {
       // Try to get the user profile
-      getUserProfile(token, username, function(profileFound, profile){
+      exports.getUserProfileNoToken(username, username, function(profileFound, profile){
         if(profileFound){
           // Call update method if it exists
           updateUserProfile(

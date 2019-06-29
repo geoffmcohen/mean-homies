@@ -34,7 +34,7 @@ export class HomieViewComponent implements OnInit {
     this.profileImage = '../../../assets/images/default profile.gif';
 
     // Get the profile and profile image
-    this.userService.getUserProfile(this.authService.getUserToken(), this.homie, (res : any) => {
+    this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), this.homie, (res : any) => {
       if(res.success) this.profile = res.profile;
 
       this.userService.getUserProfilePicture(this.authService.getUserToken(), this.homie, (res : any) => {
