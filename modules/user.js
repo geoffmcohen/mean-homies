@@ -893,7 +893,7 @@ insertUserProfilePicture = function(username, imageUrl, callback){
 
 // Checks if users profile is active
 exports.hasActiveProfile = function(token, username, callback){
-  exports.getUserProfile(token, username, function(success, profile){
+  exports.getUserProfile(token, username, username, function(success, profile){
     if(!success){
       return callback(false);
     } else {

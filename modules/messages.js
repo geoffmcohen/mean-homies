@@ -13,8 +13,18 @@ exports.sendMessage = function(token, username, targetUser, messageText, callbac
     } else {
       // Call the function to get the status
       exports.sendMessageNoToken(username, targetUser, messageText, function(success, message){
-        // Notify the targetUser in real time of request
-        require('./real-time.js').emitEvent('new message', {sendUser: username, recieveUser: targetUser});
+        if(success){
+          // Use the real time module
+          var rt = require('./real-time.js');
+
+          // Notify the targetUser in real time of request
+          rt.emitEvent('new message', {sendUser: username, recieveUser: targetUser});
+
+          // Send an email notification to the target user if they are not currently connected
+          if(!rt.checkIfConnected(targetUser)){
+            exports.sendMessageNotificationEmail(username, targetUser, messageText);
+          }
+        }
 
         // Callback with results
         return callback(success, message);
@@ -72,6 +82,12 @@ exports.sendMessageNoToken = function(username, targetUser, messageText, callbac
       });
     }
   });
+}
+
+// Sends the user an email notification
+// #TODO: This needs to be implemented
+exports.sendMessageNotificationEmail = function(username, targetUser, messageText, send = true, preview = false ){
+  console.error("sendMessageNotificationEmail has been called, but not yet implemented");
 }
 
 // Function called by the api to get all the messages between the user and targetUser sent after the startTime

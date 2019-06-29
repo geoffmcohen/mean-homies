@@ -120,10 +120,20 @@ exports.sendHomieRequest = function(token, username, targetUser, message, callba
     } else {
       // Call function to actually make the request
       exports.sendHomieRequestNoToken(username, targetUser, message, function(success, msg){
-        // Notify the targetUser in real time of request
-        require('./real-time.js').emitEvent('homie request count change', {requestUser: username, acceptUser: targetUser});
+        if(success){
+          // Import the real-time module
+          var rt = require('./real-time.js');
 
-        // Callback with success
+          // Notify the targetUser in real time of request
+          rt.emitEvent('homie request count change', {requestUser: username, acceptUser: targetUser});
+
+          // If target user is not logged in, send them an email
+          if(!rt.checkIfConnected(targetUser)){
+            exports.sendHomieRequestEmailNotification(username, targetUser, message);
+          }
+        }
+
+        // Callback with results
         return callback(success, msg);
       });
     }
@@ -139,7 +149,6 @@ exports.sendHomieRequestNoToken = function(username, targetUser, message, callba
       if(!success){
         return callback(false, serverErrorMessage);
       } else if(status != 'n/a'){
-        // #TODO: Make more situational messages here
         return callback(false, "Unable to make a new Homie Request due to current status.");
       } else {
         // Connect to the database
@@ -168,7 +177,6 @@ exports.sendHomieRequestNoToken = function(username, targetUser, message, callba
               return callback(false, serverErrorMessage);
             } else {
               console.log("Succesfully inserted homieRequest");
-              // #TODO: Send an email to the target user
               return callback(true, "Succesfully created Homie Request");
             }
           });
@@ -176,6 +184,13 @@ exports.sendHomieRequestNoToken = function(username, targetUser, message, callba
       }
   });
 }
+
+// Sends the target user a notification that they have recieved a new Homie Request
+// #TODO: This needs to be implemented
+exports.sendHomieRequestEmailNotification = function(username, targetUser, message, send = true, preview = false){
+  console.error("sendHomieRequestEmailNotification() has been called but not yet implemented");
+}
+
 
 // Accepts a Homie request from the target user
 exports.acceptHomieRequest = function(token, username, targetUser, callback){

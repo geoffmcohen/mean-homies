@@ -12,37 +12,40 @@ export class HomiesService {
     private http: HttpClient,
     private authService: AuthenticationService
   ) {
-    // Create a socket to check for changes in homies and homie requests
-    const socket = socketIo('');
+    // If a user is logged in set up connection to real time notification socket
+    if(authService.getUser()){
+      // Create a socket to check for changes in homies and homie requests
+      const socket = socketIo('');
 
-    // When the count of homie requests changes
-    socket.on('homie request count change', response => {
-      // If a user is loggedin, then check if the request was for them
-      if(authService.getUser()){
-        if(response.acceptUser == authService.getUser()){
-          this.getUsersPendingHomieRequestCount(authService.getUserToken(), authService.getUser(), (success : boolean, count: number) => {
-            if(success) this.pendingRequestCountChange.emit(count);
-          });
+      // When the count of homie requests changes
+      socket.on('homie request count change', response => {
+        // If a user is loggedin, then check if the request was for them
+        if(authService.getUser()){
+          if(response.acceptUser == authService.getUser()){
+            this.getUsersPendingHomieRequestCount(authService.getUserToken(), authService.getUser(), (success : boolean, count: number) => {
+              if(success) this.pendingRequestCountChange.emit(count);
+            });
+          }
+          else if(response.requestUser == authService.getUser()){
+            this.getUsersWaitingHomieRequestCount(authService.getUserToken(), authService.getUser(), (success: boolean, count: number) => {
+              if(success) this.waitingRequestCountChange.emit(count);
+            })
+          }
         }
-        else if(response.requestUser == authService.getUser()){
-          this.getUsersWaitingHomieRequestCount(authService.getUserToken(), authService.getUser(), (success: boolean, count: number) => {
-            if(success) this.waitingRequestCountChange.emit(count);
-          })
-        }
-      }
-    });
+      });
 
-    // When a homie user removes another user from their homie list
-    socket.on('homie removal', response => {
-      // If a user is logged in, check if this request pertains to them
-      if(authService.getUser()){
-        if(response.user == authService.getUser()){
-          this.removeUserFromHomies.emit(response.targetUser);
-        } else if(response.targetUser == authService.getUser()){
-          this.removeUserFromHomies.emit(response.user);
+      // When a homie user removes another user from their homie list
+      socket.on('homie removal', response => {
+        // If a user is logged in, check if this request pertains to them
+        if(authService.getUser()){
+          if(response.user == authService.getUser()){
+            this.removeUserFromHomies.emit(response.targetUser);
+          } else if(response.targetUser == authService.getUser()){
+            this.removeUserFromHomies.emit(response.user);
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   // Event emitters to notify when changes to homies and homie requests occur

@@ -1,6 +1,9 @@
 // Variable to use for all communications
 var io = null;
 
+// JSON to track all active connections
+var connectedUsers = {};
+
 // Initializes the socket and creates the
 exports.init = function(server){
   // Create instance of socket.io on the server
@@ -10,11 +13,17 @@ exports.init = function(server){
   io.on('connection', (socket) => {
     // Gets the username from the cookies
     user = getUserFromCookies(socket);
-    console.log("User '%s' has connected to real time service", user);
+    if(user){
+      // Add the user to the JSON of active connections
+      connectedUsers[user] = true;
+      console.log("User '%s' has connected to real time service", user);
 
-    socket.on('disconnect', () => {
-      console.log("User '%s' has disconnected from real time service", user);
-    });
+      socket.on('disconnect', () => {
+        // Remove the user from the JSON of active connections
+        delete connectedUsers[user];
+        console.log("User '%s' has disconnected from real time service", user);
+      });
+    }
   });
 
   console.log('real-time.js has been initiliazed');
@@ -24,6 +33,7 @@ exports.init = function(server){
 getUserFromCookies = function(socket){
   // Get the cookie string
   var cookieString = socket.handshake.headers.cookie;
+  console.log("cookieString = %s", cookieString);
 
   // Use a regex to get the value
   var re = new RegExp("user=([^;]+)");
@@ -41,4 +51,9 @@ exports.emitEvent = function(eventName, eventArgs){
     console.log("Event '%s' emitted by real-time.js", eventName);
     io.emit(eventName, eventArgs);
   }
+}
+
+// Checks if a specific user is connected
+exports.checkIfConnected = function(username){
+  return connectedUsers[username] ? true : false;
 }

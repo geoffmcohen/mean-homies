@@ -40,7 +40,11 @@ export class LoginDialogComponent implements OnInit {
 
       // Return a true if successfully logged in
       if(res.success){
+        // Close this dialog
         this.dialogRef.close( true );
+
+        // Redirect to home page
+        window.open('/home', '_self');
       } else {
         this.password = "";
         this.message = res.message;
