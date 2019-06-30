@@ -510,7 +510,7 @@ module.exports = (function(){
     console.log('api/homies/get_users_homies');
 
     var homies = require("../modules/homies.js");
-    homies.getUsersHomies(req.query.token, req.query.username,function(success, homies){
+    homies.getUsersHomies(req.query.token, req.query.username, function(success, homies){
       res.send({success: success, homies: homies});
     });
   });
@@ -570,6 +570,42 @@ module.exports = (function(){
       homies.blockUser(fields.token, fields.username, fields.targetUser, function(success, message){
         res.send({success: success, message: message});
       });
+    });
+  });
+
+  // Sends a new message from the user to the target user
+  api.post('/messages/send_message', function(req, res){
+    console.log('api/messages/send_message');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the message
+      var msg = require("../modules/messages.js");
+      msg.sendMessage(fields.token, fields.username, fields.targetUser, fields.messageText, function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+  });
+
+  // Gets the messages between the user and the target user
+  api.get('/messages/get_messages', function(req, res){
+    console.log('api/messages/get_messages');
+
+    var msg = require("../modules/messages.js");
+    msg.getMessages(req.query.token, req.query.username, req.query.targetUser, Number(req.query.startTime), function(success, messages){
+      res.send({success: success, messages: messages});
+    });
+  });
+
+  // Gets the count of unread message for the user
+  api.get('/messages/get_unread_message_count', function(req, res){
+    console.log('api/messages/get_unread_message_count');
+
+    var msg = require("../modules/messages.js");
+    msg.getUnreadMessageCount(req.query.token, req.query.username, function(success, count){
+      res.send({success: success, count: count});
     });
   });
 

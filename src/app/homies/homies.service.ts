@@ -8,6 +8,11 @@ import { AuthenticationService } from '../auth/authentication.service';
 })
 export class HomiesService {
 
+  // Event emitters to notify when changes to homies and homie requests occur
+  @Output() pendingRequestCountChange: EventEmitter<number> = new EventEmitter();
+  @Output() waitingRequestCountChange: EventEmitter<number> = new EventEmitter();
+  @Output() removeUserFromHomies: EventEmitter<string> = new EventEmitter();
+
   constructor(
     private http: HttpClient,
     private authService: AuthenticationService
@@ -47,11 +52,6 @@ export class HomiesService {
       });
     }
   }
-
-  // Event emitters to notify when changes to homies and homie requests occur
-  @Output() pendingRequestCountChange: EventEmitter<number> = new EventEmitter();
-  @Output() waitingRequestCountChange: EventEmitter<number> = new EventEmitter();
-  @Output() removeUserFromHomies: EventEmitter<string> = new EventEmitter();
 
   // Returns the relationship between two users
   public getHomieStatus(

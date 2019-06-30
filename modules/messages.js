@@ -210,10 +210,58 @@ markMessageAsRead = function(message){
   });
 }
 
-// Gets all unread messages for the user
-exports.getUsersUnreadMessages = function(token, username, callback){
+// Gets the count of unread messages for the user
+exports.getUnreadMessageCount = function(token, username, callback){
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      // Get the actual unread count from the database
+      exports.getUnreadMessageCountNoToken(username, function(success, count){
+        return callback(success, count);
+      });
+    }
+  });
 }
 
-// Retrieves all unread messages for the user
-exports.getUsersUnreadMessagesNoToken = function(username, callback){
+// Retreives the count of unread messages for the user
+exports.getUnreadMessageCountNoToken = function(username, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Set up search query to get count of unread messages
+    searchQuery = {recieveUser: username, status: 'sent'};
+
+    // Search for unread messages for the user
+    dbo.collection("messages").find(searchQuery).count(function(err, count){
+      db.close();
+      if(err){
+        console.error("Error occurred while trying to get unread message count for '%s'", username);
+        console.error(err);
+        return callback(false, null);
+      } else {
+        console.log("Found %d unread messages for user '%s'", count, username);
+        return callback(true, count);
+      }
+    });
+  });
 }
+
+// // Gets all unread messages for the user
+// exports.getUsersUnreadMessages = function(token, username, callback){
+// }
+//
+// // Retrieves all unread messages for the user
+// exports.getUsersUnreadMessagesNoToken = function(username, callback){
+// }
