@@ -7,6 +7,7 @@ import { HomiesService } from '../../homies/homies.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { ProfileViewDialogComponent } from '../../user/profile-view-dialog/profile-view-dialog.component';
 import { CreateHomieRequestDialogComponent } from '../../homies/create-homie-request-dialog/create-homie-request-dialog.component';
+import { MessengerDialogComponent } from '../../messages/messenger-dialog/messenger-dialog.component';
 
 @Component({
   selector: 'app-profile-view',
@@ -21,6 +22,7 @@ export class ProfileViewComponent implements OnInit {
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private profileDialogRef: MatDialogRef<ProfileViewDialogComponent>;
   private requestDialogRef: MatDialogRef<CreateHomieRequestDialogComponent>;
+  private messengerDialogRef: MatDialogRef<MessengerDialogComponent>;
 
   constructor(
     private authService: AuthenticationService,
@@ -138,9 +140,15 @@ export class ProfileViewComponent implements OnInit {
     });
   }
 
-  // Sends your homie a message
+  // Opens the messenger dialog to allow for messaging
   sendHomieMessage(){
-    // #TODO: Implement with messaging
-    console.log("sendHomieMessage() called");
+    // Create dialog configs for messenger dialog
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = { profile: this.profile };
+    dialogConfig.minWidth = "90%";
+
+    // Show the messenger dialog
+    this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);
   }
 }
