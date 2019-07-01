@@ -6,6 +6,7 @@ import { HomiesService } from '../../homies/homies.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { ProfileViewDialogComponent } from '../../user/profile-view-dialog/profile-view-dialog.component';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { MessengerDialogComponent } from '../../messages/messenger-dialog/messenger-dialog.component';
 
 @Component({
   selector: 'app-homie-view',
@@ -20,6 +21,7 @@ export class HomieViewComponent implements OnInit {
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private profileDialogRef: MatDialogRef<ProfileViewDialogComponent>;
   private confirmationDialogRef: MatDialogRef<ConfirmationDialogComponent>;
+  private messengerDialogRef: MatDialogRef<MessengerDialogComponent>;
 
   constructor(
     private authService: AuthenticationService,
@@ -91,7 +93,7 @@ export class HomieViewComponent implements OnInit {
       message: "Are you sure you would like to remove " + this.profile.username + " from your homies?"
     };
 
-    // Show the profile dislay dialog
+    // Show the confirmation dialog
     this.confirmationDialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
 
     // If the user confirmed, then delete the request and block the user
@@ -142,7 +144,15 @@ export class HomieViewComponent implements OnInit {
     });
   }
 
-  // Sends the homie a message
-  // #TODO: This needs to be implemented
-  sendHomieMessage(){ console.log("sendHomieMessage() called"); }
+  // Opens the messenger dialog to allow for messaging
+  sendHomieMessage(){
+    // Create dialog configs for messenger dialog
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = { profile: this.profile };
+    dialogConfig.minWidth = "90%";
+
+    // Show the messenger dialog
+    this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);
+  }
 }

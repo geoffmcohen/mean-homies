@@ -33,7 +33,6 @@ exports.init = function(server){
 getUserFromCookies = function(socket){
   // Get the cookie string
   var cookieString = socket.handshake.headers.cookie;
-  console.log("cookieString = %s", cookieString);
 
   // Use a regex to get the value
   var re = new RegExp("user=([^;]+)");

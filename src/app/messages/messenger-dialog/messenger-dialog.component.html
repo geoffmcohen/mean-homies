@@ -1,0 +1,20 @@
+<div class="messenger-dialog">
+  <div class="top-bar">
+    <div class="image-div"><img class="profile-image" [src]="profileImage"></div>
+    <div class="title"><h1 mat-dialog-title>{{profile.displayName ? profile.displayName : profile.username}}</h1></div>
+    <div class="close-button"><button mat-icon-button (click)="close()"><mat-icon>close</mat-icon></button></div>
+  </div>
+  <div class="messages">
+    <div *ngFor="let msg of messages" [class]="msg.sendUser == profile.username ? 'recieved-message' : 'sent-message'">
+      {{msg.messageText}}
+    </div>
+  </div>
+  <div class="send-area">
+    <mat-form-field appearance="outline" style="margin-bottom: -1.25em" class="full-width">
+      <mat-label>Message</mat-label>
+      <textarea matInput placeholder=" " [formControl]="newMessage" cdkTextareaAutosize cdkAutosizeMinRows="3" cdkAutosizeMaxRows="3" [disabled]="sendDisabled"></textarea>
+    </mat-form-field>
+    <div *ngIf="errorMessage" class='error-message'>{{errorMessage}}</div>
+    <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="sendDisabled">Send</button>
+  </div>
+</div>
