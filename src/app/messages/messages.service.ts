@@ -32,7 +32,7 @@ export class MessagesService {
       // When a new message has been sent
       socket.on('new message', msgInfo => {
         // If the user is the recipient
-        if(authService.getUser() == msgInfo.recieveUser){
+        if(authService.getUser() == msgInfo.receiveUser){
           // Increment count of unread messages and emit
           this.unreadMessageCountChange.emit(++this.unreadMessageCount);
 
@@ -46,7 +46,7 @@ export class MessagesService {
         if(authService.getUser() == updatedMessage.sendUser){
           // Let the sender know the message has been read so it can be displayed
           this.messageMarkedAsRead.emit(updatedMessage);
-        } else if (authService.getUser() == updatedMessage.recieveUser){
+        } else if (authService.getUser() == updatedMessage.receiveUser){
           // Decrement count of unread messages and emit
           this.unreadMessageCountChange.emit(--this.unreadMessageCount);
         }

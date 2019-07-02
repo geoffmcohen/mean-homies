@@ -18,7 +18,7 @@ exports.sendMessage = function(token, username, targetUser, messageText, callbac
           var rt = require('./real-time.js');
 
           // Notify the targetUser in real time of request
-          rt.emitEvent('new message', {sendUser: username, recieveUser: targetUser});
+          rt.emitEvent('new message', {sendUser: username, receiveUser: targetUser});
 
           // Send an email notification to the target user if they are not currently connected
           if(!rt.checkIfConnected(targetUser)){
@@ -61,7 +61,7 @@ exports.sendMessageNoToken = function(username, targetUser, messageText, callbac
         message = {
           conversationId: createConversationId(username, targetUser),
           sendUser: username,
-          recieveUser: targetUser,
+          receiveUser: targetUser,
           messageText: messageText,
           sendTimestamp: Date.now(),
           status: 'sent'
@@ -144,7 +144,7 @@ exports.getMessagesNoToken = function(username, targetUser, startTime, callback)
         // Go through each message
         messages.forEach(function(message){
           // Mark the message as read if it's unread and sent to this user
-          if(message.recieveUser == username && message.status == 'sent'){
+          if(message.receiveUser == username && message.status == 'sent'){
             markMessageAsRead(message);
           }
 
@@ -241,7 +241,7 @@ exports.getUnreadMessageCountNoToken = function(username, callback){
     var dbo = db.db();
 
     // Set up search query to get count of unread messages
-    searchQuery = {recieveUser: username, status: 'sent'};
+    searchQuery = {receiveUser: username, status: 'sent'};
 
     // Search for unread messages for the user
     dbo.collection("messages").find(searchQuery).count(function(err, count){

@@ -185,7 +185,7 @@ exports.sendHomieRequestNoToken = function(username, targetUser, message, callba
   });
 }
 
-// Sends the target user a notification that they have recieved a new Homie Request
+// Sends the target user a notification that they have received a new Homie Request
 // #TODO: This needs to be implemented
 exports.sendHomieRequestEmailNotification = function(username, targetUser, message, send = true, preview = false){
   console.error("sendHomieRequestEmailNotification() has been called but not yet implemented");

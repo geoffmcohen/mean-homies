@@ -56,7 +56,7 @@
   /*background-color: LightBlue;*/
 }
 
-.message-recieved{
+.message-received{
   align-self: flex-start;
 
   margin-right: 10%;
@@ -76,7 +76,7 @@
   font-size: 125%;
 }
 
-.message-info-recieved{
+.message-info-received{
   font-size: 60%;
   align-self: flex-end;
   color: Grey
