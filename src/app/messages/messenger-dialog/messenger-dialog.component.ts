@@ -19,6 +19,7 @@ export class MessengerDialogComponent implements OnInit {
   public errorMessage: string;
   public sendDisabled: boolean;
   private lastMessageTime: number;
+  private needsToScrollToBottom;
 
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
@@ -60,6 +61,9 @@ export class MessengerDialogComponent implements OnInit {
           this.lastMessageTime = this.messages[this.messages.length-1].sendTimestamp;
         }
 
+        // Scroll to the bottom after the view is checked
+        this.needsToScrollToBottom = true;      
+
         // Now subscribe to get new messages
         this.subscribeToNewMessages();
       }
@@ -67,6 +71,12 @@ export class MessengerDialogComponent implements OnInit {
       // Hide the loading dialog
       this.closeLoadingDialog();
     });
+  }
+
+  // Keep the messages scrolled to the bottom
+  ngAfterViewChecked(){
+    // Scroll to the bottom if neccessary
+    if(this.needsToScrollToBottom) this.scrollToBottom();
   }
 
   // Subscribe to message changes
@@ -145,8 +155,19 @@ export class MessengerDialogComponent implements OnInit {
           this.lastMessageTime = this.messages[this.messages.length-1].sendTimestamp;
         }
 
-        // #TODO: We need to make the messages auto scroll to the end
+        // Scroll to the bottom after the view is checked
+        this.needsToScrollToBottom = true;
       }
     });
+  }
+
+  // Scroll the messages to the bottom
+  scrollToBottom(){
+    // Scroll the messages to the bottom
+    var messagesDiv = document.getElementById("messages");
+    messagesDiv.scrollTop = messagesDiv.scrollHeight - messagesDiv.clientHeight;
+
+    // Reset the flag to let it know that we need to scroll to the bottom
+    this.needsToScrollToBottom = false;
   }
 }

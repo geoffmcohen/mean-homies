@@ -4,7 +4,7 @@
     <div class="title"><h1 mat-dialog-title>{{profile.displayName ? profile.displayName : profile.username}}</h1></div>
     <div class="close-button"><button mat-icon-button (click)="close()"><mat-icon>close</mat-icon></button></div>
   </div>
-  <div class="messages">
+  <div id="messages">
     <div *ngFor="let msg of messages" [class]="msg.sendUser == profile.username ? 'message-received' : 'message-sent'">
       <div class="message-text">{{msg.messageText}}</div>
       <div [class]="msg.sendUser == profile.username ? 'message-info-sent' : 'message-info-received'">
@@ -20,6 +20,6 @@
       <textarea matInput placeholder=" " [formControl]="newMessage" cdkTextareaAutosize cdkAutosizeMinRows="3" cdkAutosizeMaxRows="3" [disabled]="sendDisabled"></textarea>
     </mat-form-field>
     <div *ngIf="errorMessage" class='error-message'>{{errorMessage}}</div>
-    <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="sendDisabled">Send</button>
+    <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="sendDisabled || newMessage.value.length == 0">Send</button>
   </div>
 </div>

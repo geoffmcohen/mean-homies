@@ -29,7 +29,7 @@
   justify-content: flex-end;
 }
 
-.messages{
+#messages{
   border: 1px solid LightGrey;
   background-color: white;
   padding: 5px;
