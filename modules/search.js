@@ -82,7 +82,7 @@ exports.getUsersNearCoords = function(
                 if (a.distance == b.distance){
                   return a.username > b.username;
                 } else {
-                  return a.distance > b.distance;
+                  return a.distance - b.distance;
                 }
               });
 

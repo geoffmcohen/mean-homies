@@ -162,7 +162,7 @@ exports.getMessagesNoToken = function(username, targetUser, startTime, callback)
               if(a.sendTimestamp == b.sendTimestamp){
                 return a.sendUser > b.sendUser;
               } else {
-                return a.sendTimestamp > b.sendTimestamp;
+                return a.sendTimestamp - b.sendTimestamp;
               }
             });
 
