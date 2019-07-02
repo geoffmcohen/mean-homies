@@ -5,8 +5,12 @@
     <div class="close-button"><button mat-icon-button (click)="close()"><mat-icon>close</mat-icon></button></div>
   </div>
   <div class="messages">
-    <div *ngFor="let msg of messages" [class]="msg.sendUser == profile.username ? 'recieved-message' : 'sent-message'">
-      {{msg.messageText}}
+    <div *ngFor="let msg of messages" [class]="msg.sendUser == profile.username ? 'message-recieved' : 'message-sent'">
+      <div class="message-text">{{msg.messageText}}</div>
+      <div [class]="msg.sendUser == profile.username ? 'message-info-sent' : 'message-info-recieved'">
+        <span *ngIf="msg.receiveUser == profile.username && msg.status == 'read'">Read&nbsp;-&nbsp;{{msg.readTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
+        <span *ngIf="msg.receiveUser != profile.username || msg.status == 'sent'">Sent&nbsp;-&nbsp;{{msg.sendTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
+      </div>
     </div>
   </div>
   <div class="send-area">

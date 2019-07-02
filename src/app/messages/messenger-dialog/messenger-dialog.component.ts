@@ -144,6 +144,8 @@ export class MessengerDialogComponent implements OnInit {
         if(this.messages.length){
           this.lastMessageTime = this.messages[this.messages.length-1].sendTimestamp;
         }
+
+        // #TODO: We need to make the messages auto scroll to the end
       }
     });
   }
