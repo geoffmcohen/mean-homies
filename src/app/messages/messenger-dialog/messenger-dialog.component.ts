@@ -62,7 +62,7 @@ export class MessengerDialogComponent implements OnInit {
         }
 
         // Scroll to the bottom after the view is checked
-        this.needsToScrollToBottom = true;      
+        this.needsToScrollToBottom = true;
 
         // Now subscribe to get new messages
         this.subscribeToNewMessages();
@@ -81,10 +81,24 @@ export class MessengerDialogComponent implements OnInit {
 
   // Subscribe to message changes
   subscribeToNewMessages(){
+    // Get latest messages
     this.msgService.newMessageFrom.subscribe(sendUser => {
       // Get new messages if it was this user who sent a message
       if(sendUser == this.profile.username){
         this.getLatestMessages();
+      }
+    });
+
+    // Mark messages as read
+    this.msgService.messageMarkedAsRead.subscribe(updatedMessage => {
+      if(updatedMessage.receiveUser == this.profile.username){
+        // Loop through the messages backwards to find the mesasage to mark as read
+        for(var i = this.messages.length - 1; i >= 0; i--){
+          if(this.messages[i].sendTimestamp == updatedMessage.sendTimestamp && this.messages[i].sendUser == updatedMessage.sendUser){
+            break;
+            this.messages[i] = updatedMessage;
+          }
+        }
       }
     });
   }
