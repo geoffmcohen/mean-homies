@@ -121,8 +121,11 @@ export class ProfileViewDialogComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.data = { profile: this.profile };
-    dialogConfig.minWidth = "90%";
 
+    // #TODO: Have to figure out how to make this mobile friendly
+    dialogConfig.minWidth = "800px";
+    dialogConfig.maxWidth = "800px";
+    
     // Show the messenger dialog
     this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);
   }

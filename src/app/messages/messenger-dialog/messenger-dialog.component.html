@@ -10,7 +10,6 @@
       <div [class]="msg.sendUser == profile.username ? 'message-info-sent' : 'message-info-received'">
         <span *ngIf="msg.receiveUser == profile.username && msg.status == 'read'">Read&nbsp;-&nbsp;{{msg.readTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
         <span *ngIf="msg.receiveUser != profile.username || msg.status == 'sent'">Sent&nbsp;-&nbsp;{{msg.sendTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
-        <!--'{{msg.receiveUser}}' ?= '{{profile.username}}' && msg.status == '{{msg.status}}'-->
       </div>
     </div>
   </div>
@@ -20,6 +19,6 @@
       <textarea matInput placeholder=" " [formControl]="newMessage" cdkTextareaAutosize cdkAutosizeMinRows="3" cdkAutosizeMaxRows="3" [disabled]="sendDisabled"></textarea>
     </mat-form-field>
     <div *ngIf="errorMessage" class='error-message'>{{errorMessage}}</div>
-    <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="sendDisabled || newMessage.value.length == 0">Send</button>
+    <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="sendDisabled || newMessage.value.length == 0"><mat-icon>send</mat-icon>&nbsp;Send</button>
   </div>
 </div>
