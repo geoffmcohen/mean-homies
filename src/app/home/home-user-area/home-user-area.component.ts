@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
+import { MessagesService } from '../../messages/messages.service';
 import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from '../../user/signup-dialog/signup-dialog.component';
 import { UserAgreementDialogComponent } from '../../user/user-agreement-dialog/user-agreement-dialog.component';
@@ -18,12 +19,14 @@ export class HomeUserAreaComponent implements OnInit {
   public loggedInUser: string;
   public hasActiveProfile: boolean;
   public pendingHomieRequestCount: number;
+  public unreadMessageCount: number;
 
   constructor(
     private dialog: MatDialog,
     private authService: AuthenticationService,
     private userService: UserService,
-    private homiesService: HomiesService
+    private homiesService: HomiesService,
+    private msgService: MessagesService,
   ) { }
 
   ngOnInit() {
@@ -62,6 +65,9 @@ export class HomeUserAreaComponent implements OnInit {
 
     // Get the initial count of homie requests and track changes
     this.subscribeToHomieRequestChanges();
+
+    // Gets the count of unread meassges and tracks changes
+    this.subscribeToMessageChanges();
   }
 
   // Setup profile active state and subscribe to changes
@@ -87,6 +93,22 @@ export class HomeUserAreaComponent implements OnInit {
       this.homiesService.pendingRequestCountChange.subscribe((newCount) => {
         this.pendingHomieRequestCount = newCount;
       });
+    });
+  }
+
+  // Subscibes to the count of messages
+  subscribeToMessageChanges(){
+    // Get the initial count of unread messages
+    this.msgService.getUnreadMessageCount(this.authService.getUserToken(), this.authService.getUser(), (res: any) => {
+      if(res.success){
+        // Set the initial count and subscribe to changes in the count
+        this.unreadMessageCount = res.count;
+
+        // Subscribe to changes in the unread messagse count
+        this.msgService.unreadMessageCountChange.subscribe(count => {
+          this.unreadMessageCount = count;
+        });
+      }
     });
   }
 

@@ -1,7 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { MessagesService } from '../messages.service';
@@ -12,14 +13,16 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   templateUrl: './messenger-dialog.component.html',
   styleUrls: ['./messenger-dialog.component.css']
 })
-export class MessengerDialogComponent implements OnInit {
+export class MessengerDialogComponent implements OnInit, OnDestroy {
   public profile: any;
   public profileImage: string;
   public messages: any[];
   public errorMessage: string;
   public sendDisabled: boolean;
   private lastMessageTime: number;
-  private needsToScrollToBottom;
+  private needsToScrollToBottom: boolean;
+  private newMessageSubscription: Subscription;
+  private readMessageSubscription: Subscription;
 
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
@@ -79,10 +82,16 @@ export class MessengerDialogComponent implements OnInit {
     if(this.needsToScrollToBottom) this.scrollToBottom();
   }
 
+  // Unsubscribe from observables when the dialog is closed
+  ngOnDestroy(){
+    this.newMessageSubscription.unsubscribe();
+    this.readMessageSubscription.unsubscribe();
+  }
+
   // Subscribe to message changes
   subscribeToNewMessages(){
     // Get latest messages
-    this.msgService.newMessageFrom.subscribe(sendUser => {
+    this.newMessageSubscription = this.msgService.newMessageFrom.subscribe(sendUser => {
       // Get new messages if it was this user who sent a message
       if(sendUser == this.profile.username){
         this.getLatestMessages();
@@ -90,13 +99,13 @@ export class MessengerDialogComponent implements OnInit {
     });
 
     // Mark messages as read
-    this.msgService.messageMarkedAsRead.subscribe(updatedMessage => {
+    this.readMessageSubscription = this.msgService.messageMarkedAsRead.subscribe(updatedMessage => {
       if(updatedMessage.receiveUser == this.profile.username){
         // Loop through the messages backwards to find the mesasage to mark as read
         for(var i = this.messages.length - 1; i >= 0; i--){
           if(this.messages[i].sendTimestamp == updatedMessage.sendTimestamp && this.messages[i].sendUser == updatedMessage.sendUser){
-            break;
             this.messages[i] = updatedMessage;
+            break;
           }
         }
       }

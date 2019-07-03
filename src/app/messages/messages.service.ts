@@ -22,9 +22,7 @@ export class MessagesService {
     // If a user is logged in set up connection to real time notification socket
     if(authService.getUser()){
       // Get the number of unread messages for the user
-      this.getUnreadMessageCount(this.authService.getUserToken(), this.authService.getUser(), (res : any) => {
-        this.unreadMessageCount = res.count;
-      });
+      this.getUnreadMessageCount(this.authService.getUserToken(), this.authService.getUser(), (res : any) => {});
 
       // Create a socket to check for message updates
       const socket = socketIo('');
@@ -51,6 +49,7 @@ export class MessagesService {
           this.unreadMessageCountChange.emit(--this.unreadMessageCount);
         }
       });
+      //});
     }
   }
 
@@ -107,6 +106,11 @@ export class MessagesService {
 
     // Make the REST call
     this.http.get<any>('api/messages/get_unread_message_count', {params}).subscribe((res: any) => {
+      // Set the local unread message count
+      if(res.success){
+        this.unreadMessageCount = res.count;
+      }
+
       // Send the results back to the callback
       callback(res);
     });
