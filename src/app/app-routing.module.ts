@@ -12,6 +12,7 @@ import { FaqComponent } from './home/faq/faq.component';
 import { EditProfileComponent } from './user/edit-profile/edit-profile.component';
 import { SearchComponent } from './search/search/search.component';
 import { HomiesComponent } from './homies/homies/homies.component';
+import { MessageCenterComponent } from './messages/message-center/message-center.component';
 
 const routes: Routes = [
   //{path: '', component: ComingSoonComponent},
@@ -23,7 +24,8 @@ const routes: Routes = [
       {path: 'faq', component: FaqComponent},
       {path: 'user/edit-profile', component: EditProfileComponent},
       {path: 'search', component: SearchComponent},
-      {path: 'homies', component: HomiesComponent}
+      {path: 'homies', component: HomiesComponent},
+      {path: 'messages', component: MessageCenterComponent}
     ]
   },
   {path: 'blog', component: BlogComponent},
