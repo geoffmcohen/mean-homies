@@ -13,6 +13,7 @@ export class MessagesService {
   // Event emitters to notify components of changes
   @Output() unreadMessageCountChange: EventEmitter<number> = new EventEmitter();
   @Output() newMessageFrom: EventEmitter<string> = new EventEmitter();
+  @Output() newMessageTo: EventEmitter<string> = new EventEmitter();
   @Output() messageMarkedAsRead: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -36,6 +37,9 @@ export class MessagesService {
 
           // Also emit the senders name so we can refresh any open convo with them
           this.newMessageFrom.emit(msgInfo.sendUser);
+        } else if(authService.getUser() == msgInfo.sendUser){
+          // If the user sent the message emit something to let the message center know to update the screen
+          this.newMessageTo.emit(msgInfo.receiveUser);
         }
       });
 
@@ -105,7 +109,7 @@ export class MessagesService {
       .set('username', username);
 
     // Make the REST call
-    this.http.get<any>('api/messages/get_unread_message_count', {params}).subscribe((res: any) => {
+    this.http.get<any>('/api/messages/get_unread_message_count', {params}).subscribe((res: any) => {
       // Set the local unread message count
       if(res.success){
         this.unreadMessageCount = res.count;
@@ -116,4 +120,21 @@ export class MessagesService {
     });
   }
 
+  // Gets the latest messages in all user conversations
+  public getLatestMessages(
+    token: string,
+    username: string,
+    callback: ((result : any) => void)
+  ) : void {
+    // Set up the parameters
+    var params = new HttpParams()
+      .set('token', token)
+      .set('username', username);
+
+    // Make the REST call
+    this.http.get<any>('/api/messages/get_latest_messages', {params}).subscribe((res: any) => {
+      // Send the results back to the callback
+      callback(res);
+    });
+  }
 }

@@ -609,6 +609,17 @@ module.exports = (function(){
     });
   });
 
+  // Gets the latest messages in all user conversations
+  api.get('/messages/get_latest_messages', function(req, res){
+    console.log('api/messages/get_latest_messages');
+
+    var msg = require("../modules/messages.js");
+    msg.getLatestMessages(req.query.token, req.query.username, function(success, messages){
+      res.send({success: success, messages: messages});
+    });
+  });
+
+
   // api.get()
   return api;
 })();

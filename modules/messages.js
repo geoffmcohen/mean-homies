@@ -268,8 +268,8 @@ exports.getLastestMessages = function(token, username, callback){
       return callback(false, null);
     } else {
       // Get the actual conversations from the database
-      exports.getLastestMessagesNoToken(username, function(success, count){
-        return callback(success, count);
+      exports.getLastestMessagesNoToken(username, function(success, messages){
+        return callback(success, messages);
       });
     }
   });
