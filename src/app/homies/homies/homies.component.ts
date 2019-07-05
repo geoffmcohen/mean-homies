@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../homies.service';
@@ -14,6 +15,7 @@ export class HomiesComponent implements OnInit {
   public loggedIn: boolean;
   public hasActiveProfile: boolean;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
+  private subscriptions: Subscription[];
 
   public pendingHomieRequests: any[];
   public waitingHomieRequests: any[];
@@ -27,6 +29,9 @@ export class HomiesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Create the array of subscriptions
+    this.subscriptions = [];
+
     // Get initial login state and track changes
     this.subscribeToLoginChanges();
   }
@@ -43,10 +48,10 @@ export class HomiesComponent implements OnInit {
     this.subscribeToHomieRequestChanges();
 
     // Subscribe to login changes
-    this.authService.userLoginChange.subscribe(loggedIn => {
+    this.subscriptions.push(this.authService.userLoginChange.subscribe(loggedIn => {
       this.loggedIn = loggedIn;
 
-      // Clears the search results if not logged in
+      // Clears the homies if not logged in
       if(!loggedIn){
         this.clearData();
       } else {
@@ -56,28 +61,28 @@ export class HomiesComponent implements OnInit {
         // Subscribe to changes in pending and waiting homie requests
         this.subscribeToHomieRequestChanges();
       }
-    });
+    }));
   }
 
   // Subscribe to changes in pending and waiting homie requests
   subscribeToHomieRequestChanges(){
     if(this.loggedIn){
       // Refresh the data if pending count changes
-      this.homiesService.pendingRequestCountChange.subscribe(count => {
+      this.subscriptions.push(this.homiesService.pendingRequestCountChange.subscribe(count => {
         this.getData();
-      });
+      }));
 
       // Refresh the data if waiting count changes
-      this.homiesService.waitingRequestCountChange.subscribe(count => {
+      this.subscriptions.push(this.homiesService.waitingRequestCountChange.subscribe(count => {
         this.getData();
-      });
+      }));
 
       // Remove a homie from the list
-      this.homiesService.removeUserFromHomies.subscribe(username => {
+      this.subscriptions.push(this.homiesService.removeUserFromHomies.subscribe(username => {
         this.homies = this.homies.filter(function(value, index, arr){
           return value != username;
         });
-      });
+      }));
     }
   }
 
@@ -159,4 +164,10 @@ export class HomiesComponent implements OnInit {
     this.waitingHomieRequests = null;
   }
 
+  // Unsubscribes to all observables before closing
+  ngOnDestroy(){
+    for(var i = 0; i < this.subscriptions.length; i++){
+      this.subscriptions[i].unsubscribe();
+    }
+  }
 }

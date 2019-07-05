@@ -66,6 +66,7 @@ import { HomieViewComponent } from './homies/homie-view/homie-view.component';
 import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confirmation-dialog.component';
 import { MessengerDialogComponent } from './messages/messenger-dialog/messenger-dialog.component';
 import { MessageCenterComponent } from './messages/message-center/message-center.component';
+import { ConversationViewComponent } from './messages/conversation-view/conversation-view.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { MessageCenterComponent } from './messages/message-center/message-center
     HomieViewComponent,
     ConfirmationDialogComponent,
     MessengerDialogComponent,
-    MessageCenterComponent
+    MessageCenterComponent,
+    ConversationViewComponent
   ],
   imports: [
     BrowserModule,

@@ -259,7 +259,7 @@ exports.getUnreadMessageCountNoToken = function(username, callback){
 }
 
 // Gets the latest messages in all user conversations
-exports.getLastestMessages = function(token, username, callback){
+exports.getLatestMessages = function(token, username, callback){
   // Check to make sure this is the users token
   require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
     if(!isTokenValid){
@@ -268,7 +268,7 @@ exports.getLastestMessages = function(token, username, callback){
       return callback(false, null);
     } else {
       // Get the actual conversations from the database
-      exports.getLastestMessagesNoToken(username, function(success, messages){
+      exports.getLatestMessagesNoToken(username, function(success, messages){
         return callback(success, messages);
       });
     }
@@ -276,7 +276,7 @@ exports.getLastestMessages = function(token, username, callback){
 }
 
 // Retrieves the latest message in each conversation
-exports.getLastestMessagesNoToken = function(username, callback){
+exports.getLatestMessagesNoToken = function(username, callback){
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
   var mongoURI = process.env.MONGOLAB_URI;
