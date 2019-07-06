@@ -143,8 +143,6 @@ export class MessageCenterComponent implements OnInit {
             // Set the messages if successful
             if(res.success) this.latestMessages = res.messages;
 
-            console.log(this.latestMessages);
-
             // Hide the loading dialog
             if (showLoading) this.closeLoadingDialog();
           });

@@ -277,77 +277,89 @@ exports.getLatestMessages = function(token, username, callback){
 
 // Retrieves the latest message in each conversation
 exports.getLatestMessagesNoToken = function(username, callback){
-  // Connect to the database
-  var MongoClient = require('mongodb').MongoClient;
-  var mongoURI = process.env.MONGOLAB_URI;
-  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
-    // Throw error if unable to connect
-    if(err){
-      console.log("Unable to connect to MongoDB!!!");
-      throw err;
-    }
-    var dbo = db.db();
+  // Try to get blocks to remove conversations with blocked users
+  require('./homies.js').getBlocks(username, function(success, blocks){
+    // In the case of an error, allow us to get blocked conversations anyways as the frontend will block them
+    if(!success) blocks = [];
 
-    // Create the aggregation query
-    var aggregationQuery = [
-      {$match: {$or: [{sendUser: username}, {receiveUser: username}]}},
-      {$group: {
-        _id: '$conversationId',
-        lastSentTimestamp: {$max: '$sendTimestamp'}
-      }},
-      {$lookup: {
-        from: 'messages',
-        let: {convId: '$_id', lst: '$lastSentTimestamp'},
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  {$eq: ['$conversationId', '$$convId']},
-                  {$eq: ['$sendTimestamp', '$$lst']}
-                ]
+    // Connect to the database
+    var MongoClient = require('mongodb').MongoClient;
+    var mongoURI = process.env.MONGOLAB_URI;
+    MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+      // Throw error if unable to connect
+      if(err){
+        console.log("Unable to connect to MongoDB!!!");
+        throw err;
+      }
+      var dbo = db.db();
+
+      // Create the aggregation query
+      var aggregationQuery = [
+        {$match: {
+          $and: [
+              {$and: [{sendUser: {$nin: blocks}}, {receiveUser: {$nin: blocks}}]},
+              {$or: [{sendUser: username}, {receiveUser: username}]}
+            ]
+          }
+        },
+        {$group: {
+          _id: '$conversationId',
+          lastSentTimestamp: {$max: '$sendTimestamp'}
+        }},
+        {$lookup: {
+          from: 'messages',
+          let: {convId: '$_id', lst: '$lastSentTimestamp'},
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {$eq: ['$conversationId', '$$convId']},
+                    {$eq: ['$sendTimestamp', '$$lst']}
+                  ]
+                }
               }
             }
-          }
-        ],
-        as:  'lastMessages'
-      }}
-    ];
+          ],
+          as:  'lastMessages'
+        }}
+      ];
 
-    // Perform an aggregate
-    dbo.collection("messages").aggregate(aggregationQuery, function(err, aggResults){
-      if(err){
-        db.close();
-        console.error("Unable to aggregate conversations for user '%s'", username);
-        console.error(err);
-        return callback(false, null);
-      } else {
-        // Create an array to return in callback
-        var lastMessages = [];
-
-        // Loop through each aggregation result
-        aggResults.forEach(function(aggResult){
-          // Add the last message in each conversation to the array to return
-          if(aggResult.lastMessages.length > 0){
-            lastMessages.push(aggResult.lastMessages[0]);
-          }
-        }, function(err){
+      // Perform an aggregate
+      dbo.collection("messages").aggregate(aggregationQuery, function(err, aggResults){
+        if(err){
           db.close();
-          if(err){
-            console.error("Error occurred while trying to loop through conversations for '%s'", username);
-            console.error(err);
-            return callback(false, null);
-          } else {
-            // Sort the messages by sendTimestamp descending
-            lastMessages.sort(function(a, b){
-                return b.sendTimestamp - a.sendTimestamp;
-            });
+          console.error("Unable to aggregate conversations for user '%s'", username);
+          console.error(err);
+          return callback(false, null);
+        } else {
+          // Create an array to return in callback
+          var lastMessages = [];
 
-            // Return the messages in the callback
-            return callback(true, lastMessages);
-          }
-        });
-      }
+          // Loop through each aggregation result
+          aggResults.forEach(function(aggResult){
+            // Add the last message in each conversation to the array to return
+            if(aggResult.lastMessages.length > 0){
+              lastMessages.push(aggResult.lastMessages[0]);
+            }
+          }, function(err){
+            db.close();
+            if(err){
+              console.error("Error occurred while trying to loop through conversations for '%s'", username);
+              console.error(err);
+              return callback(false, null);
+            } else {
+              // Sort the messages by sendTimestamp descending
+              lastMessages.sort(function(a, b){
+                  return b.sendTimestamp - a.sendTimestamp;
+              });
+
+              // Return the messages in the callback
+              return callback(true, lastMessages);
+            }
+          });
+        }
+      });
     });
   });
 }
