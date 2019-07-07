@@ -18,6 +18,9 @@ export class MessageCenterComponent implements OnInit {
 
   public homies: string[];
   public latestMessages: any[];
+
+  private homiesLoading: boolean;
+  private messagesLoading: boolean;
   private homiesProfileMap: any;
   private messagesProfileMap: any;
 
@@ -131,6 +134,9 @@ export class MessageCenterComponent implements OnInit {
   // Gets the latest message in each conversation
   getLatestMessages(showLoading){
     if(this.loggedIn){
+      // Set message loading flag so loading screen isn't prematurely closed
+      this.messagesLoading = true;
+
       // Show loading dialog
       if (showLoading) this.showLoadingDialog();
 
@@ -157,8 +163,11 @@ export class MessageCenterComponent implements OnInit {
               // Set the profile map for the messages
               if(res.success) this.messagesProfileMap = res.profilesByUsername;
 
+              // Set message loading flag to false to indicate that messages are done loading
+              this.messagesLoading = false;
+
               // Hide the loading dialog
-              if (showLoading) this.closeLoadingDialog();
+              if (showLoading && !this.homiesLoading) this.closeLoadingDialog();
             });
 
           });
@@ -170,8 +179,11 @@ export class MessageCenterComponent implements OnInit {
   // Gets the homies
   getHomies(showLoading){
     if(this.loggedIn){
+      // Set the homies loading flag to true to make sure loading isn't prematurely closed
+      this.homiesLoading = true;
+
       // Show loading dialog
-      if (showLoading) this.showLoadingDialog();
+      if(showLoading) this.showLoadingDialog();
 
       // Get the homies
       this.homiesService.getUsersHomies(this.authService.getUserToken(), this.authService.getUser(), (res : any) => {
@@ -182,32 +194,21 @@ export class MessageCenterComponent implements OnInit {
           this.userService.getUserProfiles(this.authService.getUserToken(), this.authService.getUser(), this.homies,  (res : any) => {
             // Get the profile mapping for the homies
             if(res.success) this.homiesProfileMap = res.profilesByUsername;
+            // Set homies loading flag to false to indicate homies is done loading
+            this.homiesLoading = false;
 
             // Hide the loading dialog if neccessary
-            if(showLoading) this.closeLoadingDialog();
+            if(showLoading && !this.messagesLoading) this.closeLoadingDialog();
           });
-
-          // // Get the profile for each homie
-          // this.profilesByUsername = {};
-          // for(var i = 0; i < this.homies.length; i++){
-          //   // Get the profile
-          //   this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), this.homies[i], (res : any) => {
-          //     if(res.success){
-          //       // Set the profile for this user
-          //       this.profilesByUsername[res.profile.username] = res.profile;
-          //
-          //       // If we've done all of them, then remove the loading dialog
-          //       if (showLoading && this.homies.length == Object.keys(this.profilesByUsername).length) this.closeLoadingDialog();
-          //     }
-          //   });
-          // }
         } else {
-          // Hide the loading dialog
-          if (showLoading) this.closeLoadingDialog();
+          // Set homies loading flag to false to indicate homies is done loading
+          this.homiesLoading = false;
+
+          // Hide the loading dialog if neccessary
+          if(showLoading && !this.messagesLoading) this.closeLoadingDialog();
         }
       });
     }
-
   }
 
   // Displays a loading dialog
