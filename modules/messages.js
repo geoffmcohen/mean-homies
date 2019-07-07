@@ -376,3 +376,60 @@ exports.getLatestMessagesNoToken = function(username, callback){
     });
   });
 }
+
+// Gets a specific message
+exports.getMessage = function(token, username, sendUser, receiveUser, sendTimestamp, markAsRead, callback){
+  // Check to make sure this is the users token
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else if(username != sendUser && username != receiveUser) {
+      console.warn("User '%s' has tried to get a message sent from '%s' to '%s'", username, sendUser, receiveUser);
+      return callback(false, null);
+    }
+    else {
+      // Get the actual conversations from the database
+      exports.getMessageNoToken(sendUser, receiveUser, sendTimestamp, markAsRead, function(success, message){
+        return callback(success, message);
+      });
+    }
+  });
+}
+
+// Retrieves a specific message from the database
+exports.getMessageNoToken = function(sendUser, receiveUser, sendTimestamp, markAsRead, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Get the message from the database
+    var searchCriteria = {sendUser: sendUser, receiveUser: receiveUser, sendTimestamp: sendTimestamp};
+    dbo.collection("messages").findOne(searchCriteria, function(err, message){
+      db.close();
+      if(err){
+        console.error("Error occurred while trying to get message from '%s' to '%s'", sendUser, receiveUser);
+        console.error(err);
+        return callback(false, null);
+      } else if (message == null){
+        console.error("No message found with search criteria:");
+        console.error(searchCriteria);
+        return callback(false, null);
+      } else {
+        // Mark the message as read if neccessary
+        if(markAsRead) markMessageAsRead(message);
+
+        // Return the message via callback
+        return callback(true, message);
+      }
+    });
+  });
+}

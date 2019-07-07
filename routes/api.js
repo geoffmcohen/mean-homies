@@ -629,7 +629,15 @@ module.exports = (function(){
     });
   });
 
+  // Gets a specific message
+  api.get('/messages/get_message', function(req, res){
+    console.log('api/messages/get_message');
 
+    var msg = require("../modules/messages.js");
+    msg.getMessage(req.query.token, req.query.username, req.query.sendUser, req.query.receiveUser, Number(req.query.sendTimestamp), req.query.markAsRead == 'true', function(success, messages){
+      res.send({success: success, message: message});
+    });
+  });
   // api.get()
   return api;
 })();

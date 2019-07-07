@@ -14,6 +14,7 @@ export class MessagesService {
   @Output() unreadMessageCountChange: EventEmitter<number> = new EventEmitter();
   @Output() newMessageFrom: EventEmitter<string> = new EventEmitter();
   @Output() newMessageTo: EventEmitter<string> = new EventEmitter();
+  @Output() newMessageInfo: EventEmitter<any> = new EventEmitter();
   @Output() messageMarkedAsRead: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -40,6 +41,11 @@ export class MessagesService {
         } else if(authService.getUser() == msgInfo.sendUser){
           // If the user sent the message emit something to let the message center know to update the screen
           this.newMessageTo.emit(msgInfo.receiveUser);
+        }
+
+        // If the user is either user emit the message details as well
+        if(authService.getUser() == msgInfo.receiveUser || authService.getUser() == msgInfo.sendUser){
+          this.newMessageInfo.emit(msgInfo);
         }
       });
 
@@ -133,6 +139,32 @@ export class MessagesService {
 
     // Make the REST call
     this.http.get<any>('/api/messages/get_latest_messages', {params}).subscribe((res: any) => {
+      // Send the results back to the callback
+      callback(res);
+    });
+  }
+
+  // Gets a specific message
+  public getMessage(
+    token: string,
+    username: string,
+    sendUser: string,
+    receiveUser: string,
+    sendTimestamp: number,
+    markAsRead: boolean,
+    callback: ((result : any) => void)
+  ) : void {
+    // Set up the parameters
+    var params = new HttpParams()
+      .set('token', token)
+      .set('username', username)
+      .set('sendUser', sendUser)
+      .set('receiveUser', receiveUser)
+      .set('sendTimestamp', String(sendTimestamp))
+      .set('markAsRead', String(markAsRead));
+
+    // Make the REST call
+    this.http.get<any>('/api/messages/get_message', {params}).subscribe((res: any) => {
       // Send the results back to the callback
       callback(res);
     });

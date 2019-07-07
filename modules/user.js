@@ -941,7 +941,6 @@ exports.getUserProfilesNoToken = function(username, users, callback){
 
         // Find all of the profiles for the users
         searchCriteria = {username: {$in: users}};
-        console.log(searchCriteria);
         dbo.collection("userProfiles").find(searchCriteria, function(err, profileRecords){
           if(err){
             db.close();

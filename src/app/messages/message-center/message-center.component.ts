@@ -77,14 +77,8 @@ export class MessageCenterComponent implements OnInit {
       // Get the messages
       this.getLatestMessages(true);
 
-      // Subscribe to new messages to the user
-      this.subscriptions.push(this.msgService.newMessageFrom.subscribe(sendUser => {
-        this.getLatestMessages(false);
-      }));
-
-      // Subscribe to new messages from the user
-      this.subscriptions.push(this.msgService.newMessageFrom.subscribe(receiveUser => {
-        this.getLatestMessages(false);
+      this.subscriptions.push(this.msgService.newMessageInfo.subscribe(msgInfo => {
+        this.getNewMessage(msgInfo);
       }));
     }
   }
@@ -110,9 +104,6 @@ export class MessageCenterComponent implements OnInit {
       this.homies = this.homies.filter(function(value, index, arr){
         return value != userToRemove;
       });
-      //
-      // // Remove this users profile from the list of profiles
-      // delete this.homieProfileMap[userToRemove];
     }));
   }
 
@@ -148,28 +139,29 @@ export class MessageCenterComponent implements OnInit {
         // If the profile is active, get the homies
         if(this.hasActiveProfile){
           this.msgService.getLatestMessages(this.authService.getUserToken(), this.authService.getUser(), (res : any) => {
-            // Set the messages if successful
-            if(res.success) this.latestMessages = res.messages;
+            if(res.success){
+              // Build a list of users to get the profiles for
+              var users = [];
+              for(var i = 0; i < res.messages.length; i++){
+                var user = res.messages[i].sendUser == this.authService.getUser() ? res.messages[i].receiveUser : res.messages[i].sendUser;
+                users.push(user);
+              }
 
-            // Build a list of users to get the profiles for
-            var users = [];
-            for(var i = 0; i < this.latestMessages.length; i++){
-              var user = this.latestMessages[i].sendUser == this.authService.getUser() ? this.latestMessages[i].receiveUser : this.latestMessages[i].sendUser;
-              users.push(user);
+              // Get the profiles for these users
+              this.userService.getUserProfiles(this.authService.getUserToken(), this.authService.getUser(), users, (profileRes : any) => {
+                // Set the profile map for the messages
+                if(profileRes.success) this.messagesProfileMap = profileRes.profilesByUsername;
+
+                // Set the messages
+                this.latestMessages = res.messages;
+
+                // Set message loading flag to false to indicate that messages are done loading
+                this.messagesLoading = false;
+
+                // Hide the loading dialog
+                if (showLoading && !this.homiesLoading) this.closeLoadingDialog();
+              });
             }
-
-            // Get the profiles for these users
-            this.userService.getUserProfiles(this.authService.getUserToken(), this.authService.getUser(), users, (res : any) => {
-              // Set the profile map for the messages
-              if(res.success) this.messagesProfileMap = res.profilesByUsername;
-
-              // Set message loading flag to false to indicate that messages are done loading
-              this.messagesLoading = false;
-
-              // Hide the loading dialog
-              if (showLoading && !this.homiesLoading) this.closeLoadingDialog();
-            });
-
           });
         }
       });
@@ -238,7 +230,45 @@ export class MessageCenterComponent implements OnInit {
   }
 
   // Gets the user profile for a message
+  // #TODO: Handle not found better
   getProfileForMessage(msg){
     return this.messagesProfileMap[this.authService.getUser() == msg.sendUser ? msg.receiveUser : msg.sendUser];
+  }
+
+  // Gets a new message for the screen
+  getNewMessage(msgInfo){
+    this.msgService.getMessage(this.authService.getUserToken(), this.authService.getUser(), msgInfo.sendUser, msgInfo.receiveUser, msgInfo.sendTimestamp, false, (res : any) => {
+      if(res.success){
+        // Check if the profile is needed for a new message
+        if(!this.getProfileForMessage(res.message)){
+          // Add the users profile first
+          var user = this.authService.getUser() == msgInfo.sendUser ? msgInfo.receiveUser : msgInfo.sendUser;
+          this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), user, (profileRes : any) => {
+            this.messagesProfileMap[user] = profileRes.profile;
+
+            // Now add the message
+            this.addNewMessage(res.message);
+          });
+        } else {
+          this.addNewMessage(res.message);
+        }
+      }
+    });
+  }
+
+  // Adds a new message to the latest messages
+  addNewMessage(message){
+    // Remove the previous message in this conversation if it exists
+    this.latestMessages = this.latestMessages.filter((msg : any) => {
+      return msg.conversationId != message.conversationId;
+    });
+
+    // Add the new message
+    this.latestMessages.push(message);
+
+    // Sort the messages
+    this.latestMessages.sort((a, b) => {
+      return b.sendTimestamp - a.sendTimestamp;
+    });
   }
 }
