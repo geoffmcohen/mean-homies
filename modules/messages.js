@@ -229,31 +229,37 @@ exports.getUnreadMessageCount = function(token, username, callback){
 
 // Retreives the count of unread messages for the user
 exports.getUnreadMessageCountNoToken = function(username, callback){
-  // Connect to the database
-  var MongoClient = require('mongodb').MongoClient;
-  var mongoURI = process.env.MONGOLAB_URI;
-  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
-    // Throw error if unable to connect
-    if(err){
-      console.log("Unable to connect to MongoDB!!!");
-      throw err;
-    }
-    var dbo = db.db();
+  // Try to get blocks to remove conversations with blocked users
+  require('./homies.js').getBlocks(username, function(success, blocks){
+    // In the case of an error, allow us to get blocked conversations anyways as the frontend will block them
+    if(!success) blocks = [];
 
-    // Set up search query to get count of unread messages
-    searchQuery = {receiveUser: username, status: 'sent'};
-
-    // Search for unread messages for the user
-    dbo.collection("messages").find(searchQuery).count(function(err, count){
-      db.close();
+    // Connect to the database
+    var MongoClient = require('mongodb').MongoClient;
+    var mongoURI = process.env.MONGOLAB_URI;
+    MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+      // Throw error if unable to connect
       if(err){
-        console.error("Error occurred while trying to get unread message count for '%s'", username);
-        console.error(err);
-        return callback(false, null);
-      } else {
-        console.log("Found %d unread messages for user '%s'", count, username);
-        return callback(true, count);
+        console.log("Unable to connect to MongoDB!!!");
+        throw err;
       }
+      var dbo = db.db();
+
+      // Set up search query to get count of unread messages
+      searchQuery = {receiveUser: username, status: 'sent', sendUser: {$nin: blocks}};
+
+      // Search for unread messages for the user
+      dbo.collection("messages").find(searchQuery).count(function(err, count){
+        db.close();
+        if(err){
+          console.error("Error occurred while trying to get unread message count for '%s'", username);
+          console.error(err);
+          return callback(false, null);
+        } else {
+          console.log("Found %d unread messages for user '%s'", count, username);
+          return callback(true, count);
+        }
+      });
     });
   });
 }
