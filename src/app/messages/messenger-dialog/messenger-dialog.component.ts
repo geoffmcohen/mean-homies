@@ -99,12 +99,13 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
     });
 
     // Mark messages as read
-    this.readMessageSubscription = this.msgService.messageMarkedAsRead.subscribe(updatedMessage => {
-      if(updatedMessage.receiveUser == this.profile.username){
+    this.readMessageSubscription = this.msgService.messageMarkedAsRead.subscribe(updateData => {
+      if(updateData.receiveUser == this.profile.username){
         // Loop through the messages backwards to find the mesasage to mark as read
         for(var i = this.messages.length - 1; i >= 0; i--){
-          if(this.messages[i].sendTimestamp == updatedMessage.sendTimestamp && this.messages[i].sendUser == updatedMessage.sendUser){
-            this.messages[i] = updatedMessage;
+          if(this.messages[i].sendTimestamp == updateData.sendTimestamp && this.messages[i].sendUser == updateData.sendUser){
+            this.messages[i].status = updateData.status;
+            this.messages[i].readTimestamp = updateData.readTimestamp;
             break;
           }
         }

@@ -13,19 +13,6 @@ exports.sendMessage = function(token, username, targetUser, messageText, callbac
     } else {
       // Call the function to get the status
       exports.sendMessageNoToken(username, targetUser, messageText, function(success, message){
-        if(success){
-          // Use the real time module
-          var rt = require('./real-time.js');
-
-          // Notify the targetUser in real time of request
-          rt.emitEvent('new message', {sendUser: username, receiveUser: targetUser});
-
-          // Send an email notification to the target user if they are not currently connected
-          if(!rt.checkIfConnected(targetUser)){
-            exports.sendMessageNotificationEmail(username, targetUser, messageText);
-          }
-        }
-
         // Callback with results
         return callback(success, message);
       });
@@ -76,6 +63,18 @@ exports.sendMessageNoToken = function(username, targetUser, messageText, callbac
             return callback(false, serverErrorMessage);
           } else {
             console.log("Succesfully inserted new message '%s' -> '%s'", username, targetUser);
+
+            // Use the real time module
+            var rt = require('./real-time.js');
+
+            // Notify the targetUser in real time of request
+            rt.emitEvent('new message', {conversationId: message.conversationId, sendUser: username, receiveUser: targetUser, sendTimestamp: message.sendTimestamp });
+
+            // Send an email notification to the target user if they are not currently connected
+            if(!rt.checkIfConnected(targetUser)){
+              exports.sendMessageNotificationEmail(username, targetUser, messageText);
+            }
+
             return callback(true, "Succesfully sent message to " + targetUser);
           }
         });
@@ -204,7 +203,15 @@ markMessageAsRead = function(message){
         console.log("Message '%s-%s' marked as read", message.conversationId, message.sendTimestamp);
 
         // Notify the sender that the user has read their message
-        require('./real-time.js').emitEvent('message marked as read', updatedMessage);
+        var updateData = {
+          conversationId: updatedMessage.conversationId,
+          sendUser: updatedMessage.sendUser,
+          receiveUser: updatedMessage.receiveUser,
+          sendTimestamp: updatedMessage.sendTimestamp,
+          readTimestamp: updatedMessage.readTimestamp,
+          status: updatedMessage.status
+        };
+        require('./real-time.js').emitEvent('message marked as read', updateData);
       }
     });
   });
