@@ -6,11 +6,11 @@
       <span class="location">{{profile.location.city}}, {{profile.location.stateProvince}}, {{profile.location.country}}</span>
     </div>
     <div class="message-area">
-      <span class="user-said">{{latestMessage.sendUser == loggedInUser ? 'You said:' : profile.username + ' said:'}}</span>
+      <span class="user-said">{{latestMessage.sendUser == loggedInUser ? 'You' : profile.displayName ? profile.displayName : profile.username}}&nbsp;said:</span>
       <div [class]="latestMessage.sendUser == loggedInUser ? 'message-sent' : 'message-received'">{{latestMessage.messageText}}</div>
       <div class="button-area">
         <!-- Should the text on this button be dynamic based on who sent the message -->
-        <button mat-raised-button color="primary" (click)="openConversation()"><mat-icon>message</mat-icon> Open Conversation</button>
+        <button mat-raised-button color="primary" (click)="openConversation()"><mat-icon>message</mat-icon> Open Conversation</button>&nbsp;
         <button mat-raised-button color="primary" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon> View Profile</button>
       </div>
     </div>
