@@ -901,3 +901,78 @@ exports.hasActiveProfile = function(token, username, callback){
     }
   });
 }
+
+// Gets multiple user profiles
+exports.getUserProfiles = function(token, username, users, callback){
+  // Force username to be lowercase
+  username = username.toLowerCase();
+
+  // Check to make sure a user token is valid
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      exports.getUserProfilesNoToken(username, users, function(success, profilesByUsername){
+        return callback(success, profilesByUsername);
+      });
+    }
+  });
+}
+
+// Retreives multiple profiles in a json
+exports.getUserProfilesNoToken = function(username, users, callback){
+  // Get blocked users so we don't give blocked profiles
+  require('./homies.js').getBlocks(username, function(success, blocks){
+    if(!success){
+      return callback(false, null);
+    } else {
+      // Connect to the database
+      var MongoClient = require('mongodb').MongoClient;
+      var mongoURI = process.env.MONGOLAB_URI;
+      MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+        // Throw error if unable to connect
+        if(err){
+          console.error("Unable to connect to MongoDB!!!");
+          throw err;
+        }
+        var dbo = db.db();
+
+        // Find all of the profiles for the users
+        searchCriteria = {username: {$in: users}};
+        console.log(searchCriteria);
+        dbo.collection("userProfiles").find(searchCriteria, function(err, profileRecords){
+          if(err){
+            db.close();
+            console.error("Unable to get profiles for usernames '%s'", users.join('\', \''));
+            console.error(err);
+            return callback(false, null);
+          } else {
+            // Create the JSON to return
+            var profilesByUsername = {};
+
+            // Add each profile to the JSON keyed by username
+            profileRecords.forEach(function(profile){
+              // If blocked, map to a null
+              if(blocks.includes(profile.username)){
+                profilesByUsername[profile.username] = null;
+              } else {
+                profilesByUsername[profile.username] = profile;
+              }
+            }, function(err){
+              db.close();
+              if(err){
+                console.error("Error while trying to loop through profiles for usernames '%s'", users.join('\', \''));
+                console.error(err);
+                return callback(false, null);
+              } else {
+                return callback(true, profilesByUsername);
+              }
+            });
+          }
+        });
+      });
+    }
+  });
+}

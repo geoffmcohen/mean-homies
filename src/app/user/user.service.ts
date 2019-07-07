@@ -105,6 +105,27 @@ export class UserService {
     });
   }
 
+
+  // Gets multiple user profiles
+  public getUserProfiles(
+    token: string,
+    username: string,
+    users: string[],
+    callback: ((result: any) => void)
+  ) : void{
+    // Set up the parameters
+    var params = new HttpParams()
+      .set('token', token)
+      .set('username', username)
+      .set('usersString', users.join(','));
+
+    // Make the REST call
+    this.http.get<any>('/api/user/get_profiles', {params}).subscribe((res: any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
+
   // Saves the users profile
   public saveUserProfile(
     token: string,

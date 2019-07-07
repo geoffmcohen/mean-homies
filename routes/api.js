@@ -338,6 +338,16 @@ module.exports = (function(){
     });
   });
 
+  // Get a multiple user profiles
+  api.get('/user/get_profiles', function(req, res){
+    console.log('api/user/get_profiles called');
+
+    var user = require("../modules/user.js");
+    user.getUserProfiles(req.query.token, req.query.username, req.query.usersString.split(','), function(success, profilesByUsername){
+      res.send({success: success, profilesByUsername: profilesByUsername});
+    });
+  });
+
   // Saves a users profile
   api.post('/user/save_profile', function(req, res){
     console.log('api/user/save_profile called');

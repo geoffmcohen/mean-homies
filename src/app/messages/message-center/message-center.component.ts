@@ -18,7 +18,8 @@ export class MessageCenterComponent implements OnInit {
 
   public homies: string[];
   public latestMessages: any[];
-  public profilesByUsername: any;
+  private homiesProfileMap: any;
+  private messagesProfileMap: any;
 
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private subscriptions: Subscription[];
@@ -106,9 +107,9 @@ export class MessageCenterComponent implements OnInit {
       this.homies = this.homies.filter(function(value, index, arr){
         return value != userToRemove;
       });
-
-      // Remove this users profile from the list of profiles
-      delete this.profilesByUsername[userToRemove];
+      //
+      // // Remove this users profile from the list of profiles
+      // delete this.homieProfileMap[userToRemove];
     }));
   }
 
@@ -123,7 +124,8 @@ export class MessageCenterComponent implements OnInit {
   clearData(){
     this.latestMessages = null;
     this.homies = null;
-    this.profilesByUsername = null;
+    this.homiesProfileMap = null;
+    this.messagesProfileMap = null;
   }
 
   // Gets the latest message in each conversation
@@ -143,8 +145,22 @@ export class MessageCenterComponent implements OnInit {
             // Set the messages if successful
             if(res.success) this.latestMessages = res.messages;
 
-            // Hide the loading dialog
-            if (showLoading) this.closeLoadingDialog();
+            // Build a list of users to get the profiles for
+            var users = [];
+            for(var i = 0; i < this.latestMessages.length; i++){
+              var user = this.latestMessages[i].sendUser == this.authService.getUser() ? this.latestMessages[i].receiveUser : this.latestMessages[i].sendUser;
+              users.push(user);
+            }
+
+            // Get the profiles for these users
+            this.userService.getUserProfiles(this.authService.getUserToken(), this.authService.getUser(), users, (res : any) => {
+              // Set the profile map for the messages
+              if(res.success) this.messagesProfileMap = res.profilesByUsername;
+
+              // Hide the loading dialog
+              if (showLoading) this.closeLoadingDialog();
+            });
+
           });
         }
       });
@@ -163,20 +179,28 @@ export class MessageCenterComponent implements OnInit {
           // Get the list of homies
           this.homies = res.homies;
 
-          // Get the profile for each homie
-          this.profilesByUsername = {};
-          for(var i = 0; i < this.homies.length; i++){
-            // Get the profile
-            this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), this.homies[i], (res : any) => {
-              if(res.success){
-                // Set the profile for this user
-                this.profilesByUsername[res.profile.username] = res.profile;
+          this.userService.getUserProfiles(this.authService.getUserToken(), this.authService.getUser(), this.homies,  (res : any) => {
+            // Get the profile mapping for the homies
+            if(res.success) this.homiesProfileMap = res.profilesByUsername;
 
-                // If we've done all of them, then remove the loading dialog
-                if (showLoading && this.homies.length == Object.keys(this.profilesByUsername).length) this.closeLoadingDialog();
-              }
-            });
-          }
+            // Hide the loading dialog if neccessary
+            if(showLoading) this.closeLoadingDialog();
+          });
+
+          // // Get the profile for each homie
+          // this.profilesByUsername = {};
+          // for(var i = 0; i < this.homies.length; i++){
+          //   // Get the profile
+          //   this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), this.homies[i], (res : any) => {
+          //     if(res.success){
+          //       // Set the profile for this user
+          //       this.profilesByUsername[res.profile.username] = res.profile;
+          //
+          //       // If we've done all of them, then remove the loading dialog
+          //       if (showLoading && this.homies.length == Object.keys(this.profilesByUsername).length) this.closeLoadingDialog();
+          //     }
+          //   });
+          // }
         } else {
           // Hide the loading dialog
           if (showLoading) this.closeLoadingDialog();
@@ -210,5 +234,10 @@ export class MessageCenterComponent implements OnInit {
       // Nullify the ref
       this.loadingDialogRef = null;
     }
+  }
+
+  // Gets the user profile for a message
+  getProfileForMessage(msg){
+    return this.messagesProfileMap[this.authService.getUser() == msg.sendUser ? msg.receiveUser : msg.sendUser];
   }
 }

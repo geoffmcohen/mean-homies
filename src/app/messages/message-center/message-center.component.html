@@ -6,6 +6,6 @@
   <!--<p *ngIf="profilesByUsername">Object.keys(profilesByUsername).length = {{Object.keys(profilesByUsername).length}}</p>-->
   <!-- Add new conversation area here -->
   <app-conversation-view *ngFor="let msg of latestMessages" [latestMessage]="msg"></app-conversation-view>
-  <!-- <app-conversation-view *ngFor="let msg of latestMessages" [latestMessage]="msg" [profile]="getProfileForMessage(msg)"></app-conversation-view> -->
+  <app-conversation-view *ngFor="let msg of latestMessages" [latestMessage]="msg" [profile]="getProfileForMessage(msg)"></app-conversation-view>
 
 </mat-card>
