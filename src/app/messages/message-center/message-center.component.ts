@@ -6,6 +6,7 @@ import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
 import { MessagesService } from '../messages.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
+import { MessengerDialogComponent } from '../../messages/messenger-dialog/messenger-dialog.component';
 
 @Component({
   selector: 'app-message-center',
@@ -18,6 +19,7 @@ export class MessageCenterComponent implements OnInit {
 
   public homies: string[];
   public latestMessages: any[];
+  public homieToMessage: string;
 
   private homiesLoading: boolean;
   private messagesLoading: boolean;
@@ -25,6 +27,7 @@ export class MessageCenterComponent implements OnInit {
   private messagesProfileMap: any;
 
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
+  private messengerDialogRef: MatDialogRef<MessengerDialogComponent>;
   private subscriptions: Subscription[];
 
   constructor(
@@ -292,5 +295,29 @@ export class MessageCenterComponent implements OnInit {
         break;
       }
     }
+  }
+
+  // Creates a formatted version of the homies name as 'username - "displayName"'
+  formatHomieName(homie){
+    var profile = this.homiesProfileMap[homie];
+    if(profile && profile.displayName){
+      return homie + " - \"" + profile.displayName + "\""
+    } else {
+      return homie;
+    }
+  }
+
+  sendHomieMessage(){
+    // Create dialog configs for messenger dialog
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = { profile: this.homiesProfileMap[this.homieToMessage] };
+
+    // #TODO: Have to figure out how to make this mobile friendly
+    dialogConfig.minWidth = "800px";
+    dialogConfig.maxWidth = "800px";
+
+    // Show the messenger dialog
+    this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);
   }
 }
