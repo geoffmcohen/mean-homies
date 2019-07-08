@@ -7,11 +7,14 @@
     </div>
     <div class="message-area">
       <span class="user-said">{{latestMessage.sendUser == loggedInUser ? 'You' : profile.displayName ? profile.displayName : profile.username}}&nbsp;said:</span>
-      <div [class]="latestMessage.sendUser == loggedInUser ? 'message-sent' : 'message-received'">{{latestMessage.messageText}}</div>
+      <div [class]="latestMessage.sendUser == loggedInUser ? 'message-sent' : 'message-received'">
+        <div class="message-text">{{latestMessage.messageText}}</div>
+      </div>
+      <span *ngIf="latestMessage.receiveUser == profile.username && latestMessage.status == 'read'" class="message-info">Read&nbsp;@&nbsp;{{latestMessage.readTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
+      <span *ngIf="latestMessage.receiveUser != profile.username || latestMessage.status == 'sent'" class="message-info">Sent&nbsp;@&nbsp;{{latestMessage.sendTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
       <div class="button-area">
-        <!-- Should the text on this button be dynamic based on who sent the message -->
-        <button mat-raised-button color="primary" (click)="openConversation()"><mat-icon>message</mat-icon> Open Conversation</button>&nbsp;
-        <button mat-raised-button color="primary" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon> View Profile</button>
+        <button mat-raised-button [color]="getOpenMessageButtonColor()" (click)="openConversation()"><mat-icon>{{getOpenMessageButtonIcon()}}</mat-icon>&nbsp;{{getOpenMessageButtonText()}}</button>&nbsp;
+        <button mat-raised-button color="primary" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon>&nbsp;View Profile</button>
       </div>
     </div>
   </div>

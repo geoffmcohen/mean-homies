@@ -1,11 +1,5 @@
 <app-unavailable-feature *ngIf="!loggedIn"></app-unavailable-feature>
 <mat-card *ngIf="loggedIn && hasActiveProfile == false"><h3>You must have an active profile to be able to use this feature.  Please create or edit your profile.</h3></mat-card>
 <mat-card *ngIf="loggedIn && hasActiveProfile">
-  <!-- <p *ngIf="latestMessages">latestMessages.length = {{latestMessages.length}}</p>
-  <p *ngIf="homies">homies.length = {{homies.length}}</p> -->
-  <!--<p *ngIf="profilesByUsername">Object.keys(profilesByUsername).length = {{Object.keys(profilesByUsername).length}}</p>-->
-  <!-- Add new conversation area here -->
-  <app-conversation-view *ngFor="let msg of latestMessages" [latestMessage]="msg"></app-conversation-view>
   <app-conversation-view *ngFor="let msg of latestMessages" [latestMessage]="msg" [profile]="getProfileForMessage(msg)"></app-conversation-view>
-
 </mat-card>

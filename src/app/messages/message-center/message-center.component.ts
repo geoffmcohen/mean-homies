@@ -77,8 +77,14 @@ export class MessageCenterComponent implements OnInit {
       // Get the messages
       this.getLatestMessages(true);
 
+      // Subscribe to new messages
       this.subscriptions.push(this.msgService.newMessageInfo.subscribe(msgInfo => {
         this.getNewMessage(msgInfo);
+      }));
+
+      // Subscribe to message read notifications
+      this.subscriptions.push(this.msgService.messageMarkedAsRead.subscribe(updateData => {
+        this.markMessageAsRead(updateData);
       }));
     }
   }
@@ -270,5 +276,21 @@ export class MessageCenterComponent implements OnInit {
     this.latestMessages.sort((a, b) => {
       return b.sendTimestamp - a.sendTimestamp;
     });
+  }
+
+  // Marks a message as read
+  markMessageAsRead(updateData){
+    // Loop through the messagess to find the relevant message
+    for(var i = this.latestMessages.length - 1; i >= 0; i--){
+      // Check if it's for this conversation
+      if(this.latestMessages[i].conversationId == updateData.conversationId){
+        // Only update it if it's this specific message
+        if(this.latestMessages[i].sendTimestamp == updateData.sendTimestamp){
+          this.latestMessages[i].readTimestamp = updateData.readTimestamp;
+          this.latestMessages[i].status = updateData.status;
+        }
+        break;
+      }
+    }
   }
 }

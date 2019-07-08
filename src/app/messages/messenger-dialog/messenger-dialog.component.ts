@@ -104,8 +104,8 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
         // Loop through the messages backwards to find the mesasage to mark as read
         for(var i = this.messages.length - 1; i >= 0; i--){
           if(this.messages[i].sendTimestamp == updateData.sendTimestamp && this.messages[i].sendUser == updateData.sendUser){
-            this.messages[i].status = updateData.status;
             this.messages[i].readTimestamp = updateData.readTimestamp;
+            this.messages[i].status = updateData.status;
             break;
           }
         }

@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
-// import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { MessengerDialogComponent } from '../../messages/messenger-dialog/messenger-dialog.component';
 import { ProfileViewDialogComponent } from '../../user/profile-view-dialog/profile-view-dialog.component';
 
@@ -19,7 +18,6 @@ export class ConversationViewComponent implements OnInit {
   public conversationWithUser: string;
   public profileImage: string;
 
-  // private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private messengerDialogRef: MatDialogRef<MessengerDialogComponent>;
   private profileDialogRef: MatDialogRef<ProfileViewDialogComponent>;
 
@@ -38,17 +36,6 @@ export class ConversationViewComponent implements OnInit {
 
     // Set the profile image to the default
     this.profileImage = '../../../assets/images/default profile.gif';
-
-    // // Show the loading dialog
-    // this.showLoadingDialog();
-
-    // // Get the users profile
-    // this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), this.conversationWithUser, (res : any) => {
-    //   if(res.success) this.profile = res.profile;
-    //
-    //   // // Hide the loading dialog
-    //   // this.closeLoadingDialog();
-    // });
 
     // Get the users profile image
     this.userService.getUserProfilePicture(this.authService.getUserToken(), this.conversationWithUser, (res : any) => {
@@ -83,29 +70,38 @@ export class ConversationViewComponent implements OnInit {
     this.profileDialogRef = this.dialog.open(ProfileViewDialogComponent, dialogConfig);
   }
 
-  // // Displays a loading dialog
-  // showLoadingDialog(){
-  //   // Only show if loading dialog is undefined
-  //   if(!this.loadingDialogRef){
-  //     // Create the loading dialog
-  //     const dialogConfig = new MatDialogConfig();
-  //     dialogConfig.disableClose = true;
-  //     dialogConfig.autoFocus = true;
-  //
-  //     // Show the loading dialog
-  //     this.loadingDialogRef = this.dialog.open(LoadingDialogComponent, dialogConfig);
-  //   }
-  // };
-  //
-  // // Closes the loading dialog
-  // closeLoadingDialog(){
-  //   // Only try to close if dialog ref defined
-  //   if(this.loadingDialogRef){
-  //     // Close the loading dialog
-  //     this.loadingDialogRef.close();
-  //
-  //     // Nullify the ref
-  //     this.loadingDialogRef = null;
-  //   }
-  // }
+  // Sets the button color based on the message information
+  getOpenMessageButtonColor(){
+    if(this.latestMessage.sendUser == this.profile.username && this.latestMessage.status == 'sent'){
+      return "accent";
+    } else {
+      return "primary";
+    }
+  }
+
+  // Sets the button text based on the message information
+  getOpenMessageButtonText(){
+    if(this.latestMessage.sendUser == this.profile.username){
+      if(this.latestMessage.status == 'sent'){
+        return "Open Message";
+      } else {
+        return "Send Reply";
+      }
+    } else {
+      return "View Conversation";
+    }
+  }
+
+  // Sets the button icon based on the message information
+  getOpenMessageButtonIcon(){
+    if(this.latestMessage.sendUser == this.profile.username){
+      if(this.latestMessage.status == 'sent'){
+        return "email";
+      } else {
+        return "reply";
+      }
+    } else {
+      return "forum";
+    }
+  }
 }

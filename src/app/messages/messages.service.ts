@@ -55,6 +55,9 @@ export class MessagesService {
           // Let the sender know the message has been read so it can be displayed
           this.messageMarkedAsRead.emit(updatedMessage);
         } else if (authService.getUser() == updatedMessage.receiveUser){
+          // Let the receiver also know that the message has been read
+          this.messageMarkedAsRead.emit(updatedMessage);
+
           // Decrement count of unread messages and emit
           this.unreadMessageCountChange.emit(--this.unreadMessageCount);
         }
