@@ -249,6 +249,16 @@ export class UserService {
     sendHomieRequestAcceptEmail: boolean,
     callback: ((result: any) => void)
   ) : void{
-
+    // Make the REST call
+    this.http.post<any>('/api/user/save_user_preferences', {
+      token: token,
+      username: username,
+      sendNewMessageEmail: String(sendNewMessageEmail),
+      sendHomieRequestReceiveEmail: String(sendHomieRequestReceiveEmail),
+      sendHomieRequestAcceptEmail: String(sendHomieRequestAcceptEmail)
+    }).subscribe((res: any) => {
+      // Send the results back to callback
+      callback(res);
+    });
   }
 }
