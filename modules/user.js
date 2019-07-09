@@ -858,7 +858,7 @@ updateUserProfilePicture = function(username, oldImageUrl, newImageUrl, callback
         });
 
         console.log("Succesfully uploaded new profile picture for '%s'", username);
-        return callback(true, "Your profile picture has been successfully upldated.");
+        return callback(true, "Your profile picture has been successfully updated.");
       }
     });
   });
@@ -973,5 +973,158 @@ exports.getUserProfilesNoToken = function(username, users, callback){
         });
       });
     }
+  });
+}
+
+// Gets the users preferences
+exports.getUserPreferences = function(token, username, callback){
+  // Check to make sure a user token is valid
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      exports.getUserPreferencesNoToken(username, function(success, preferences){
+        return callback(success, preferences);
+      });
+    }
+  });
+}
+
+// Retrieves the users preferences from the database
+exports.getUserPreferencesNoToken = function(username, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Perform the search
+    dbo.collection("userPreferences").findOne({username: username}, function(err, record){
+      db.close();
+      if(err){
+        // If there is an error throw so we don't end up inserting duplicates
+        console.error("Error occurred while trying to get profile picture  for '%s'", username);
+        console.error(err);
+        throw err;
+      } else if (record == null) {
+        console.log("No preferences found for user '%s'", username);
+        return callback(false, null);
+      } else {
+        console.log("Preferences found for user '%s'", username);
+        return callback(true, record);
+      }
+    });
+  });
+}
+
+// Saves the users preferences
+exports.saveUserPreferences = function(token, username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
+  // Check to make sure a user token is valid
+  require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify user token');
+      console.error(err);
+      return callback(false, null);
+    } else {
+      exports.saveUserPreferencesNoToken(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
+        return callback(success, message);
+      });
+    }
+  });
+}
+
+// Writes the users preferences to the database
+exports.saveUserPreferencesNoToken = function(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
+  // Try to get the users preferences
+  exports.getUserPreferencesNoToken(username, function(success, preferences){
+    if(success){
+      updateUserPreferences(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
+        return callback(success, message);
+      });
+    } else {
+      insertUserPreferences(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
+        return callback(success, message);
+      });
+    }
+  });
+}
+
+// Inserts a new record of the users preferences into the database
+insertUserPreferences = function(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Create the record
+    preferences = {
+      username: username,
+      sendNewMessageEmail: sendNewMessageEmail,
+      sendHomieRequestReceiveEmail: sendHomieRequestReceiveEmail,
+      sendHomieRequestAcceptEmail: sendHomieRequestAcceptEmail
+    };
+
+    // Insert the record into the database
+    dbo.collection("userPreferences").insertOne(preferences, function(err, insertResult){
+      db.close();
+      if(err){
+        console.error("Unable to insert user preferences for user '%s'", username);
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else {
+        console.log("Succesfully inserted user preferences for user '%s'", username);
+        return callback(true, "Your preferences have been successfully saved.");
+      }
+    });
+  });
+}
+
+// Updates the usrs preferences in the database
+updateUserPreferences = function(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Set the data to be updated
+    updateData = {
+      $set: {
+        sendNewMessageEmail: sendNewMessageEmail,
+        sendHomieRequestReceiveEmail: sendHomieRequestReceiveEmail,
+        sendHomieRequestAcceptEmail: sendHomieRequestAcceptEmail
+      }
+    }
+
+    // Perform the update
+    dbo.collection("userPreferences").updateOne({username: username}, updateData, function(err, updateResult){
+      db.close();
+      if(err){
+        console.error("Error occurred while trying to update user preferences for '%s'", username);
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else {
+        console.log("Succesfully updated user preferences for '%s'", username);
+        return callback(true, "Your preferences have been successfully saved.");
+      }
+    });
   });
 }
