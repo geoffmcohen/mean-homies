@@ -457,6 +457,32 @@ module.exports = (function(){
     });
   });
 
+  // Gets the users preferences
+  api.get('/user/get_user_preferences', function(req, res){
+    console.log('api/user/get_user_preferences');
+
+    var user = require("../modules/user.js");
+    user.getUserPreferences(req.query.token, req.query.username, function(success, preferences){
+      res.send({success: success, preferences: preferences});
+    });
+  });
+
+  // Saves the users preferences
+  api.post('/user/save_user_preferences', function(req, res){
+    console.log('api/user/save_user_preferences');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the homie request
+      var user = require("../modules/user.js");
+      user.saveUserPreferences(fields.token, fields.username, fields.sendNewMessageEmail == 'true', fields.sendHomieRequestReceiveEmail == 'true', fields.sendHomieRequestAcceptEmai == 'true', function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+  });
+
   // Returns the relationship between two users
   api.get('/homies/get_homie_status', function(req, res){
     console.log('api/homies/get_homie_status');
@@ -638,6 +664,7 @@ module.exports = (function(){
       res.send({success: success, message: message});
     });
   });
+
   // api.get()
   return api;
 })();

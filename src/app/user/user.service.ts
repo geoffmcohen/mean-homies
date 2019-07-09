@@ -221,4 +221,34 @@ export class UserService {
       callback(res.isActive);
     });
   }
+
+  // Gets the users preferences
+  public getUserPreferences(
+    token: string,
+    username: string,
+    callback: ((result: any) => void)
+  ) : void{
+    // Set up the parameters
+    var params = new HttpParams()
+      .set('token', token)
+      .set('username', username);
+
+    // Make the REST call
+    this.http.get<any>('/api/user/get_user_preferences', {params}).subscribe((res: any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
+
+  // Saves the users preferences
+  public saveUserPreferences(
+    token: string,
+    username: string,
+    sendNewMessageEmail: boolean,
+    sendHomieRequestReceiveEmail: boolean,
+    sendHomieRequestAcceptEmail: boolean,
+    callback: ((result: any) => void)
+  ) : void{
+
+  }
 }
