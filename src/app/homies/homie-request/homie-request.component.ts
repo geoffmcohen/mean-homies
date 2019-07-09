@@ -100,7 +100,7 @@ export class HomieRequestComponent implements OnInit {
       this.closeLoadingDialog();
 
       // Show a snackbar with the message returned
-      this.snackBar.open(res.message, "Close");
+      this.snackBar.open(res.message, "Close",  {duration: 5000});
     });
   }
 
@@ -115,7 +115,7 @@ export class HomieRequestComponent implements OnInit {
       this.closeLoadingDialog();
 
       // Show a snackbar with the message returned
-      this.snackBar.open(res.message, "Close");
+      this.snackBar.open(res.message, "Close",  {duration: 5000});
     });
   }
 
@@ -146,7 +146,7 @@ export class HomieRequestComponent implements OnInit {
             this.closeLoadingDialog();
 
             // Show a snackbar with the message returned
-            this.snackBar.open(res.message, "Close");
+            this.snackBar.open(res.message, "Close",  {duration: 5000});
           });
         });
       }
@@ -178,7 +178,7 @@ export class HomieRequestComponent implements OnInit {
          this.closeLoadingDialog();
 
          // Show a snackbar with the message returned
-         this.snackBar.open(res.message, "Close");
+         this.snackBar.open(res.message, "Close", {duration: 5000});
        });
      }
    });

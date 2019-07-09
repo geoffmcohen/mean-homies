@@ -154,7 +154,7 @@ export class EditProfileComponent implements OnInit {
 
         if(res.success){
           // Display a Snackbar with message
-          this.snackBar.open(res.message, "Close");
+          this.snackBar.open(res.message, "Close", {duration: 5000});
         } else {
           // Display the error message in the message section
           this.message = res.message;

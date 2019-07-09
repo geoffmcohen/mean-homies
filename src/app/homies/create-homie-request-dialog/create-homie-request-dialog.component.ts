@@ -67,7 +67,7 @@ export class CreateHomieRequestDialogComponent implements OnInit {
 
         if(res.success){
           // Display a snackBar
-          this.snackBar.open(res.message, "Close");
+          this.snackBar.open(res.message, "Close", {duration: 5000});
 
           // Close this dialog
           this.dialogRef.close(true);

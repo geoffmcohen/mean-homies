@@ -50,7 +50,7 @@ export class ChangePasswordDialogComponent implements OnInit {
         // Show a snackbar with a message and close the dialog
         if(res.success){
           this.dialogRef.close();
-          this.snackBar.open(res.message, "Close");
+          this.snackBar.open(res.message, "Close", {duration: 5000});
         } else {
           this.clearFields();
           this.message = res.message;

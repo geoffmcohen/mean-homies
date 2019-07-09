@@ -67,7 +67,7 @@ export class ResetPasswordDialogComponent implements OnInit {
         if (res.success){
           // Close this dialog and display the message in a snackbar
           this.dialogRef.close(true);
-          this.snackBar.open(res.message, "Close");
+          this.snackBar.open(res.message, "Close", {duration: 5000});
         } else {
           // Reset the email field and display the message
           this.email.setValue("");

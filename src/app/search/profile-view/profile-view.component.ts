@@ -116,7 +116,7 @@ export class ProfileViewComponent implements OnInit {
       }
 
       // Show a snackbar with the message returned
-      this.snackBar.open(res.message, "Close");
+      this.snackBar.open(res.message, "Close", {duration: 5000});
     });
   }
 
@@ -136,7 +136,7 @@ export class ProfileViewComponent implements OnInit {
       }
 
       // Show a snackbar with the message returned
-      this.snackBar.open(res.message, "Close");
+      this.snackBar.open(res.message, "Close", {duration: 5000});
     });
   }
 
@@ -150,7 +150,7 @@ export class ProfileViewComponent implements OnInit {
     // #TODO: Have to figure out how to make this mobile friendly
     dialogConfig.minWidth = "800px";
     dialogConfig.maxWidth = "800px";
-    
+
     // Show the messenger dialog
     this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);
   }

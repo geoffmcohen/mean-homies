@@ -45,7 +45,7 @@ export class SignupDialogComponent implements OnInit {
         // Close this dialog and show snackbar if successful
         if(res.success){
           this.dialogRef.close();
-          this.snackBar.open(res.message, "Close");
+          this.snackBar.open(res.message, "Close", {duration: 5000});
         } else {
           this.password.setValue("");
           this.passwordConfirm.setValue("");

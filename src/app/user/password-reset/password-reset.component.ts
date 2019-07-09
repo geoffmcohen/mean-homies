@@ -122,7 +122,7 @@ export class PasswordResetComponent implements OnInit {
 
         // Show a snackbar with a message and action to close the window
         if(res.success){
-          let snackBarRef = this.snackBar.open(res.message, "Close");
+          let snackBarRef = this.snackBar.open(res.message, "Close", {duration: 5000});
           snackBarRef.onAction().subscribe(() => {
             window.close();
           });

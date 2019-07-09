@@ -8,6 +8,8 @@ import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.compo
 import { SignupDialogComponent } from '../../user/signup-dialog/signup-dialog.component';
 import { UserAgreementDialogComponent } from '../../user/user-agreement-dialog/user-agreement-dialog.component';
 import { ChangePasswordDialogComponent } from '../../user/change-password-dialog/change-password-dialog.component';
+import { UserPreferencesDialogComponent } from '../../user/user-preferences-dialog/user-preferences-dialog.component';
+
 
 @Component({
   selector: 'app-home-user-area',
@@ -151,5 +153,12 @@ export class HomeUserAreaComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     this.dialog.open(ChangePasswordDialogComponent, dialogConfig);
+  }
+
+  // Shows the dialog to update the users Preferences
+  showUserPreferencesDialog(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    this.dialog.open(UserPreferencesDialogComponent, dialogConfig);
   }
 }

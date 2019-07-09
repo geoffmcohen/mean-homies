@@ -77,7 +77,7 @@ export class PictureUploadDialogComponent implements OnInit {
           this.message = res.message;
         } else {
           // Show snackbar with message
-          this.snackBar.open(res.message, "Close");
+          this.snackBar.open(res.message, "Close", {duration: 5000});
 
           // Close dialog with a success
           this.dialogRef.close(true);

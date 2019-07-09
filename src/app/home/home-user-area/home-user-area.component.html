@@ -13,7 +13,7 @@
 
 <mat-menu #usermenu="matMenu">
   <button mat-menu-item [routerLink]="['user/edit-profile']">Edit Profile</button>
-  <button mat-menu-item disabled>Preferences</button>
+  <button mat-menu-item (click)="showUserPreferencesDialog()">Preferences</button>
   <button mat-menu-item (click)="showChangePasswordDialog()">Change Password</button>
   <button mat-menu-item (click)="logout()">Logout</button>
 </mat-menu>

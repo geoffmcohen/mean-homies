@@ -67,6 +67,7 @@ import { ConfirmationDialogComponent } from './shared/confirmation-dialog/confir
 import { MessengerDialogComponent } from './messages/messenger-dialog/messenger-dialog.component';
 import { MessageCenterComponent } from './messages/message-center/message-center.component';
 import { ConversationViewComponent } from './messages/conversation-view/conversation-view.component';
+import { UserPreferencesDialogComponent } from './user/user-preferences-dialog/user-preferences-dialog.component';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,8 @@ import { ConversationViewComponent } from './messages/conversation-view/conversa
     ConfirmationDialogComponent,
     MessengerDialogComponent,
     MessageCenterComponent,
-    ConversationViewComponent
+    ConversationViewComponent,
+    UserPreferencesDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -153,7 +155,8 @@ import { ConversationViewComponent } from './messages/conversation-view/conversa
     ProfileViewDialogComponent,
     CreateHomieRequestDialogComponent,
     ConfirmationDialogComponent,
-    MessengerDialogComponent
+    MessengerDialogComponent,
+    UserPreferencesDialogComponent
   ]
 })
 export class AppModule { }
