@@ -59,6 +59,6 @@ exports.sendAppTemplateEmail = function(to, template, input, send = true, previe
     message: {to: to},
     locals: input
   }).then( res => {
-    console.log("Succesfully sent activation email");
+    console.log("Succesfully sent '%s' email", template);
   }).catch(console.error);
 }

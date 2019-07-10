@@ -129,7 +129,7 @@ exports.sendHomieRequest = function(token, username, targetUser, message, callba
 
           // If target user is not logged in, send them an email
           if(!rt.checkIfConnected(targetUser)){
-            exports.sendHomieRequestEmailNotification(username, targetUser, message);
+            exports.sendHomieRequestReceivedEmailNotification(username, targetUser, message);
           }
         }
 
@@ -186,11 +186,50 @@ exports.sendHomieRequestNoToken = function(username, targetUser, message, callba
 }
 
 // Sends the target user a notification that they have received a new Homie Request
-// #TODO: This needs to be implemented
-exports.sendHomieRequestEmailNotification = function(username, targetUser, message, send = true, preview = false){
-  console.error("sendHomieRequestEmailNotification() has been called but not yet implemented");
-}
+exports.sendHomieRequestReceivedEmailNotification = function(username, targetUser, message, send = true, preview = false){
+  // Get preferences to see if the target user has opted out of this email
+  var user = require('./user.js');
+  user.getUserPreferencesNoToken(targetUser, function(success, preferences){
+    if(success && !preferences.sendHomieRequestReceiveEmail){
+      console.log("User '%s' will not receive a homie request receive notification because they have opted out.", targetUser);
+    } else {
+      // We need to get the target users email address first
+      user.getUserEmail(targetUser, function(success, emailTo){
+        if(!success){
+          console.error("Unable to send homie request receive notification because user '%s' email address could not be retrieved.", targetUser);
+        } else {
+          // Now we need the profile of the sender to show their display name
+          user.getUserProfileNoToken(username, username, function(success, profile){
+            if(!success){
+              console.error("Unable to send homie request receive notification because user '%s' profile could not be retrieved.", username);
+            } else {
+              var email = require('./email.js');
 
+              // Get the url to use for links from an environment variable
+              var appUrl = process.env.VH_APP_URL || 'http://localhost:3000';
+
+              // Set up the inputs for the email template
+              templateInputs = {
+                appUrl: appUrl,
+                senderName: profile.displayName ? profile.displayName + " (" + username + ")": username,
+                messageText: message
+              };
+
+              // Send the email using the template
+              email.sendAppTemplateEmail(
+                emailTo,
+                'homie-request-receive',
+                templateInputs,
+                send,
+                preview
+              );
+            }
+          });
+        }
+      });
+    }
+  });
+}
 
 // Accepts a Homie request from the target user
 exports.acceptHomieRequest = function(token, username, targetUser, callback){
@@ -203,9 +242,63 @@ exports.acceptHomieRequest = function(token, username, targetUser, callback){
     } else {
       // Call the actual function to make the request
       exports.acceptHomieRequestNoToken(username, targetUser, function(success, message){
+        // Import the real-time module
+        var rt = require('./real-time.js');
+
         // Notify the users client that the count has changed
-        require('./real-time.js').emitEvent('homie request count change', {requestUser: targetUser, acceptUser: username});
+        rt.emitEvent('homie request count change', {requestUser: targetUser, acceptUser: username});
+
+        // If target user is not logged in, send them an email
+        if(!rt.checkIfConnected(targetUser)){
+          exports.sendHomieRequestAcceptEmailNotification(username, targetUser);
+        }
+
         return callback(success, message);
+      });
+    }
+  });
+}
+
+// Sends the targetUser an email notifying them that their homie request has been accepted
+exports.sendHomieRequestAcceptEmailNotification = function(username, targetUser, send = true, preview = false){
+  // Get preferences to see if the target user has opted out of this email
+  var user = require('./user.js');
+  user.getUserPreferencesNoToken(targetUser, function(success, preferences){
+    if(success && !preferences.sendHomieRequestReceiveEmail){
+      console.log("User '%s' will not receive a homie request accept notification because they have opted out.", targetUser);
+    } else {
+      // We need to get the target users email address first
+      user.getUserEmail(targetUser, function(success, emailTo){
+        if(!success){
+          console.error("Unable to send homie request accept notification because user '%s' email address could not be retrieved.", targetUser);
+        } else {
+          // Now we need the profile of the sender to show their display name
+          user.getUserProfileNoToken(username, username, function(success, profile){
+            if(!success){
+              console.error("Unable to send homie request accept notification because user '%s' profile could not be retrieved.", username);
+            } else {
+              var email = require('./email.js');
+
+              // Get the url to use for links from an environment variable
+              var appUrl = process.env.VH_APP_URL || 'http://localhost:3000';
+
+              // Set up the inputs for the email template
+              templateInputs = {
+                appUrl: appUrl,
+                senderName: profile.displayName ? profile.displayName + " (" + username + ")": username
+              };
+
+              // Send the email using the template
+              email.sendAppTemplateEmail(
+                emailTo,
+                'homie-request-accept',
+                templateInputs,
+                send,
+                preview
+              );
+            }
+          });
+        }
       });
     }
   });

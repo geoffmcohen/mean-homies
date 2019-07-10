@@ -90,7 +90,48 @@ createConversationId = function(user1, user2){
 
 // Sends the user an email notification
 exports.sendMessageNotificationEmail = function(username, targetUser, messageText, send = true, preview = false ){
-  console.error("sendMessageNotificationEmail has been called, but not yet implemented");
+  // Get preferences to see if the target user has opted out of this email
+  var user = require('./user.js');
+  user.getUserPreferencesNoToken(targetUser, function(success, preferences){
+    if(success && !preferences.sendNewMessageEmail){
+      console.log("User '%s' will not receive a new message notification because they have opted out.", targetUser);
+    } else {
+      // We need to get the target users email address first
+      user.getUserEmail(targetUser, function(success, emailTo){
+        if(!success){
+          console.error("Unable to send new message notification because user '%s' email address could not be retrieved.", targetUser);
+        } else {
+          // Now we need the profile of the sender to show their display name
+          user.getUserProfileNoToken(username, username, function(success, profile){
+            if(!success){
+              console.error("Unable to send new message notification because user '%s' profile could not be retrieved.", username);
+            } else {
+              var email = require('./email.js');
+
+              // Get the url to use for links from an environment variable
+              var appUrl = process.env.VH_APP_URL || 'http://localhost:3000';
+
+              // Set up the inputs for the email template
+              templateInputs = {
+                appUrl: appUrl,
+                senderName: profile.displayName ? profile.displayName + " (" + username + ")": username,
+                messageText: messageText
+              };
+
+              // Send the email using the template
+              email.sendAppTemplateEmail(
+                emailTo,
+                'new-message',
+                templateInputs,
+                send,
+                preview
+              );
+            }
+          });
+        }
+      });
+    }
+  });
 }
 
 // Function called by the api to get all the messages between the user and targetUser sent after the startTime

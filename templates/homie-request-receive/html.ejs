@@ -1,0 +1,8 @@
+<% if(messageText) {%>
+<span><span style="font-weight:bold"><%=senderName%></span> said:<span>
+<div>"<%=messageText%>"</div>
+<% } else { %>
+<span>You have received a Homie Request from <span style="font-weight:bold"><%=senderName%></span></span>
+<% } %>
+<br>
+<span>To accept or decline, please go to <a href="<%=appUrl%>/home/homies">Vegan Homies</a></span>
