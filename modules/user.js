@@ -1025,7 +1025,7 @@ exports.getUserPreferencesNoToken = function(username, callback){
 }
 
 // Saves the users preferences
-exports.saveUserPreferences = function(token, username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
+exports.saveUserPreferences = function(token, username, sendAnnouncementsEmail, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
   // Check to make sure a user token is valid
   require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
     if(!isTokenValid){
@@ -1033,7 +1033,7 @@ exports.saveUserPreferences = function(token, username, sendNewMessageEmail, sen
       console.error(err);
       return callback(false, null);
     } else {
-      exports.saveUserPreferencesNoToken(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
+      exports.saveUserPreferencesNoToken(username, sendAnnouncementsEmail, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
         return callback(success, message);
       });
     }
@@ -1041,15 +1041,15 @@ exports.saveUserPreferences = function(token, username, sendNewMessageEmail, sen
 }
 
 // Writes the users preferences to the database
-exports.saveUserPreferencesNoToken = function(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
+exports.saveUserPreferencesNoToken = function(username, sendAnnouncementsEmail, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
   // Try to get the users preferences
   exports.getUserPreferencesNoToken(username, function(success, preferences){
     if(success){
-      updateUserPreferences(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
+      updateUserPreferences(username, sendAnnouncementsEmail, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
         return callback(success, message);
       });
     } else {
-      insertUserPreferences(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
+      insertUserPreferences(username, sendAnnouncementsEmail, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, function(success, message){
         return callback(success, message);
       });
     }
@@ -1057,7 +1057,7 @@ exports.saveUserPreferencesNoToken = function(username, sendNewMessageEmail, sen
 }
 
 // Inserts a new record of the users preferences into the database
-insertUserPreferences = function(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
+insertUserPreferences = function(username, sendAnnouncementsEmail, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
   var mongoURI = process.env.MONGOLAB_URI;
@@ -1072,6 +1072,7 @@ insertUserPreferences = function(username, sendNewMessageEmail, sendHomieRequest
     // Create the record
     preferences = {
       username: username,
+      sendAnnouncementsEmail: sendAnnouncementsEmail,
       sendNewMessageEmail: sendNewMessageEmail,
       sendHomieRequestReceiveEmail: sendHomieRequestReceiveEmail,
       sendHomieRequestAcceptEmail: sendHomieRequestAcceptEmail
@@ -1093,7 +1094,7 @@ insertUserPreferences = function(username, sendNewMessageEmail, sendHomieRequest
 }
 
 // Updates the usrs preferences in the database
-updateUserPreferences = function(username, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
+updateUserPreferences = function(username, sendAnnouncementsEmail, sendNewMessageEmail, sendHomieRequestReceiveEmail, sendHomieRequestAcceptEmail, callback){
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
   var mongoURI = process.env.MONGOLAB_URI;
@@ -1108,6 +1109,7 @@ updateUserPreferences = function(username, sendNewMessageEmail, sendHomieRequest
     // Set the data to be updated
     updateData = {
       $set: {
+        sendAnnouncementsEmail: sendAnnouncementsEmail,
         sendNewMessageEmail: sendNewMessageEmail,
         sendHomieRequestReceiveEmail: sendHomieRequestReceiveEmail,
         sendHomieRequestAcceptEmail: sendHomieRequestAcceptEmail

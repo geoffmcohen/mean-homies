@@ -477,9 +477,17 @@ module.exports = (function(){
     form.parse(req, function(err, fields, files){
       // Send the homie request
       var user = require("../modules/user.js");
-      user.saveUserPreferences(fields.token, fields.username, fields.sendNewMessageEmail == 'true', fields.sendHomieRequestReceiveEmail == 'true', fields.sendHomieRequestAcceptEmai == 'true', function(success, message){
-        res.send({success: success, message: message});
-      });
+      user.saveUserPreferences(
+        fields.token,
+        fields.username,
+        fields.sendAnnouncementsEmail == 'true',
+        fields.sendNewMessageEmail == 'true',
+        fields.sendHomieRequestReceiveEmail == 'true',
+        fields.sendHomieRequestAcceptEmail == 'true',
+        function(success, message){
+          res.send({success: success, message: message});
+        }
+      );
     });
   });
 

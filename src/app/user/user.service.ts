@@ -244,6 +244,7 @@ export class UserService {
   public saveUserPreferences(
     token: string,
     username: string,
+    sendAnnouncementsEmail: boolean,
     sendNewMessageEmail: boolean,
     sendHomieRequestReceiveEmail: boolean,
     sendHomieRequestAcceptEmail: boolean,
@@ -253,6 +254,7 @@ export class UserService {
     this.http.post<any>('/api/user/save_user_preferences', {
       token: token,
       username: username,
+      sendAnnouncementsEmail: String(sendAnnouncementsEmail),
       sendNewMessageEmail: String(sendNewMessageEmail),
       sendHomieRequestReceiveEmail: String(sendHomieRequestReceiveEmail),
       sendHomieRequestAcceptEmail: String(sendHomieRequestAcceptEmail)

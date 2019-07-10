@@ -10,6 +10,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   styleUrls: ['./user-preferences-dialog.component.css']
 })
 export class UserPreferencesDialogComponent implements OnInit {
+  public sendAnnouncementsEmail: boolean;
   public sendNewMessageEmail: boolean;
   public sendHomieRequestReceiveEmail: boolean;
   public sendHomieRequestAcceptEmail: boolean;
@@ -65,11 +66,13 @@ export class UserPreferencesDialogComponent implements OnInit {
     this.userService.getUserPreferences(this.authService.getUserToken(), this.authService.getUser(), (res : any) => {
       if(res.success){
         // If the record was found in the database, set the checkbox values accordingly
+        this.sendAnnouncementsEmail = res.preferences.sendAnnouncementsEmail;
         this.sendNewMessageEmail = res.preferences.sendNewMessageEmail;
         this.sendHomieRequestReceiveEmail = res.preferences.sendHomieRequestReceiveEmail;
         this.sendHomieRequestAcceptEmail = res.preferences.sendHomieRequestAcceptEmail;
       } else {
         // If the record was not found, default the checkbox values to true
+        this.sendAnnouncementsEmail = true;
         this.sendNewMessageEmail = true;
         this.sendHomieRequestReceiveEmail = true;
         this.sendHomieRequestAcceptEmail = true;
@@ -86,7 +89,7 @@ export class UserPreferencesDialogComponent implements OnInit {
     this.showLoadingDialog();
 
     // Try to save the users preferences to the database
-    this.userService.saveUserPreferences(this.authService.getUserToken(), this.authService.getUser(), this.sendNewMessageEmail, this.sendHomieRequestReceiveEmail, this.sendHomieRequestAcceptEmail, (res : any) => {
+    this.userService.saveUserPreferences(this.authService.getUserToken(), this.authService.getUser(), this.sendAnnouncementsEmail, this.sendNewMessageEmail, this.sendHomieRequestReceiveEmail, this.sendHomieRequestAcceptEmail, (res : any) => {
       // Hide the loading dialog
       this.closeLoadingDialog();
       this.message = null;
