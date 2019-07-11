@@ -13,7 +13,7 @@ import { MessengerDialogComponent } from '../../messages/messenger-dialog/messen
   templateUrl: './message-center.component.html',
   styleUrls: ['./message-center.component.css']
 })
-export class MessageCenterComponent implements OnInit {
+export class MessageCenterComponent implements OnInit, OnDestroy {
   public loggedIn: boolean;
   public hasActiveProfile: boolean;
 

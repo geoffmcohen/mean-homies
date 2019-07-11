@@ -14,6 +14,6 @@
   <div class='message'>{{message}}</div>
 </mat-card>
 <mat-dialog-actions>
-  <button *ngIf="showPasswordReset" class="mat-raised-button mat-warn" (click)="showPasswordResetDialog()">Reset Password</button>
   <button class="mat-raised-button mat-primary" (click)="submitLoginForm()">Login</button>
+  <button *ngIf="showPasswordReset" class="mat-raised-button mat-warn" (click)="showPasswordResetDialog()">Reset Password</button>
 </mat-dialog-actions>

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
@@ -16,12 +17,14 @@ import { UserPreferencesDialogComponent } from '../../user/user-preferences-dial
   templateUrl: './home-user-area.component.html',
   styleUrls: ['./home-user-area.component.css']
 })
-export class HomeUserAreaComponent implements OnInit {
+export class HomeUserAreaComponent implements OnInit, OnDestroy {
   public loggedIn: boolean;
   public loggedInUser: string;
   public hasActiveProfile: boolean;
   public pendingHomieRequestCount: number;
   public unreadMessageCount: number;
+
+  private subscriptions: Subscription[];
 
   constructor(
     private dialog: MatDialog,
@@ -32,8 +35,18 @@ export class HomeUserAreaComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Initialize the subscriptions array
+    this.subscriptions = [];
+
     // Get initial login state and track changes
     this.subscribeToLoginChanges();
+  }
+
+  // Unsubscribes to all observables before closing
+  ngOnDestroy(){
+    for(var i = 0; i < this.subscriptions.length; i++){
+      this.subscriptions[i].unsubscribe();
+    }
   }
 
   // Set up login state and subscribe to changes
@@ -48,7 +61,7 @@ export class HomeUserAreaComponent implements OnInit {
     }
 
     // Subscribe to login changes
-    this.authService.userLoginChange.subscribe(loggedIn => {
+    this.subscriptions.push(this.authService.userLoginChange.subscribe(loggedIn => {
       this.loggedIn = loggedIn;
       if(this.loggedIn){
         this.loggedInUser = this.authService.getUser();
@@ -58,7 +71,7 @@ export class HomeUserAreaComponent implements OnInit {
       } else {
         this.loggedInUser = null;
       }
-    });
+    }));
   }
 
   subscribeToChanges(){
@@ -79,9 +92,9 @@ export class HomeUserAreaComponent implements OnInit {
       this.hasActiveProfile = isActive;
 
       // Subscribe to changes in active profile
-      this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
+      this.subscriptions.push(this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
         this.hasActiveProfile = hasActiveProfile;
-      });
+      }));
     });
   }
 
@@ -92,9 +105,9 @@ export class HomeUserAreaComponent implements OnInit {
       this.pendingHomieRequestCount = count;
 
       // Subscribe to changes to the change in homie request count
-      this.homiesService.pendingRequestCountChange.subscribe((newCount) => {
+      this.subscriptions.push(this.homiesService.pendingRequestCountChange.subscribe((newCount) => {
         this.pendingHomieRequestCount = newCount;
-      });
+      }));
     });
   }
 
@@ -107,9 +120,9 @@ export class HomeUserAreaComponent implements OnInit {
         this.unreadMessageCount = res.count;
 
         // Subscribe to changes in the unread messagse count
-        this.msgService.unreadMessageCountChange.subscribe(count => {
+        this.subscriptions.push(this.msgService.unreadMessageCountChange.subscribe(count => {
           this.unreadMessageCount = count;
-        });
+        }));
       }
     });
   }

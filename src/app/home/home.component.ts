@@ -1,23 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material';
+// import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../auth/authentication.service';
 import { UserService } from '../user/user.service';
+import { HomiesService } from '../homies/homies.service';
+import { MessagesService } from '../messages/messages.service';
 import { PageStatsService } from '../shared/page-stats.service';
+import { LoginDialogComponent } from '../user/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from '../user/signup-dialog/signup-dialog.component';
+import { UserAgreementDialogComponent } from '../user/user-agreement-dialog/user-agreement-dialog.component';
+import { ChangePasswordDialogComponent } from '../user/change-password-dialog/change-password-dialog.component';
+import { UserPreferencesDialogComponent } from '../user/user-preferences-dialog/user-preferences-dialog.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   public loggedIn: boolean;
   public loggedInUser: string;
   public hasActiveProfile: boolean;
+  public pendingHomieRequestCount: number;
+  public unreadMessageCount: number;
+
+  private subscriptions: Subscription[];
 
   constructor(
-    private router: Router,
+    // private router: Router,
+    private dialog: MatDialog,
     private authService: AuthenticationService,
     private userService: UserService,
+    private homiesService: HomiesService,
+    private msgService: MessagesService,
     private pageStatsService: PageStatsService
   ) { }
 
@@ -25,8 +41,18 @@ export class HomeComponent implements OnInit {
     // Increment page stats for home page
     this.pageStatsService.incrementPageCount( "home" );
 
+    // Initialize the subscriptions array
+    this.subscriptions = [];
+
     // Get initial login state and track changes
     this.subscribeToLoginChanges();
+  }
+
+  // Unsubscribes to all observables before closing
+  ngOnDestroy(){
+    for(var i = 0; i < this.subscriptions.length; i++){
+      this.subscriptions[i].unsubscribe();
+    }
   }
 
   // Set up login state and subscribe to changes
@@ -36,22 +62,33 @@ export class HomeComponent implements OnInit {
     if(this.loggedIn){
       this.loggedInUser = this.authService.getUser();
 
-      // Get the inital state of active profile and track changes
-      this.subscribeToHasActiveProfileChanges();
+      // Subscribe to all other data change events
+      this.subscribeToChanges();
     }
 
     // Subscribe to login changes
-    this.authService.userLoginChange.subscribe(loggedIn => {
+    this.subscriptions.push(this.authService.userLoginChange.subscribe(loggedIn => {
       this.loggedIn = loggedIn;
       if(this.loggedIn){
         this.loggedInUser = this.authService.getUser();
 
-        // Get the inital state of active profile and track changes
-        this.subscribeToHasActiveProfileChanges();
+        // Subscribe to all other data change events
+        this.subscribeToChanges();
       } else {
         this.loggedInUser = null;
       }
-    });
+    }));
+  }
+
+  subscribeToChanges(){
+    // Get the inital state of active profile and track changes
+    this.subscribeToHasActiveProfileChanges();
+
+    // Get the initial count of homie requests and track changes
+    this.subscribeToHomieRequestChanges();
+
+    // Gets the count of unread meassges and tracks changes
+    this.subscribeToMessageChanges();
   }
 
   // Setup profile active state and subscribe to changes
@@ -61,14 +98,106 @@ export class HomeComponent implements OnInit {
       this.hasActiveProfile = isActive;
 
       // Subscribe to changes in active profile
-      this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
+      this.subscriptions.push(this.userService.hasActiveProfileChange.subscribe(hasActiveProfile => {
         this.hasActiveProfile = hasActiveProfile;
-      });
+      }));
     });
+  }
+
+  // Subscribes to the count of active homie requests to display as a badge
+  subscribeToHomieRequestChanges(){
+    // Get initial state of pendingHomieRequestCount
+    this.homiesService.getUsersPendingHomieRequestCount(this.authService.getUserToken(), this.authService.getUser(), (success: boolean, count: number) => {
+      this.pendingHomieRequestCount = count;
+
+      // Subscribe to changes to the change in homie request count
+      this.subscriptions.push(this.homiesService.pendingRequestCountChange.subscribe((newCount) => {
+        this.pendingHomieRequestCount = newCount;
+      }));
+    });
+  }
+
+  // Subscibes to the count of messages
+  subscribeToMessageChanges(){
+    // Get the initial count of unread messages
+    this.msgService.getUnreadMessageCount(this.authService.getUserToken(), this.authService.getUser(), (res: any) => {
+      if(res.success){
+        // Set the initial count and subscribe to changes in the count
+        this.unreadMessageCount = res.count;
+
+        // Subscribe to changes in the unread messagse count
+        this.subscriptions.push(this.msgService.unreadMessageCountChange.subscribe(count => {
+          this.unreadMessageCount = count;
+        }));
+      }
+    });
+  }
+
+  showLoginDialog(){
+    // Create the login dialog
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+
+    // Show the dialog for login
+    this.dialog.open(LoginDialogComponent, dialogConfig)
+  }
+
+  showSignupDialog(){
+    // Create the config to be used for the dialogs
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+
+    // Show user agreement first and only display signup if accepted
+    var userAgreementDialogRef = this.dialog.open(UserAgreementDialogComponent, dialogConfig);
+    userAgreementDialogRef.afterClosed().subscribe(userAgrees => {
+      if(userAgrees){
+        // Show the dialog for sign up
+        var signupDialogRef = this.dialog.open(SignupDialogComponent, dialogConfig)
+      }
+    })
+  }
+
+  // Shows the dialog used for updating the users password
+  showChangePasswordDialog(){
+    // Show the dialog for the user to update their password
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    this.dialog.open(ChangePasswordDialogComponent, dialogConfig);
+  }
+
+  // Shows the dialog to update the users Preferences
+  showUserPreferencesDialog(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = true;
+    this.dialog.open(UserPreferencesDialogComponent, dialogConfig);
   }
 
   // Opens up the blog in a new window
   openBlog(){
     window.open('/blog', '_blank');
+  }
+
+  // Allow user to log out
+  logout(){
+    // Log the user out
+    this.authService.userLogout();
+
+    // Redirect to home page
+    window.open('/home', '_self');
+  }
+
+  // Gets the number of alerts to show as a badge on the menu button
+  getTotalAlertCount(){
+    return this.pendingHomieRequestCount + this.unreadMessageCount;
+  }
+
+  // Determines if a badge should be shown on the menu button
+  shouldHideMenuBadge(){
+    var totalAlerts = this.getTotalAlertCount();
+    if(totalAlerts != null && totalAlerts > 0){
+      return false;
+    } else {
+      return true;
+    }
   }
 }

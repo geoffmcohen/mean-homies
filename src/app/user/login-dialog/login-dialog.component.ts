@@ -43,8 +43,8 @@ export class LoginDialogComponent implements OnInit {
         // Close this dialog
         this.dialogRef.close( true );
 
-        // Redirect to home page
-        window.open('/home', '_self');
+        // Reload the current page
+        document.location.reload();
       } else {
         this.password = "";
         this.message = res.message;
