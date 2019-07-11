@@ -3,13 +3,21 @@
   <button mat-icon-button [routerLink]="['search']" [disabled]="!hasActiveProfile"><mat-icon>search</mat-icon></button>
   <button mat-icon-button [routerLink]="['homies']" [disabled]="!hasActiveProfile" [matBadge]="pendingHomieRequestCount" [matBadgeHidden]="pendingHomieRequestCount<1" matBadgeSize="small" matBadgeColor="accent"><mat-icon>people</mat-icon></button>
   <button mat-icon-button [routerLink]="['messages']" [disabled]="!hasActiveProfile" [matBadge]="unreadMessageCount" [matBadgeHidden]="unreadMessageCount<1" matBadgeSize="small" matBadgeColor="accent"><mat-icon>message</mat-icon></button>
+  <button mat-icon-button [matMenuTriggerFor]="infomenu"><mat-icon>help</mat-icon></button>
   <button mat-icon-button [matMenuTriggerFor]="usermenu"><mat-icon>account_circle</mat-icon></button>
 </span>
 
 <span *ngIf="!loggedIn">
   <button mat-button (click)="showLoginDialog()">Login</button>
   <button mat-button (click)="showSignupDialog()">Sign Up</button>
+  <button mat-icon-button [matMenuTriggerFor]="infomenu"><mat-icon>help</mat-icon></button>
 </span>
+
+<mat-menu #infomenu="matMenu">
+  <button mat-menu-item [routerLink]="['about']">About</button>
+  <button mat-menu-item [routerLink]="['faq']">FAQ</button>
+  <button mat-menu-item (click)="openBlog()">Blog</button>
+</mat-menu>
 
 <mat-menu #usermenu="matMenu">
   <button mat-menu-item [routerLink]="['user/edit-profile']">Edit Profile</button>

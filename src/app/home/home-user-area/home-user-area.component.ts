@@ -161,4 +161,9 @@ export class HomeUserAreaComponent implements OnInit {
     dialogConfig.autoFocus = true;
     this.dialog.open(UserPreferencesDialogComponent, dialogConfig);
   }
+
+  // Opens up the blog in a new window
+  openBlog(){
+    window.open('/blog', '_blank');
+  }
 }
