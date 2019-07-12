@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material";
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { ApplicationStateService } from '../../shared/application-state.service';
 
 @Component({
   selector: 'app-user-agreement-dialog',
@@ -8,7 +9,8 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
   styleUrls: ['./user-agreement-dialog.component.css']
 })
 export class UserAgreementDialogComponent implements OnInit {
-  private userHasScrolled: boolean;
+  public isMobile: boolean;
+  private agreementScrolled: boolean;
   public userAgrees: boolean;
   public userAgreement =
 `This will be the user agreement...
@@ -34,31 +36,38 @@ One more for the road...
 End`;
 
   constructor(
+    private appStateService: ApplicationStateService,
     private dialogRef: MatDialogRef<UserAgreementDialogComponent>
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = appStateService.getIsMobile();
+  }
 
   ngOnInit() {
-    // Set a flag indicating that the user has not scrolled through the box
-    this.userHasScrolled = false;
   }
 
   ngAfterViewChecked(){
-    // If the user has not yet touched the scrollbar of the agreement, move the scroll to the top
-    if(!this.userHasScrolled){
-      // This is a hack to ensure the beginning of the agreement is shown when the dialog comes up
-      document.getElementById("agreementTextarea").scrollTop = 0;
+    // Finds the agreement text area
+    var agreementText = document.getElementById("agreementTextarea");
+
+    // If found, we will ensure that it is initially scrolled to the top
+    if(agreementText){
+      if(!this.agreementScrolled && agreementText.scrollTop != 0){
+        agreementText.scrollTop = 0;
+        this.agreementScrolled = true;
+      }
     }
   }
 
-  // Triggered when the agreement is scrolled
-  agreementScroll(){
-    // Set whether the user has scrolled the agreement so the scrolling doesn't move to the top unexpectedly
-    this.userHasScrolled = true;
-  }
-
+  // Submit the agreement
   submitAgreement(){
     // Close the dialog and return whether the user agreed
     this.dialogRef.close(this.userAgrees);
+  }
+
+  // Use for a close button on mobile
+  close(){
+    this.dialogRef.close(false);
   }
 
 }

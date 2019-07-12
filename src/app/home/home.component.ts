@@ -152,6 +152,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    }
+
     // Show user agreement first and only display signup if accepted
     var userAgreementDialogRef = this.dialog.open(UserAgreementDialogComponent, dialogConfig);
     userAgreementDialogRef.afterClosed().subscribe(userAgrees => {

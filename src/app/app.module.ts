@@ -70,6 +70,8 @@ import { ConversationViewComponent } from './messages/conversation-view/conversa
 import { UserPreferencesDialogComponent } from './user/user-preferences-dialog/user-preferences-dialog.component';
 import { HomeDesktopComponent } from './home/home-desktop/home-desktop.component';
 import { HomeMobileComponent } from './home/home-mobile/home-mobile.component';
+import { UserAgreementDialogMobileComponent } from './user/user-agreement-dialog/user-agreement-dialog-mobile/user-agreement-dialog-mobile.component';
+import { UserAgreementDialogDesktopComponent } from './user/user-agreement-dialog/user-agreement-dialog-desktop/user-agreement-dialog-desktop.component';
 
 @NgModule({
   declarations: [
@@ -113,7 +115,9 @@ import { HomeMobileComponent } from './home/home-mobile/home-mobile.component';
     ConversationViewComponent,
     UserPreferencesDialogComponent,
     HomeDesktopComponent,
-    HomeMobileComponent
+    HomeMobileComponent,
+    UserAgreementDialogMobileComponent,
+    UserAgreementDialogDesktopComponent
   ],
   imports: [
     BrowserModule,
