@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-// import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ApplicationStateService } from '../shared/application-state.service';
 import { AuthenticationService } from '../auth/authentication.service';
 import { UserService } from '../user/user.service';
 import { HomiesService } from '../homies/homies.service';
@@ -18,7 +18,9 @@ import { UserPreferencesDialogComponent } from '../user/user-preferences-dialog/
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit, OnDestroy {
+  public isMobile: boolean;
   public loggedIn: boolean;
   public loggedInUser: string;
   public hasActiveProfile: boolean;
@@ -28,14 +30,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[];
 
   constructor(
-    // private router: Router,
     private dialog: MatDialog,
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private homiesService: HomiesService,
     private msgService: MessagesService,
     private pageStatsService: PageStatsService
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = this.appStateService.getIsMobile();
+  }
 
   ngOnInit() {
     // Increment page stats for home page

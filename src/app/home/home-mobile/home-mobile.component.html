@@ -1,0 +1,28 @@
+<div class="mat-app-background">
+  <mat-toolbar color="primary">
+    <button mat-icon-button [matMenuTriggerFor]="mainmenu" [matBadge]="getTotalAlertCount()" [matBadgeHidden]="shouldHideMenuBadge()" matBadgeSize="small" matBadgeColor="accent"><mat-icon>menu</mat-icon></button>
+    &nbsp;&nbsp;Vegan Homies
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+</div>
+
+<mat-menu #mainmenu="matMenu">
+  <button mat-menu-item *ngIf="loggedIn" [routerLink]="['search']" [disabled]="!hasActiveProfile">Homie Search</button>
+  <button mat-menu-item *ngIf="loggedIn" [routerLink]="['homies']" [disabled]="!hasActiveProfile">My Homies{{pendingHomieRequestCount>0 ? " ( " + pendingHomieRequestCount + ")" : ""}}</button>
+  <button mat-menu-item *ngIf="loggedIn" [routerLink]="['messages']" [disabled]="!hasActiveProfile">Messages{{unreadMessageCount>0 ? " ( " + unreadMessageCount + ")" : ""}}</button>
+  <mat-divider *ngIf="loggedIn"></mat-divider>
+  <button mat-menu-item *ngIf="!loggedIn" (click)="showLoginDialog()">Log In</button>
+  <button mat-menu-item *ngIf="!loggedIn" (click)="showSignupDialog()">Sign Up</button>
+  <button mat-menu-item *ngIf="loggedIn" [matMenuTriggerFor]="usermenu">Account</button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item [routerLink]="['about']">About</button>
+  <button mat-menu-item [routerLink]="['faq']">FAQ</button>
+  <button mat-menu-item (click)="openBlog()">Blog</button>
+</mat-menu>
+
+<mat-menu #usermenu="matMenu">
+  <button mat-menu-item [routerLink]="['user/edit-profile']">Edit Profile</button>
+  <button mat-menu-item (click)="showUserPreferencesDialog()">Preferences</button>
+  <button mat-menu-item (click)="showChangePasswordDialog()">Change Password</button>
+  <button mat-menu-item (click)="logout()">Log Out</button>
+</mat-menu>

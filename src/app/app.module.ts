@@ -68,6 +68,8 @@ import { MessengerDialogComponent } from './messages/messenger-dialog/messenger-
 import { MessageCenterComponent } from './messages/message-center/message-center.component';
 import { ConversationViewComponent } from './messages/conversation-view/conversation-view.component';
 import { UserPreferencesDialogComponent } from './user/user-preferences-dialog/user-preferences-dialog.component';
+import { HomeDesktopComponent } from './home/home-desktop/home-desktop.component';
+import { HomeMobileComponent } from './home/home-mobile/home-mobile.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +111,9 @@ import { UserPreferencesDialogComponent } from './user/user-preferences-dialog/u
     MessengerDialogComponent,
     MessageCenterComponent,
     ConversationViewComponent,
-    UserPreferencesDialogComponent
+    UserPreferencesDialogComponent,
+    HomeDesktopComponent,
+    HomeMobileComponent
   ],
   imports: [
     BrowserModule,
