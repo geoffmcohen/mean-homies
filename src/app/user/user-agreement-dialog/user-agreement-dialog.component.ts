@@ -13,7 +13,7 @@ export class UserAgreementDialogComponent implements OnInit {
   private agreementScrolled: boolean;
   public userAgrees: boolean;
   public userAgreement =
-`This will be the user agreement...
+`This will be the user agreement... Blah, Blah, Blah, Blah, Blah, Blah
 
 Another paragraph of text.
 

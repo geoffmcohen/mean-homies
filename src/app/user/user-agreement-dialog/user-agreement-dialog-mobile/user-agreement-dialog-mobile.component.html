@@ -1,12 +1,10 @@
 <div class="agreement-dialog">
-  <!-- <h2 mat-dialog-title>User Agreement</h2> -->
   <mat-toolbar color="primary">
-    <button mat-icon-button (click)="close()"><mat-icon>arrow_back_ios</mat-icon></button>
-    &nbsp;&nbsp;User Agreement
+    <button mat-icon-button (click)="close()"><mat-icon>arrow_back_ios</mat-icon></button>&nbsp;User Agreement
   </mat-toolbar>
   <mat-dialog-content>
     <mat-form-field appearance="outline">
-      <textarea id="agreementTextarea" matInput readonly cdkTextareaAutosize cdkAutosizeMaxRows="10" (scroll)="agreementScroll()">{{userAgreement}}</textarea>
+      <textarea id="agreementTextarea" matInput readonly cdkTextareaAutosize cdkAutosizeMaxRows="16">{{userAgreement}}</textarea>
     </mat-form-field>
     <br>
   </mat-dialog-content>

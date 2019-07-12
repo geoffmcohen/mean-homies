@@ -155,6 +155,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.isMobile){
       dialogConfig.minWidth = "100vw";
       dialogConfig.height = "100vh";
+    } else {
+      dialogConfig.minWidth = "600px;";
+      // dialogConfig.height = "600px";
     }
 
     // Show user agreement first and only display signup if accepted
