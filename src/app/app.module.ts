@@ -72,6 +72,8 @@ import { HomeDesktopComponent } from './home/home-desktop/home-desktop.component
 import { HomeMobileComponent } from './home/home-mobile/home-mobile.component';
 import { UserAgreementDialogMobileComponent } from './user/user-agreement-dialog/user-agreement-dialog-mobile/user-agreement-dialog-mobile.component';
 import { UserAgreementDialogDesktopComponent } from './user/user-agreement-dialog/user-agreement-dialog-desktop/user-agreement-dialog-desktop.component';
+import { SignupDialogDesktopComponent } from './user/signup-dialog/signup-dialog-desktop/signup-dialog-desktop.component';
+import { SignupDialogMobileComponent } from './user/signup-dialog/signup-dialog-mobile/signup-dialog-mobile.component';
 
 @NgModule({
   declarations: [
@@ -117,7 +119,9 @@ import { UserAgreementDialogDesktopComponent } from './user/user-agreement-dialo
     HomeDesktopComponent,
     HomeMobileComponent,
     UserAgreementDialogMobileComponent,
-    UserAgreementDialogDesktopComponent
+    UserAgreementDialogDesktopComponent,
+    SignupDialogDesktopComponent,
+    SignupDialogMobileComponent
   ],
   imports: [
     BrowserModule,

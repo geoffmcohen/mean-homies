@@ -152,12 +152,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
+    // Set mobile take up entire screen
     if (this.isMobile){
       dialogConfig.minWidth = "100vw";
       dialogConfig.height = "100vh";
-    } else {
-      dialogConfig.minWidth = "600px;";
-      // dialogConfig.height = "600px";
     }
 
     // Show user agreement first and only display signup if accepted
