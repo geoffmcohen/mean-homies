@@ -89,6 +89,12 @@ export class LoginDialogComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    }
+
     // Show the password reset dialog
     this.resetDialogRef = this.dialog.open(ResetPasswordDialogComponent, dialogConfig);
 

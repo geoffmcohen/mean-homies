@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, ValidationErrors } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { UserService } from '../user.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 
@@ -11,15 +12,20 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 })
 export class ResetPasswordDialogComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email]);
+  public isMobile: boolean;
   public message: string;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
+    private appStateService: ApplicationStateService,
     private userService: UserService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<ResetPasswordDialogComponent>,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = appStateService.getIsMobile();
+  }
 
   ngOnInit() {
   }
@@ -75,5 +81,10 @@ export class ResetPasswordDialogComponent implements OnInit {
         }
       });
     }
+  }
+  
+  // Use for a close button on mobile
+  close(){
+    this.dialogRef.close(false);
   }
 }
