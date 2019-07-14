@@ -25,6 +25,6 @@
   </mat-form-field>
   <div *ngIf="message" class='message'>{{message}}</div>
   <div class="button-area">
-    <button class="mat-raised-button mat-primary" (click)="submitSignupForm()">Create Account</button>
+    <button class="mat-raised-button mat-primary" [disabled]="email.invalid||password.invalid||passwordConfirm.invalid"  (click)="submitSignupForm()">Create Account</button>
   </div>
 </div>

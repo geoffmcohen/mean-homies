@@ -1,5 +1,5 @@
 .signup-dialog{
-  min-width: 300px;
+  width: 350px;
 }
 
 mat-form-field{
@@ -8,5 +8,5 @@ mat-form-field{
 
 .message{
   color: red;
-  max-width: 300px;
+  width: 100%;
 }

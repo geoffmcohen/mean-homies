@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, AbstractControl, Validators, ValidatorFn, ValidationErrors  } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { UserService } from '../user.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 
@@ -15,6 +16,7 @@ export class PasswordResetComponent implements OnInit {
   password = new FormControl('', [Validators.required, Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)]);
   passwordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.password)]);
 
+  public isMobile: boolean;
   public passwordRequirements = "Min 8 chars, at least 1 upper, 1 lower & 1 number";
   private resetToken: string;
   public message: string;
@@ -23,10 +25,14 @@ export class PasswordResetComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private appStateService: ApplicationStateService,
     private userService: UserService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = this.appStateService.getIsMobile();
+  }
 
   ngOnInit() {
     // Get the resetToken from parameters

@@ -30,6 +30,6 @@
     <div class='message'>{{message}}</div>
   </mat-card>
   <mat-dialog-actions>
-    <button class="mat-raised-button mat-primary" (click)="submitSignupForm()">Create Account</button>
+    <button class="mat-raised-button mat-primary" [disabled]="email.invalid||username.invalid||password.invalid||passwordConfirm.invalid" (click)="submitSignupForm()">Create Account</button>
   </mat-dialog-actions>
 </div>

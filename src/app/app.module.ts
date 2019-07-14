@@ -78,6 +78,8 @@ import { LoginDialogDesktopComponent } from './user/login-dialog/login-dialog-de
 import { LoginDialogMobileComponent } from './user/login-dialog/login-dialog-mobile/login-dialog-mobile.component';
 import { ResetPasswordDialogMobileComponent } from './user/reset-password-dialog/reset-password-dialog-mobile/reset-password-dialog-mobile.component';
 import { ResetPasswordDialogDesktopComponent } from './user/reset-password-dialog/reset-password-dialog-desktop/reset-password-dialog-desktop.component';
+import { PasswordResetMobileComponent } from './user/password-reset/password-reset-mobile/password-reset-mobile.component';
+import { PasswordResetDesktopComponent } from './user/password-reset/password-reset-desktop/password-reset-desktop.component';
 
 @NgModule({
   declarations: [
@@ -129,7 +131,9 @@ import { ResetPasswordDialogDesktopComponent } from './user/reset-password-dialo
     LoginDialogDesktopComponent,
     LoginDialogMobileComponent,
     ResetPasswordDialogMobileComponent,
-    ResetPasswordDialogDesktopComponent
+    ResetPasswordDialogDesktopComponent,
+    PasswordResetMobileComponent,
+    PasswordResetDesktopComponent
   ],
   imports: [
     BrowserModule,
