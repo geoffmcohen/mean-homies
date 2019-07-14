@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, AbstractControl, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../user.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
@@ -15,17 +16,22 @@ export class ChangePasswordDialogComponent implements OnInit {
   newPassword = new FormControl('', [Validators.required, Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)]);
   newPasswordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.newPassword)]);
 
+  public isMobile: boolean;
   public passwordRequirements = "Min 8 chars, at least 1 upper, 1 lower & 1 number";
   public message: string;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
     private dialogRef: MatDialogRef<ChangePasswordDialogComponent>,
-    private userService: UserService,
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
+    private userService: UserService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = this.appStateService.getIsMobile();
+  }
 
   ngOnInit() {
   }
@@ -117,5 +123,10 @@ export class ChangePasswordDialogComponent implements OnInit {
     this.oldPassword.setValue('');
     this.newPassword.setValue('');
     this.newPasswordConfirm.setValue('');
+  }
+
+  // Use for a close button on mobile
+  close(){
+    this.dialogRef.close(false);
   }
 }

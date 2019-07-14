@@ -457,7 +457,7 @@ exports.changePassword = function(username, oldPassword, newPassword, callback){
         const bcrypt = require('bcrypt');
         bcrypt.compare(oldPassword, user.passwordHash, function(err, passwordMatch){
           if(!passwordMatch){
-            console.log("User '%s' entered incorrect old password.");
+            console.log("User '%s' entered incorrect old password.", username);
             return callback(false, "Incorrect old password.");
           } else {
             // Update the password

@@ -179,6 +179,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Show the dialog for the user to update their password
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
+
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    }
+
+    // Show the change password dialog
     this.dialog.open(ChangePasswordDialogComponent, dialogConfig);
   }
 
@@ -186,6 +194,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   showUserPreferencesDialog(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
+
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    }
+
+    // Show the user preferences dialog
     this.dialog.open(UserPreferencesDialogComponent, dialogConfig);
   }
 
