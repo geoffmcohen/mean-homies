@@ -69,5 +69,4 @@ End`;
   close(){
     this.dialogRef.close(false);
   }
-
 }

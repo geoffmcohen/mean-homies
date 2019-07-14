@@ -74,6 +74,8 @@ import { UserAgreementDialogMobileComponent } from './user/user-agreement-dialog
 import { UserAgreementDialogDesktopComponent } from './user/user-agreement-dialog/user-agreement-dialog-desktop/user-agreement-dialog-desktop.component';
 import { SignupDialogDesktopComponent } from './user/signup-dialog/signup-dialog-desktop/signup-dialog-desktop.component';
 import { SignupDialogMobileComponent } from './user/signup-dialog/signup-dialog-mobile/signup-dialog-mobile.component';
+import { LoginDialogDesktopComponent } from './user/login-dialog/login-dialog-desktop/login-dialog-desktop.component';
+import { LoginDialogMobileComponent } from './user/login-dialog/login-dialog-mobile/login-dialog-mobile.component';
 
 @NgModule({
   declarations: [
@@ -121,7 +123,9 @@ import { SignupDialogMobileComponent } from './user/signup-dialog/signup-dialog-
     UserAgreementDialogMobileComponent,
     UserAgreementDialogDesktopComponent,
     SignupDialogDesktopComponent,
-    SignupDialogMobileComponent
+    SignupDialogMobileComponent,
+    LoginDialogDesktopComponent,
+    LoginDialogMobileComponent
   ],
   imports: [
     BrowserModule,

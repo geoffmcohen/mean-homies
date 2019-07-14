@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-password-dialog.component';
@@ -10,6 +11,7 @@ import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-pas
   styleUrls: ['./login-dialog.component.css']
 })
 export class LoginDialogComponent implements OnInit {
+  public isMobile: boolean;
   public usernameOrEmail: string;
   public password: string;
   public message: string;
@@ -19,9 +21,13 @@ export class LoginDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<LoginDialogComponent>,
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private dialog: MatDialog
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = this.appStateService.getIsMobile();
+  }
 
   ngOnInit() {
   }
@@ -93,5 +99,10 @@ export class LoginDialogComponent implements OnInit {
         this.dialogRef.close();
       }
     });
+  }
+
+  // Use for a close button on mobile
+  close(){
+    this.dialogRef.close(false);
   }
 }

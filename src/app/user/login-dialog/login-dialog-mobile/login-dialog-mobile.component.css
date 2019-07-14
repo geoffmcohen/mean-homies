@@ -1,0 +1,23 @@
+.login-dialog{
+  display: flex;
+  flex-direction: column;
+}
+
+mat-form-field{
+  width: 100%;
+}
+
+.message{
+  color: red;
+  font-size: 75%;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+.button-area{
+  display: flex;
+  flex-direction: row;
+  align-self: flex-end;
+}

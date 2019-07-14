@@ -5,7 +5,7 @@ const invalidTokenMessage = "Invalid user token provided. Please log out and bac
 // Checks the user collection to see if a user already exists with the username
 exports.checkIfUsernameIsTaken = checkIfUsernameIsTaken = function(username, callback){
   // Force username to be lowercase
-  username = username.toLowerCase();
+  if(username) username = username.toLowerCase();
 
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
@@ -40,7 +40,7 @@ exports.checkIfUsernameIsTaken = checkIfUsernameIsTaken = function(username, cal
 // Checks the user collection to see if a user already exists with the email
 exports.checkIfEmailIsTaken = checkIfEmailIsTaken = function(email, callback){
   // Force email to be lowercase
-  email = email.toLowerCase();
+  if(email) email = email.toLowerCase();
 
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
@@ -105,8 +105,8 @@ exports.sendUserAccountActivationEmail = sendUserAccountActivationEmail = functi
 // Attempts to create a new user
 exports.createUser = function(email, username, password, callback){
   // Force email and username to be lowercase
-  email = email.toLowerCase();
-  username = username.toLowerCase();
+  if(email) email = email.toLowerCase();
+  if(username) username = username.toLowerCase();
 
   console.log("Creating user for '%s'...", username);
 
@@ -211,7 +211,7 @@ exports.activateUserAccount = function(username, activationCode, callback){
 // Function to authenticate a user - callback(success, message)
 exports.authenticateUser = function(username, password, callback){
   // Force username to be lowercase
-  username = username.toLowerCase();
+  if(username) username = username.toLowerCase();
 
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
@@ -287,7 +287,7 @@ function updateLastLoginTime(username){
 // Requests a password change
 exports.requestPasswordReset = function(email, callback){
   // Force email to be lowercase
-  email = email.toLowerCase();
+  if(email) email = email.toLowerCase();
 
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;
@@ -356,7 +356,7 @@ exports.sendPasswordResetEmail = sendPasswordResetEmail = function(emailTo, toke
 // Attempts to reset the users password
 exports.resetPassword = function(email, newPassword, token, callback){
   // Force email to be lowercase
-  email = email.toLowerCase();
+  if(email) email = email.toLowerCase();
 
   // Message to use for all bad token issues
   const badTokenMessage = "Invalid or expired password reset. Please request password reset again.";
@@ -485,7 +485,7 @@ exports.changePassword = function(username, oldPassword, newPassword, callback){
 // Gets a users profile if one exists
 exports.getUserProfile = function(token, username, targetUser, callback){
   // Force username to be lowercase
-  username = username.toLowerCase();
+  if(username) username = username.toLowerCase();
 
   // Check to make sure a user token is valid
   require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
@@ -905,7 +905,7 @@ exports.hasActiveProfile = function(token, username, callback){
 // Gets multiple user profiles
 exports.getUserProfiles = function(token, username, users, callback){
   // Force username to be lowercase
-  username = username.toLowerCase();
+  if(username) username = username.toLowerCase();
 
   // Check to make sure a user token is valid
   require('./auth.js').verifyUser(token, username, 'user', function(err, isTokenValid){
@@ -1134,7 +1134,7 @@ updateUserPreferences = function(username, sendAnnouncementsEmail, sendNewMessag
 // Gets the email address for a user
 exports.getUserEmail = function(username, callback){
   // Force username to lowercase
-  username = username.toLowerCase();
+  if(username) username = username.toLowerCase();
 
   // Connect to the database
   var MongoClient = require('mongodb').MongoClient;

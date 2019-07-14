@@ -1,19 +1,2 @@
-<h2 mat-dialog-title>Login</h2>
-<mat-dialog-content>
-  <mat-form-field appearance="outline">
-    <mat-label>Username or Email</mat-label>
-    <input matInput [(ngModel)]="usernameOrEmail" placeholder="Username or Email">
-  </mat-form-field>
-  <br>
-  <mat-form-field appearance="outline">
-    <mat-label>Password</mat-label>
-    <input matInput [(ngModel)]="password" placeholder="Password" type="password">
-  </mat-form-field>
-</mat-dialog-content>
-<mat-card *ngIf="message">
-  <div class='message'>{{message}}</div>
-</mat-card>
-<mat-dialog-actions>
-  <button class="mat-raised-button mat-primary" (click)="submitLoginForm()">Login</button>
-  <button *ngIf="showPasswordReset" class="mat-raised-button mat-warn" (click)="showPasswordResetDialog()">Reset Password</button>
-</mat-dialog-actions>
+<app-login-dialog-mobile *ngIf="isMobile"></app-login-dialog-mobile>
+<app-login-dialog-desktop *ngIf="!isMobile"></app-login-dialog-desktop>
