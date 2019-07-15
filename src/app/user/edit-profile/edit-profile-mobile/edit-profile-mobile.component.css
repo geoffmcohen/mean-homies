@@ -1,0 +1,57 @@
+.edit-profile{
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-card-title{
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.mat-form-field{
+  width: 100%;
+}
+
+.form-field-with-hint{
+  margin-bottom: 20px;
+}
+
+.form-field-without-hint{
+  margin-bottom: -1.25em
+}
+
+.mat-card{
+  margin-bottom: 10px;
+}
+
+agm-map {
+  height: 200px;
+}
+
+.profile-pic{
+  height: 250px;
+  width: 250px;
+}
+
+.message{
+  color: red;
+  font-size: 75%;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+.map-area{
+  display: flex;
+  flex-direction: column;
+}
+
+.image-area{
+  display: flex;
+  flex-direction: column;
+}
+
+.button-area{
+  align-self: flex-end;
+}

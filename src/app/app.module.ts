@@ -84,6 +84,8 @@ import { ChangePasswordDialogMobileComponent } from './user/change-password-dial
 import { ChangePasswordDialogDesktopComponent } from './user/change-password-dialog/change-password-dialog-desktop/change-password-dialog-desktop.component';
 import { UserPreferencesDialogMobileComponent } from './user/user-preferences-dialog/user-preferences-dialog-mobile/user-preferences-dialog-mobile.component';
 import { UserPreferencesDialogDesktopComponent } from './user/user-preferences-dialog/user-preferences-dialog-desktop/user-preferences-dialog-desktop.component';
+import { EditProfileMobileComponent } from './user/edit-profile/edit-profile-mobile/edit-profile-mobile.component';
+import { EditProfileDesktopComponent } from './user/edit-profile/edit-profile-desktop/edit-profile-desktop.component';
 
 @NgModule({
   declarations: [
@@ -141,7 +143,9 @@ import { UserPreferencesDialogDesktopComponent } from './user/user-preferences-d
     ChangePasswordDialogMobileComponent,
     ChangePasswordDialogDesktopComponent,
     UserPreferencesDialogMobileComponent,
-    UserPreferencesDialogDesktopComponent
+    UserPreferencesDialogDesktopComponent,
+    EditProfileMobileComponent,
+    EditProfileDesktopComponent
   ],
   imports: [
     BrowserModule,

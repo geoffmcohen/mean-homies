@@ -1,0 +1,51 @@
+<app-unavailable-feature *ngIf="!loggedIn"></app-unavailable-feature>
+<mat-card *ngIf="loggedIn">
+  <mat-card-title>Edit Profile</mat-card-title>
+  <mat-form-field appearance="outline" class="small-width">
+    <mat-label>Display Name</mat-label>
+    <input matInput placeholder="Display Name" [formControl]="displayName">
+    <mat-hint>Enter a name to display instead of your username (optional)</mat-hint>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="outline" class="medium-width" [matTooltip]="locationTooltipText">
+    <mat-label>Location</mat-label>
+    <input matInput placeholder="Enter your location..." [formControl]="location" required>
+    <mat-hint>For privacy, it is recommended that you do not enter your exact home address.</mat-hint>
+  </mat-form-field>
+  &nbsp;
+  <button mat-raised-button color="primary" (click)="findLocation()"><mat-icon>location_on</mat-icon> Find Me</button>
+  <br>
+  <mat-card *ngIf="locationError">
+    <div class='message'>{{locationError}}</div>
+  </mat-card>
+  <mat-card *ngIf="showMap">
+    <mat-card-title>Location Found: {{city}}, {{stateProvince}}, {{country}}</mat-card-title>
+    <agm-map [latitude]="lat" [longitude]="lng">
+      <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+    </agm-map>
+    <p>This will be the location used for location based searches. If it does not look correct try entering something else and hitting 'Find Me' again.  Your location will be displayed to other users as: {{city}}, {{stateProvince}}, {{country}}.</p>
+  </mat-card>
+  <br>
+  <mat-card *ngIf="profileImage">
+    <mat-card-title>Profile Picture</mat-card-title>
+    <img [src]="profileImage" class="profile-pic">
+    <br>
+    <button mat-raised-button color="primary" (click)="showPictureUploadDialog()"><mat-icon>image</mat-icon> Upload Image</button>
+  </mat-card>
+  <br>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>About Me</mat-label>
+    <textarea matInput placeholder="Please tell us a little about yourself..." [formControl]="aboutMe" cdkTextareaAutosize cdkAutosizeMinRows="10" required></textarea>
+  </mat-form-field>
+  <br>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Who Am I Looking to Meet</mat-label>
+    <textarea matInput placeholder="Please tell us a little about the types of people you are looking to connect with..." [formControl]="lookingToMeet" cdkTextareaAutosize cdkAutosizeMinRows="10" required></textarea>
+  </mat-form-field>
+  <mat-card *ngIf="message">
+    <div class='message'>{{message}}</div>
+  </mat-card>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="saveProfile()"><mat-icon>save</mat-icon> Save Profile</button>
+  </mat-card-actions>
+</mat-card>

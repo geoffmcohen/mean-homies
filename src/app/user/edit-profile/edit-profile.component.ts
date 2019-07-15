@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../user.service';
 import { MapsService } from '../../maps/maps.service';
@@ -14,6 +15,7 @@ import { PictureUploadDialogComponent } from '../picture-upload-dialog/picture-u
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
+  public isMobile: boolean;
   public loggedIn: boolean;
   public loggedInUser: string;
   public message: string;
@@ -36,12 +38,16 @@ export class EditProfileComponent implements OnInit {
   public locationTooltipText: string = `Instead of your home address, you can enter in the name or address of a local business in your neighborhood like "Erewhon Venice Beach", the name of a local landmark like "Brooklyn Borough Hall" or a combination of your city, state/province and country like "San Francisco, California, USA".`;
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private mapsService: MapsService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = this.appStateService.getIsMobile();
+  }
 
   ngOnInit() {
     // Get initial login state and track changes

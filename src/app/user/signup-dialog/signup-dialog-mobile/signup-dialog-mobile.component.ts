@@ -6,5 +6,6 @@ import { SignupDialogComponent } from '../signup-dialog.component';
   templateUrl: './signup-dialog-mobile.component.html',
   styleUrls: ['./signup-dialog-mobile.component.css']
 })
+
 export class SignupDialogMobileComponent extends SignupDialogComponent{
 }
