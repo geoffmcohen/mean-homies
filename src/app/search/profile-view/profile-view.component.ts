@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
@@ -16,6 +17,7 @@ import { MessengerDialogComponent } from '../../messages/messenger-dialog/messen
 })
 export class ProfileViewComponent implements OnInit {
   @Input() profile: any;
+  public isMobile: boolean;
   public profileImage: string;
   public homieStatus: string;
 
@@ -25,12 +27,16 @@ export class ProfileViewComponent implements OnInit {
   private messengerDialogRef: MatDialogRef<MessengerDialogComponent>;
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private homiesService: HomiesService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = this.appStateService.getIsMobile();
+  }
 
   ngOnInit() {
     // Set the profile image to the default

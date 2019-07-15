@@ -90,6 +90,8 @@ import { PictureUploadDialogMobileComponent } from './user/picture-upload-dialog
 import { PictureUploadDialogDesktopComponent } from './user/picture-upload-dialog/picture-upload-dialog-desktop/picture-upload-dialog-desktop.component';
 import { SearchMobileComponent } from './search/search/search-mobile/search-mobile.component';
 import { SearchDesktopComponent } from './search/search/search-desktop/search-desktop.component';
+import { ProfileViewMobileComponent } from './search/profile-view/profile-view-mobile/profile-view-mobile.component';
+import { ProfileViewDesktopComponent } from './search/profile-view/profile-view-desktop/profile-view-desktop.component';
 
 @NgModule({
   declarations: [
@@ -153,7 +155,9 @@ import { SearchDesktopComponent } from './search/search/search-desktop/search-de
     PictureUploadDialogMobileComponent,
     PictureUploadDialogDesktopComponent,
     SearchMobileComponent,
-    SearchDesktopComponent
+    SearchDesktopComponent,
+    ProfileViewMobileComponent,
+    ProfileViewDesktopComponent
   ],
   imports: [
     BrowserModule,

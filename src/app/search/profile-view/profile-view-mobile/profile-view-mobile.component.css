@@ -1,0 +1,36 @@
+.profile{
+  display: flex;
+  flex-direction: column;
+}
+
+.username{
+  font-weight: bold;
+}
+
+.profile-image{
+  width: 100%;
+  height: auto;
+}
+
+.location{
+ font-size: 80%;
+}
+
+.mat-form-field{
+  width: 100%;
+  margin-bottom: -1.25em
+}
+
+.mat-card{
+  margin-top: 5px;
+}
+
+.mat-card-title{
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.button-area{
+  align-self: center;
+  margin-top: 10px;
+}

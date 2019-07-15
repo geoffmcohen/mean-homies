@@ -1,0 +1,45 @@
+<mat-card>
+  <mat-card-title><a (click)="showProfileDialog()">{{profile.displayName ? profile.displayName : profile.username}}</a></mat-card-title>
+  <div class="profile">
+    <div class="pic-and-name">
+      <a (click)="showProfileDialog()"><img class="profile-image" [src]="profileImage"></a>
+      <br>
+      <a (click)="showProfileDialog()"><span class="username">{{profile.username}}</span></a>
+      <br>
+      {{profile.distance.toFixed(2)}}&nbsp;{{profile.distanceUnit}}
+      <br>
+      <span class="location">{{profile.location.city}}, {{profile.location.stateProvince}}, {{profile.location.country}}</span>
+      <br>
+      <div *ngIf="homieStatus=='homies'">
+        <img class="homie-status-image" src="../../../../assets/images/My Homie Label.jpg">
+        <br>
+        <button mat-raised-button color="primary" (click)="sendHomieMessage()"><mat-icon>message</mat-icon> Send Message</button>
+      </div>
+      <div *ngIf="homieStatus=='waiting'">
+        <img class="homie-status-image" src="../../../../assets/images/Homie Requested Label.jpg">
+        <br>
+        <button mat-raised-button color="primary" disabled><mat-icon>hourglass_empty</mat-icon> Waiting...</button>
+      </div>
+      <div *ngIf="homieStatus=='pending'">
+        <img class="homie-status-image" src="../../../../assets/images/Be My Homie Label.jpg" >
+        <br>
+        <button mat-raised-button color="primary" (click)="acceptHomieRequest()"><mat-icon>thumb_up</mat-icon> Yes</button>&nbsp;<button mat-raised-button color="primary" (click)="declineHomieRequest()"><mat-icon>thumb_down</mat-icon> No</button>
+      </div>
+      <div *ngIf="homieStatus=='n/a'">
+        <img class="homie-status-image" src="../../../../assets/images/Be My Homie Label.jpg" >
+        <br>
+        <button mat-raised-button color="primary" (click)="showHomieRequestDialog()"><mat-icon>person_add</mat-icon> Send Request</button>
+      </div>
+    </div>
+    <div class="about-and-looking">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>About Me</mat-label>
+        <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5" readonly>{{profile.aboutMe}}</textarea>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Looking To Meet</mat-label>
+        <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="5" cdkAutosizeMaxRows="5" readonly>{{profile.lookingToMeet}}</textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</mat-card>
