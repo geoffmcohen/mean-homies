@@ -1,0 +1,29 @@
+.picture-upload-dialog{
+  display: flex;
+  flex-direction: column;
+}
+
+mat-form-field{
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: -1.25em
+}
+
+.message{
+  color: red;
+  font-size: 75%;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+.hidden{
+  display: none;
+}
+
+.button-area{
+  display: flex;
+  flex-direction: row;
+  align-self: flex-end;
+}

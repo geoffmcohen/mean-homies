@@ -246,6 +246,12 @@ export class EditProfileComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
 
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    }
+
     // Show the picture upload dialog
     this.picUploadDialogRef = this.dialog.open(PictureUploadDialogComponent, dialogConfig);
 

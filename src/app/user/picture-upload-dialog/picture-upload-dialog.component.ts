@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../user.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
@@ -10,6 +11,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   styleUrls: ['./picture-upload-dialog.component.css']
 })
 export class PictureUploadDialogComponent implements OnInit {
+  public isMobile: boolean;
   public imageFilename: string;
   public imageFile: File;
   public message: string;
@@ -17,6 +19,7 @@ export class PictureUploadDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<PictureUploadDialogComponent>,
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private dialog: MatDialog,
@@ -24,6 +27,8 @@ export class PictureUploadDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Gets whether a mobile device is being used
+    this.isMobile = this.appStateService.getIsMobile();
   }
 
   // Displays a loading dialog
@@ -84,5 +89,10 @@ export class PictureUploadDialogComponent implements OnInit {
         }
       });
     }
+  }
+
+  // Use for a close button on mobile
+  close(){
+    this.dialogRef.close(false);
   }
 }

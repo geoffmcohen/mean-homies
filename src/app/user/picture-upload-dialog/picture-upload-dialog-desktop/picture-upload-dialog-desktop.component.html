@@ -1,0 +1,19 @@
+<div class="picture-upload-dialog">
+  <h2 mat-dialog-title>Upload Profile Picture</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Upload File</mat-label>
+      <input class='hidden' type='file' #hidden_file_input accept="image/*" [(ngModel)]="imageFilename" (change)="onFileChange($event)" />
+      <input matInput readonly [(ngModel)]="imageFilename" placeholder="" (click)="hidden_file_input.click()">
+    </mat-form-field>
+    <br>
+      <button type="button" mat-button (click)="hidden_file_input.click()"><mat-icon>attach_file</mat-icon>Choose File</button>
+      <button type="button" mat-button (click)="clearSelectedFile()" [disabled]="!imageFile"><mat-icon>clear</mat-icon>Clear</button>
+  </mat-dialog-content>
+  <mat-card *ngIf="message">
+    <div class='message'>{{message}}</div>
+  </mat-card>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="uploadImage()" [disabled]="!imageFile"><mat-icon>cloud_upload</mat-icon>&nbsp;Upload Image</button>
+  </mat-dialog-actions>
+</div>
