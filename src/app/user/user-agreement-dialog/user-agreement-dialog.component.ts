@@ -8,6 +8,7 @@ import { ApplicationStateService } from '../../shared/application-state.service'
   templateUrl: './user-agreement-dialog.component.html',
   styleUrls: ['./user-agreement-dialog.component.css']
 })
+
 export class UserAgreementDialogComponent implements OnInit {
   public isMobile: boolean;
   private agreementScrolled: boolean;

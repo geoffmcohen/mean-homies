@@ -1,15 +1,2 @@
-<!-- <div class="agreement-dialog">
-  <h2 mat-dialog-title>User Agreement</h2>
-  <mat-dialog-content>
-    <mat-form-field appearance="outline">
-      <textarea id="agreementTextarea" matInput readonly cdkTextareaAutosize cdkAutosizeMaxRows="10" (scroll)="agreementScroll()">{{userAgreement}}</textarea>
-    </mat-form-field>
-    <br>
-  </mat-dialog-content>
-  <mat-checkbox [(ngModel)]="userAgrees" labelPosition="before">I Accept</mat-checkbox>
-  <mat-dialog-actions>
-    <button mat-raised-button color="primary" (click)="submitAgreement()" disabled="!userAgrees">Submit Agreement</button>
-  </mat-dialog-actions>
-</div> -->
 <app-user-agreement-dialog-mobile *ngIf="isMobile"></app-user-agreement-dialog-mobile>
 <app-user-agreement-dialog-desktop *ngIf="!isMobile"><app-user-agreement-dialog-desktop>

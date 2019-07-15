@@ -1,0 +1,31 @@
+.user-preferences{
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-area{
+  display: flex;
+  flex-direction: column;
+}
+
+.button-area{
+  align-self: flex-end;
+}
+
+.message{
+  color: red;
+  font-size: 75%;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+/deep/ .mat-checkbox-layout {
+  white-space: normal !important;
+}
+
+.mat-card-title{
+  font-size: 110%;
+  font-weight: bold;
+}

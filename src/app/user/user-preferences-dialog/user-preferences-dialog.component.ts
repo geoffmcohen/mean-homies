@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 
 @Component({
@@ -9,7 +10,9 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   templateUrl: './user-preferences-dialog.component.html',
   styleUrls: ['./user-preferences-dialog.component.css']
 })
+
 export class UserPreferencesDialogComponent implements OnInit {
+  public isMobile: boolean;
   public sendAnnouncementsEmail: boolean;
   public sendNewMessageEmail: boolean;
   public sendHomieRequestReceiveEmail: boolean;
@@ -19,12 +22,16 @@ export class UserPreferencesDialogComponent implements OnInit {
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<UserPreferencesDialogComponent>,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = appStateService.getIsMobile();
+  }
 
   ngOnInit() {
     // Get the users preferences if they exist
@@ -103,5 +110,10 @@ export class UserPreferencesDialogComponent implements OnInit {
         this.message = res.message;
       }
     });
+  }
+
+  // Use for a close button on mobile
+  close(){
+    this.dialogRef.close(false);
   }
 }

@@ -1,0 +1,18 @@
+<div class='user-preferences'>
+  <mat-card>
+    <mat-card-title>Email Preferences</mat-card-title>
+    <mat-checkbox [(ngModel)]="sendAnnouncementsEmail">Send me news and announcements about VeganHomies.com</mat-checkbox>
+    <br>
+    <mat-checkbox [(ngModel)]="sendNewMessageEmail">Notify me for new messages</mat-checkbox>
+    <br>
+    <mat-checkbox [(ngModel)]="sendHomieRequestReceiveEmail">Notify me when I receive a Homie Request</mat-checkbox>
+    <br>
+    <mat-checkbox [(ngModel)]="sendHomieRequestAcceptEmail">Notify me when another user accepts my Homie Request</mat-checkbox>
+  </mat-card>
+  <mat-card *ngIf="message">
+    <div class='message'>{{message}}</div>
+  </mat-card>
+  <mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="saveUserPreferences()"><mat-icon>save</mat-icon>&nbsp;Save Preferences</button>
+  </mat-dialog-actions>
+</div>
