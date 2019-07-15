@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { SearchService } from '../search.service';
@@ -11,6 +12,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+  public isMobile: boolean;
   public loggedIn: boolean;
   public hasActiveProfile: boolean;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
@@ -27,11 +29,15 @@ export class SearchComponent implements OnInit {
   public pagedResults: any[];
 
   constructor(
-      private authService: AuthenticationService,
-      private userService: UserService,
-      private searchService: SearchService,
-      private dialog: MatDialog
-    ) { }
+    private appStateService: ApplicationStateService,
+    private authService: AuthenticationService,
+    private userService: UserService,
+    private searchService: SearchService,
+    private dialog: MatDialog
+    ){
+      // Gets whether a mobile device is being used
+      this.isMobile = this.appStateService.getIsMobile();
+    }
 
   ngOnInit() {
     // Get initial login state and track changes

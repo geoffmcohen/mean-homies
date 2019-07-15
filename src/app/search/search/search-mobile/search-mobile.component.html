@@ -1,0 +1,57 @@
+<app-unavailable-feature *ngIf="!loggedIn"></app-unavailable-feature>
+<mat-card *ngIf="loggedIn && hasActiveProfile == false"><h3>You must have an active profile to be able to use this feature.  Please create or edit your profile.</h3></mat-card>
+<mat-card *ngIf="loggedIn && hasActiveProfile">
+  <div class="search">
+    <mat-card-title>Search</mat-card-title>
+    Near:
+    <div class="radio-area">
+      <mat-radio-group [(ngModel)]="nearRadioValue">
+        <mat-radio-button value="me">Me</mat-radio-button>
+        <br>
+        <mat-radio-button value="location">
+          <mat-form-field>
+            <mat-label>Location</mat-label>
+            <input matInput [(ngModel)]="nearLocation" placeholder="Enter location...">
+          </mat-form-field>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <span class="distance-and-unit">
+      <mat-form-field class="distance">
+        <mat-label>Distance</mat-label>
+        <input matInput [(ngModel)]="distance" [matAutocomplete]="distanceauto" placeholder="Enter Distance...">
+      </mat-form-field>
+      <mat-autocomplete #distanceauto="matAutocomplete">
+        <mat-option [value]="5">5</mat-option>
+        <mat-option [value]="10">10</mat-option>
+        <mat-option [value]="25">25</mat-option>
+        <mat-option [value]="50">50</mat-option>
+        <mat-option [value]="100">100</mat-option>
+      </mat-autocomplete>
+      &nbsp;
+      <mat-form-field class="distance-unit">
+        <mat-label>Unit</mat-label>
+        <mat-select [(value)]="distanceUnit" class='unit-select'>
+          <mat-option value="Miles">Miles</mat-option>
+          <mat-option value="KM">KM</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </span>
+    <div  *ngIf="message" class='message'>{{message}}</div>
+    <div class="button-area">
+      <button mat-raised-button color="primary" (click)="performSearch()"><mat-icon>search</mat-icon> Search</button>
+    </div>
+  </div>
+</mat-card>
+<div class="search-results" *ngIf="searchResults">
+  <!-- <h4>Found {{searchResults.length}} users.</h4> -->
+  <span class="results-summary">Found {{searchResults.length}} users.</span>
+  <app-profile-view *ngFor="let profile of pagedResults" [profile]="profile"></app-profile-view>
+  <mat-paginator
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 25, 50, 100]"
+    [length]="searchResults.length"
+    [pageIndex]="currentPage"
+    (page)="pageEvent = handlePage($event)">
+  </mat-paginator>
+</div>

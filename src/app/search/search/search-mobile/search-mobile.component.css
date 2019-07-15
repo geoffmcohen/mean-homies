@@ -1,0 +1,55 @@
+.search{
+  display: flex;
+  flex-direction: column;
+}
+
+.search-results{
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-card{
+  margin-bottom: 10px;
+}
+
+.mat-card-title{
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.mat-select.unit-select{
+  width: 75px;
+}
+
+.mat-form-field.distance{
+  width: 50px;
+  text-align: right;
+}
+
+.mat-form-field.distance-unit{
+  width: 50px;
+}
+
+.radio-area{
+  margin-top: 5px;
+}
+
+.distance-and-unit{
+}
+
+.message{
+  color: red;
+  font-size: 75%;
+  border: 1px solid red;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+.button-area{
+  align-self: flex-end;
+}
+
+.results-summary{
+  font-weight: bold;
+}
