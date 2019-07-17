@@ -1,0 +1,47 @@
+.homie-request{
+  display: flex;
+  flex-direction: column;
+}
+
+.username{
+  font-weight: bold;
+}
+
+.profile-image{
+  width: 100%;
+  height: auto;
+}
+
+.location{
+ font-size: 80%;
+}
+
+.pending-request{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.waiting-request{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+mat-card{
+  margin-bottom: 5px;
+}
+
+mat-card-title{
+  font-size: 110%;
+  font-weight: bold;
+}
+
+mat-form-field{
+  width: 100%;
+  margin-bottom: -1.25em;
+}
+
+/deep/ button{
+  margin-bottom: 5px !important;
+}

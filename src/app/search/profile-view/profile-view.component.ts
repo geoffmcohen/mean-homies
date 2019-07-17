@@ -105,7 +105,7 @@ export class ProfileViewComponent implements OnInit {
       dialogConfig.minWidth = "100vw";
       dialogConfig.height = "100vh";
     }
-    
+
     // Show the homie request dialog
     this.requestDialogRef = this.dialog.open(CreateHomieRequestDialogComponent, dialogConfig);
 
