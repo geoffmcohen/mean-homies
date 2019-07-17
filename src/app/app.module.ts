@@ -96,6 +96,8 @@ import { CreateHomieRequestDialogMobileComponent } from './homies/create-homie-r
 import { CreateHomieRequestDialogDesktopComponent } from './homies/create-homie-request-dialog/create-homie-request-dialog-desktop/create-homie-request-dialog-desktop.component';
 import { ProfileViewDialogMobileComponent } from './user/profile-view-dialog/profile-view-dialog-mobile/profile-view-dialog-mobile.component';
 import { ProfileViewDialogDesktopComponent } from './user/profile-view-dialog/profile-view-dialog-desktop/profile-view-dialog-desktop.component';
+import { HomiesMobileComponent } from './homies/homies/homies-mobile/homies-mobile.component';
+import { HomiesDesktopComponent } from './homies/homies/homies-desktop/homies-desktop.component';
 
 @NgModule({
   declarations: [
@@ -165,7 +167,9 @@ import { ProfileViewDialogDesktopComponent } from './user/profile-view-dialog/pr
     CreateHomieRequestDialogMobileComponent,
     CreateHomieRequestDialogDesktopComponent,
     ProfileViewDialogMobileComponent,
-    ProfileViewDialogDesktopComponent
+    ProfileViewDialogDesktopComponent,
+    HomiesMobileComponent,
+    HomiesDesktopComponent
   ],
   imports: [
     BrowserModule,

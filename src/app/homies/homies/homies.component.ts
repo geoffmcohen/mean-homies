@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
 import { Subscription } from 'rxjs';
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../homies.service';
@@ -12,6 +13,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   styleUrls: ['./homies.component.css']
 })
 export class HomiesComponent implements OnInit {
+  public isMobile: boolean;
   public loggedIn: boolean;
   public hasActiveProfile: boolean;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
@@ -22,11 +24,15 @@ export class HomiesComponent implements OnInit {
   public homies: any[];
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private homiesService: HomiesService,
     private dialog: MatDialog
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = this.appStateService.getIsMobile();
+  }
 
   ngOnInit() {
     // Create the array of subscriptions
