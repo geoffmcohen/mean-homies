@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar, MAT_DIALOG_DATA } from "@angular/material";
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
@@ -14,6 +15,7 @@ import { MessengerDialogComponent } from '../../messages/messenger-dialog/messen
   styleUrls: ['./profile-view-dialog.component.css']
 })
 export class ProfileViewDialogComponent implements OnInit {
+  public isMobile: boolean;
   public profile: any;
   public profileImage: string;
   public homieStatus: string;
@@ -23,6 +25,7 @@ export class ProfileViewDialogComponent implements OnInit {
   private messengerDialogRef: MatDialogRef<MessengerDialogComponent>;
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private homiesService: HomiesService,
@@ -31,6 +34,10 @@ export class ProfileViewDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<ProfileViewDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data
   ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = appStateService.getIsMobile();
+
+    // Gets teh profile from the inpute data
     this.profile = data.profile;
   }
 
@@ -122,9 +129,14 @@ export class ProfileViewDialogComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.data = { profile: this.profile };
 
-    // #TODO: Have to figure out how to make this mobile friendly
-    dialogConfig.minWidth = "800px";
-    dialogConfig.maxWidth = "800px";
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    } else {
+      dialogConfig.minWidth = "768px";
+      dialogConfig.maxWidth = "768px";
+    }
 
     // Show the messenger dialog
     this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);

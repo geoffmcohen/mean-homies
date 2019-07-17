@@ -1,0 +1,42 @@
+.profile-view-dialog{
+}
+
+mat-toolbar{
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.display-name{
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.profile{
+  display: flex;
+  flex-direction: column;
+}
+
+.username{
+  font-weight: bold;
+}
+
+.profile-image{
+  width: 100%;
+  height: auto;
+  margin-top: 50px;
+}
+
+.location{
+ font-size: 80%;
+}
+
+mat-form-field{
+  width: 100%;
+  margin-bottom: -1.25em;
+}
+
+.button-area{
+  align-self: center;
+  margin-top: 10px;
+}
