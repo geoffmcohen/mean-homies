@@ -28,10 +28,11 @@
  font-size: 80%;
 }
 
-.full-width{
-  width: 100%;
-}
-
 .mat-card{
   margin-bottom: 5px;
+}
+
+mat-form-field{
+  width: 100%;
+  margin-bottom: -1.25em;
 }

@@ -1,0 +1,13 @@
+.request-dialog{
+  width: 400px;
+}
+
+.message{
+  color: red;
+  width: 100%;
+}
+
+mat-form-field{
+  width: 100%;
+  margin-bottom: -1.25em;
+}

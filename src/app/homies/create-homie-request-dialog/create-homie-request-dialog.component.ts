@@ -4,6 +4,7 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MatSnackBar } from '@angular/material';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { HomiesService } from '../../homies/homies.service';
 
@@ -13,6 +14,7 @@ import { HomiesService } from '../../homies/homies.service';
   styleUrls: ['./create-homie-request-dialog.component.css']
 })
 export class CreateHomieRequestDialogComponent implements OnInit {
+  public isMobile: boolean;
   public profile: any;
   public message: string;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
@@ -20,6 +22,7 @@ export class CreateHomieRequestDialogComponent implements OnInit {
   requestMessage = new FormControl('', []);
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private homiesService: HomiesService,
     private dialog: MatDialog,
@@ -27,6 +30,10 @@ export class CreateHomieRequestDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<CreateHomieRequestDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data
   ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = appStateService.getIsMobile();
+
+    // Get the profile from the input data
     this.profile = data.profile
   }
 
@@ -75,5 +82,10 @@ export class CreateHomieRequestDialogComponent implements OnInit {
           this.message = res.message;
         }
       });
+  }
+
+  // Use for a close button on mobile
+  close(){
+    this.dialogRef.close(false);
   }
 }

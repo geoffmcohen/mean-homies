@@ -92,6 +92,8 @@ import { SearchMobileComponent } from './search/search/search-mobile/search-mobi
 import { SearchDesktopComponent } from './search/search/search-desktop/search-desktop.component';
 import { ProfileViewMobileComponent } from './search/profile-view/profile-view-mobile/profile-view-mobile.component';
 import { ProfileViewDesktopComponent } from './search/profile-view/profile-view-desktop/profile-view-desktop.component';
+import { CreateHomieRequestDialogMobileComponent } from './homies/create-homie-request-dialog/create-homie-request-dialog-mobile/create-homie-request-dialog-mobile.component';
+import { CreateHomieRequestDialogDesktopComponent } from './homies/create-homie-request-dialog/create-homie-request-dialog-desktop/create-homie-request-dialog-desktop.component';
 
 @NgModule({
   declarations: [
@@ -157,7 +159,9 @@ import { ProfileViewDesktopComponent } from './search/profile-view/profile-view-
     SearchMobileComponent,
     SearchDesktopComponent,
     ProfileViewMobileComponent,
-    ProfileViewDesktopComponent
+    ProfileViewDesktopComponent,
+    CreateHomieRequestDialogMobileComponent,
+    CreateHomieRequestDialogDesktopComponent
   ],
   imports: [
     BrowserModule,

@@ -1,17 +1,2 @@
-<div class="request-dialog">
-  <h2 mat-dialog-title>Send Homie Request</h2>
-  <h3>To: {{profile.displayName ? profile.displayName : profile.username}}</h3>
-  <mat-dialog-content>
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Message (optional)</mat-label>
-      <textarea matInput placeholder="Optional message to send to requestee..." [formControl]="requestMessage" cdkTextareaAutosize cdkAutosizeMinRows="5"></textarea>
-    </mat-form-field>
-  </mat-dialog-content>
-  <mat-card *ngIf="message">
-    <div class='message'>{{message}}</div>
-  </mat-card>
-  <mat-dialog-actions>
-    <button mat-raised-button color="primary" (click)="sendHomieRequest()">Send Request</button>
-    <button mat-raised-button (click)="dialogRef.close()">Cancel</button>
-  </mat-dialog-actions>
-</div>
+<app-create-homie-request-dialog-mobile *ngIf="isMobile"></app-create-homie-request-dialog-mobile>
+<app-create-homie-request-dialog-desktop *ngIf="!isMobile"></app-create-homie-request-dialog-desktop>

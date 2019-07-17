@@ -80,7 +80,14 @@ export class ProfileViewComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.data = {profile: this.profile};
-    dialogConfig.minWidth = "90%";
+
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    } else {
+      dialogConfig.minWidth = "90%";
+    }
 
     // Show the profile dislay dialog
     this.profileDialogRef = this.dialog.open(ProfileViewDialogComponent, dialogConfig);
@@ -92,9 +99,13 @@ export class ProfileViewComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.data = {profile: this.profile};
-    dialogConfig.minWidth =  400;
 
-
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    }
+    
     // Show the homie request dialog
     this.requestDialogRef = this.dialog.open(CreateHomieRequestDialogComponent, dialogConfig);
 
@@ -153,9 +164,14 @@ export class ProfileViewComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.data = { profile: this.profile };
 
-    // #TODO: Have to figure out how to make this mobile friendly
-    dialogConfig.minWidth = "800px";
-    dialogConfig.maxWidth = "800px";
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    } else {
+      dialogConfig.minWidth = "768px";
+      dialogConfig.maxWidth = "768px";
+    }
 
     // Show the messenger dialog
     this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);
