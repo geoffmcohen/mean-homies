@@ -1,0 +1,24 @@
+<div class="messenger-dialog">
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="close()"><mat-icon>arrow_back_ios</mat-icon></button><span class="display-name">{{profile.displayName ? profile.displayName : profile.username}}</span>
+  </mat-toolbar>
+  <div id="messages">
+    <div class="messages-inner">
+      <div *ngFor="let msg of messages" [class]="msg.sendUser == profile.username ? 'message-received' : 'message-sent'">
+        <div class="message-text">{{msg.messageText}}</div>
+        <div [class]="msg.sendUser == profile.username ? 'message-info-sent' : 'message-info-received'">
+          <span *ngIf="msg.receiveUser == profile.username && msg.status == 'read'">Read&nbsp;@&nbsp;{{msg.readTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
+          <span *ngIf="msg.receiveUser != profile.username || msg.status == 'sent'">Sent&nbsp;@&nbsp;{{msg.sendTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="send-area">
+    <mat-form-field appearance="outline" style="margin-bottom: -1.25em" class="full-width">
+      <mat-label>Message</mat-label>
+      <textarea matInput placeholder=" " [formControl]="newMessage" cdkTextareaAutosize cdkAutosizeMinRows="2" cdkAutosizeMaxRows="2" [disabled]="sendDisabled"></textarea>
+    </mat-form-field>
+    <div *ngIf="errorMessage" class='error-message'>{{errorMessage}}</div>
+    <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="sendDisabled || newMessage.value.length == 0"><mat-icon>send</mat-icon>&nbsp;Send</button>
+  </div>
+</div>

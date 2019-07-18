@@ -1,0 +1,81 @@
+.messenger-dialog{
+}
+
+.display-name{
+  font-size: 110%;
+  font-weight: bold;
+}
+
+#messages{
+  border: 1px solid LightGrey;
+  background-color: white;
+  padding: 5px;
+  width: 95%;
+  overflow-y: scroll;
+  height: calc(100vh - 218px);
+  margin-top: 5px;
+}
+
+.messages-inner{
+  display: flex;
+  flex-direction: column;
+}
+
+.message-sent{
+  align-self: flex-end;
+  margin-left: 10%;
+  margin-bottom: 5px;
+  padding: 5px;
+  border-radius: 10px 10px 0px 10px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid LightBlue;
+  background-color: #EBF6F9;
+}
+
+.message-received{
+  align-self: flex-start;
+  margin-right: 10%;
+  margin-bottom: 5px;
+  padding: 5px;
+  border-radius: 10px 10px 10px 0px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid LightGreen;
+  background-color: #E9FCE9;
+}
+
+.message-text{
+  font-size: 100%;
+}
+
+.message-info-received{
+  font-size: 50%;
+  align-self: flex-end;
+  color: Grey
+}
+
+.message-info-sent{
+  font-size: 60%;
+  align-self: flex-start;
+  color: Grey
+}
+
+.send-area{
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width{
+  width: 100%;
+}
+
+.error-message{
+  color: red;
+  width: 100%;
+  font-size: 80%;
+}
+
+/deep/ .mat-dialog-container {
+  padding: 5px !important;
+}

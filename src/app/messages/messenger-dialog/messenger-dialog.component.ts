@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { Subscription } from 'rxjs';
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { MessagesService } from '../messages.service';
@@ -14,6 +15,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   styleUrls: ['./messenger-dialog.component.css']
 })
 export class MessengerDialogComponent implements OnInit, OnDestroy {
+  public isMobile: boolean;
   public profile: any;
   public profileImage: string;
   public messages: any[];
@@ -29,6 +31,7 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
   newMessage = new FormControl('', []);
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private msgService: MessagesService,
@@ -36,6 +39,10 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<MessengerDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data
   ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = appStateService.getIsMobile();
+
+    // Gets the profile from input data
     this.profile = data.profile;
   }
 

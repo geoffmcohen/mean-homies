@@ -1,24 +1,2 @@
-<div class="messenger-dialog">
-  <div class="top-bar">
-    <div class="image-div"><img class="profile-image" [src]="profileImage"></div>
-    <div class="title"><h1 mat-dialog-title>{{profile.displayName ? profile.displayName : profile.username}}</h1></div>
-    <div class="close-button"><button mat-icon-button (click)="close()"><mat-icon>close</mat-icon></button></div>
-  </div>
-  <div id="messages">
-    <div *ngFor="let msg of messages" [class]="msg.sendUser == profile.username ? 'message-received' : 'message-sent'">
-      <div class="message-text">{{msg.messageText}}</div>
-      <div [class]="msg.sendUser == profile.username ? 'message-info-sent' : 'message-info-received'">
-        <span *ngIf="msg.receiveUser == profile.username && msg.status == 'read'">Read&nbsp;@&nbsp;{{msg.readTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
-        <span *ngIf="msg.receiveUser != profile.username || msg.status == 'sent'">Sent&nbsp;@&nbsp;{{msg.sendTimestamp | date: 'E MMM d yyyy hh:mm:ss'}}</span>
-      </div>
-    </div>
-  </div>
-  <div class="send-area">
-    <mat-form-field appearance="outline" style="margin-bottom: -1.25em" class="full-width">
-      <mat-label>Message</mat-label>
-      <textarea matInput placeholder=" " [formControl]="newMessage" cdkTextareaAutosize cdkAutosizeMinRows="3" cdkAutosizeMaxRows="3" [disabled]="sendDisabled"></textarea>
-    </mat-form-field>
-    <div *ngIf="errorMessage" class='error-message'>{{errorMessage}}</div>
-    <button mat-raised-button color="primary" (click)="sendMessage()" [disabled]="sendDisabled || newMessage.value.length == 0"><mat-icon>send</mat-icon>&nbsp;Send</button>
-  </div>
-</div>
+<app-messenger-dialog-mobile *ngIf="isMobile"></app-messenger-dialog-mobile>
+<app-messenger-dialog-desktop *ngIf="!isMobile"></app-messenger-dialog-desktop>
