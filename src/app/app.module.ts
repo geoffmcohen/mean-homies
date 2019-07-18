@@ -100,6 +100,8 @@ import { HomiesMobileComponent } from './homies/homies/homies-mobile/homies-mobi
 import { HomiesDesktopComponent } from './homies/homies/homies-desktop/homies-desktop.component';
 import { HomieRequestMobileComponent } from './homies/homie-request/homie-request-mobile/homie-request-mobile.component';
 import { HomieRequestDesktopComponent } from './homies/homie-request/homie-request-desktop/homie-request-desktop.component';
+import { HomieViewMobileComponent } from './homies/homie-view/homie-view-mobile/homie-view-mobile.component';
+import { HomieViewDesktopComponent } from './homies/homie-view/homie-view-desktop/homie-view-desktop.component';
 
 @NgModule({
   declarations: [
@@ -173,7 +175,9 @@ import { HomieRequestDesktopComponent } from './homies/homie-request/homie-reque
     HomiesMobileComponent,
     HomiesDesktopComponent,
     HomieRequestMobileComponent,
-    HomieRequestDesktopComponent
+    HomieRequestDesktopComponent,
+    HomieViewMobileComponent,
+    HomieViewDesktopComponent
   ],
   imports: [
     BrowserModule,

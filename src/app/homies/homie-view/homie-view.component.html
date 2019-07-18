@@ -1,22 +1,2 @@
-<hr class="small-br">
-<mat-card *ngIf="profile">
-  <div class="homie-view">
-    <div class="pic-and-name">
-      <a (click)="showProfileDialog()"><img class="profile-image" [src]="profileImage"></a>
-      <br>
-      <a (click)="showProfileDialog()"><span class="username">{{profile.username}}</span></a>
-    </div>
-    <div class="name-and-location">
-      <a (click)="showProfileDialog()"><span class="display-name">{{profile.displayName ? profile.displayName : profile.username}}</span></a>
-      <br>
-      <span class="location">{{profile.location.city}}, {{profile.location.stateProvince}}, {{profile.location.country}}</span>
-    </div>
-    <div class="actions-div">
-      <button mat-raised-button color="primary" style="width:160px;text-align:left" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon> View Profile</button>
-      <hr class="small-br">
-      <button mat-raised-button color="primary" style="width:160px;text-align:left" (click)="sendHomieMessage()"><mat-icon>message</mat-icon> Send Message</button>
-      <hr class="small-br">
-      <button mat-raised-button color="warn" style="width:160px;text-align:left" (click)="removeHomie()"><mat-icon>clear</mat-icon> Remove Homie</button>
-    </div>
-  </div>
-</mat-card>
+<app-homie-view-mobile *ngIf="isMobile" [homie]="homie"></app-homie-view-mobile>
+<app-homie-view-desktop *ngIf="!isMobile" [homie]="homie"></app-homie-view-desktop>

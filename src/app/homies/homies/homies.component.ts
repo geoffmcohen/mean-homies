@@ -35,6 +35,8 @@ export class HomiesComponent implements OnInit {
   }
 
   ngOnInit() {
+    // #TODO: Need to fix double loading everywhere
+    // console.log("Loading class '%s'", this.constructor.name);
     // Create the array of subscriptions
     this.subscriptions = [];
 

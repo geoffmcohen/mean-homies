@@ -1,0 +1,11 @@
+<mat-card *ngIf="profile">
+  <mat-card-title><a (click)="showProfileDialog()">{{profile.displayName ? profile.displayName : profile.username}}</a></mat-card-title>
+  <div class="homie-view">
+    <a (click)="showProfileDialog()"><img class="profile-image" [src]="profileImage"></a>
+    <a (click)="showProfileDialog()"><span class="username">{{profile.username}}</span></a>
+    <span class="location">{{profile.location.city}}, {{profile.location.stateProvince}}, {{profile.location.country}}</span>
+    <button mat-raised-button color="primary" (click)="showProfileDialog()"><mat-icon>remove_red_eye</mat-icon> View Profile</button>
+    <button mat-raised-button color="primary" (click)="sendHomieMessage()"><mat-icon>message</mat-icon> Send Message</button>
+    <button mat-raised-button color="warn" (click)="removeHomie()"><mat-icon>clear</mat-icon> Remove Homie</button>
+  </div>
+</mat-card>

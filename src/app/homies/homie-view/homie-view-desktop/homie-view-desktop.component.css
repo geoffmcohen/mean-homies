@@ -1,0 +1,49 @@
+.homie-view{
+  display: table-row;
+}
+
+.pic-and-name{
+  display: table-cell;
+  max-width: 100px;
+  padding: 5px;
+}
+
+.name-and-location{
+  display: table-cell;
+  vertical-align: top;
+  width: 100%;
+  padding: 5px;
+}
+
+.actions-div{
+  display: table-cell;
+  vertical-align: top;
+}
+
+.profile-image{
+  width: 75px;
+  height: 75px;
+}
+
+.location{
+  font-size: 80%;
+}
+
+.username{
+  font-weight: bold;
+}
+
+.display-name{
+  font-size: 120%;
+  font-weight: bold;
+}
+
+mat-card{
+  margin-bottom: 5px;
+}
+
+/deep/ button{
+  width: 160px;
+  text-align: left;
+  margin-bottom: 5px !important;
+}
