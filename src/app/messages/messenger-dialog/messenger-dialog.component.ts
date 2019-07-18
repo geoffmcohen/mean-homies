@@ -23,9 +23,8 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
   public sendDisabled: boolean;
   private lastMessageTime: number;
   private needsToScrollToBottom: boolean;
-  private newMessageSubscription: Subscription;
-  private readMessageSubscription: Subscription;
-
+  private needsToBeResizedForMobile: boolean;
+  private subscriptions: Subscription[] = [];
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   newMessage = new FormControl('', []);
@@ -47,66 +46,79 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Start at the begining of time to get messages
-    this.lastMessageTime = 0;
+    // Only load the page data for the subclasses
+    if(this.constructor.name != "MessengerDialogComponent"){
+      // Determine if we should resize the messages for mobile
+      this.needsToBeResizedForMobile = this.isMobile;
 
-    // Set the profile image to the default
-    this.profileImage = '../../../assets/images/default profile.gif';
+      // Start at the begining of time to get messages
+      this.lastMessageTime = 0;
 
-    this.userService.getUserProfilePicture(this.authService.getUserToken(), this.profile.username, (res : any) => {
-      if(res.success) this.profileImage = res.imageUrl;
-    });
+      // Get profile image if on desktop
+      if(!this.isMobile){
+        // Set the profile image to the default
+        this.profileImage = '../../../assets/images/default profile.gif';
 
-    // Show the loading dialog
-    this.showLoadingDialog();
-
-    // Get the messages in the conversation
-    this.msgService.getMessages(this.authService.getUserToken(), this.authService.getUser(), this.profile.username, this.lastMessageTime, (res : any) => {
-      if(res.success){
-        // Set the messages
-        this.messages = res.messages;
-
-        // Update the last message time to the last messages send time
-        if(this.messages.length){
-          this.lastMessageTime = this.messages[this.messages.length-1].sendTimestamp;
-        }
-
-        // Scroll to the bottom after the view is checked
-        this.needsToScrollToBottom = true;
-
-        // Now subscribe to get new messages
-        this.subscribeToNewMessages();
+        this.userService.getUserProfilePicture(this.authService.getUserToken(), this.profile.username, (res : any) => {
+          if(res.success) this.profileImage = res.imageUrl;
+        });
       }
 
-      // Hide the loading dialog
-      this.closeLoadingDialog();
-    });
+      // Show the loading dialog
+      this.showLoadingDialog();
+
+      // Get the messages in the conversation
+      this.msgService.getMessages(this.authService.getUserToken(), this.authService.getUser(), this.profile.username, this.lastMessageTime, (res : any) => {
+        if(res.success){
+          // Set the messages
+          this.messages = res.messages;
+
+          // Update the last message time to the last messages send time
+          if(this.messages.length){
+            this.lastMessageTime = this.messages[this.messages.length-1].sendTimestamp;
+          }
+
+          // Scroll to the bottom after the view is checked
+          this.needsToScrollToBottom = true;
+
+          // Now subscribe to get new messages
+          this.subscribeToNewMessages();
+        }
+
+        // Hide the loading dialog
+        this.closeLoadingDialog();
+      });
+    }
   }
 
   // Keep the messages scrolled to the bottom
   ngAfterViewChecked(){
+    // Resize the messages div in mobile view to fit
+    if(this.needsToBeResizedForMobile) this.resizeMessagesToFitMobile();
+
     // Scroll to the bottom if neccessary
     if(this.needsToScrollToBottom) this.scrollToBottom();
   }
 
   // Unsubscribe from observables when the dialog is closed
   ngOnDestroy(){
-    this.newMessageSubscription.unsubscribe();
-    this.readMessageSubscription.unsubscribe();
+    for(var i = 0; i < this.subscriptions.length; i++){
+      this.subscriptions[i].unsubscribe();
+    }
   }
 
   // Subscribe to message changes
   subscribeToNewMessages(){
     // Get latest messages
-    this.newMessageSubscription = this.msgService.newMessageFrom.subscribe(sendUser => {
+    this.subscriptions.push(this.msgService.newMessageFrom.subscribe(sendUser => {
       // Get new messages if it was this user who sent a message
       if(sendUser == this.profile.username){
         this.getLatestMessages();
       }
-    });
+    }));
 
     // Mark messages as read
-    this.readMessageSubscription = this.msgService.messageMarkedAsRead.subscribe(updateData => {
+    this.subscriptions.push(this.msgService.messageMarkedAsRead.subscribe(updateData => {
       if(updateData.receiveUser == this.profile.username){
         // Loop through the messages backwards to find the mesasage to mark as read
         for(var i = this.messages.length - 1; i >= 0; i--){
@@ -117,7 +129,7 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
           }
         }
       }
-    });
+    }));
   }
 
   // Displays a loading dialog
@@ -200,5 +212,17 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
 
     // Reset the flag to let it know that we need to scroll to the bottom
     this.needsToScrollToBottom = false;
+  }
+
+  // Resize the messages screen on mobile to take into account browser elements
+  resizeMessagesToFitMobile(){
+    var messagesDiv = document.getElementById("messages");
+    if(this.isMobile && messagesDiv){
+      // Set the height to fit within the view window
+      messagesDiv.style.height = String(window.innerHeight - 218) + "px";
+
+      // Set the resize to false so we don't continue to resize
+      this.needsToBeResizedForMobile = false;
+    }
   }
 }
