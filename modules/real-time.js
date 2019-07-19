@@ -14,14 +14,19 @@ exports.init = function(server){
     // Gets the username from the cookies
     user = getUserFromCookies(socket);
     if(user){
-      // Add the user to the JSON of active connections
-      connectedUsers[user] = true;
-      console.log("User '%s' has connected to real time service", user);
+      // Add a connection for the user to the JSON of active connections
+      if(connectedUsers[user]){
+        connectedUsers[user]++;
+      } else {
+        connectedUsers[user] = 1;
+        console.log("User '%s' has connected to real time service", user);
+      }
+
 
       socket.on('disconnect', () => {
-        // Remove the user from the JSON of active connections
-        delete connectedUsers[user];
-        console.log("User '%s' has disconnected from real time service", user);
+        // Remove a connection for the user
+        connectedUsers[user]--;
+        if (connectedUsers[user] < 1) console.log("User '%s' has disconnected from real time service", user);
       });
     }
   });
@@ -54,5 +59,5 @@ exports.emitEvent = function(eventName, eventArgs){
 
 // Checks if a specific user is connected
 exports.checkIfConnected = function(username){
-  return connectedUsers[username] ? true : false;
+  return connectedUsers[username] > 0;
 }
