@@ -45,9 +45,14 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
     this.profile = data.profile;
   }
 
+  // Determines if this is the base class or an inherited class
+  isBaseClass(){
+    return this.constructor.name == "MessengerDialogComponent";
+  }
+
   ngOnInit() {
     // Only load the page data for the subclasses
-    if(this.constructor.name != "MessengerDialogComponent"){
+    if(!this.isBaseClass()){
       // Determine if we should resize the messages for mobile
       this.needsToBeResizedForMobile = this.isMobile;
 
@@ -93,11 +98,13 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
 
   // Keep the messages scrolled to the bottom
   ngAfterViewChecked(){
-    // Resize the messages div in mobile view to fit
-    if(this.needsToBeResizedForMobile) this.resizeMessagesToFitMobile();
+    if(!this.isBaseClass()){
+      // Resize the messages div in mobile view to fit
+      if(this.needsToBeResizedForMobile) this.resizeMessagesToFitMobile();
 
-    // Scroll to the bottom if neccessary
-    if(this.needsToScrollToBottom) this.scrollToBottom();
+      // Scroll to the bottom if neccessary
+      if(this.needsToScrollToBottom) this.scrollToBottom();
+    }
   }
 
   // Unsubscribe from observables when the dialog is closed
