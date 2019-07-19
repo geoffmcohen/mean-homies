@@ -12,6 +12,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+  public isBaseClass: boolean = this.constructor.name == "SearchComponent";
   public isMobile: boolean;
   public loggedIn: boolean;
   public hasActiveProfile: boolean;
@@ -40,13 +41,15 @@ export class SearchComponent implements OnInit {
     }
 
   ngOnInit() {
-    // Get initial login state and track changes
-    this.subscribeToLoginChanges();
+    if(!this.isBaseClass){
+      // Get initial login state and track changes
+      this.subscribeToLoginChanges();
 
-    // Set default values
-    this.nearRadioValue = "me";
-    this.distance = "5";
-    this.distanceUnit = "Miles";
+      // Set default values
+      this.nearRadioValue = "me";
+      this.distance = "5";
+      this.distanceUnit = "Miles";
+    }
   }
 
   // Set up login state and subscribe to changes

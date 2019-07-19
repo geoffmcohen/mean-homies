@@ -12,8 +12,11 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 })
 export class ResetPasswordDialogComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email]);
+
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "ResetPasswordDialogComponents";
   public message: string;
+
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
@@ -82,7 +85,7 @@ export class ResetPasswordDialogComponent implements OnInit {
       });
     }
   }
-  
+
   // Use for a close button on mobile
   close(){
     this.dialogRef.close(false);

@@ -12,9 +12,11 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 })
 export class PictureUploadDialogComponent implements OnInit {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "PictureUploadDialogComponent";
   public imageFilename: string;
   public imageFile: File;
   public message: string;
+  
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
@@ -24,11 +26,12 @@ export class PictureUploadDialogComponent implements OnInit {
     private userService: UserService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) { }
-
-  ngOnInit() {
+  ) {
     // Gets whether a mobile device is being used
     this.isMobile = this.appStateService.getIsMobile();
+  }
+
+  ngOnInit() {
   }
 
   // Displays a loading dialog

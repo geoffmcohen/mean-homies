@@ -12,6 +12,7 @@ import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-pas
 })
 export class LoginDialogComponent implements OnInit {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "LoginDialogComponent";
   public usernameOrEmail: string;
   public password: string;
   public message: string;

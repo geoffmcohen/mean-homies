@@ -21,13 +21,14 @@ import { UserPreferencesDialogComponent } from '../../user/user-preferences-dial
 
 export class HomeComponent implements OnInit, OnDestroy {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "HomeComponent";
   public loggedIn: boolean;
   public loggedInUser: string;
   public hasActiveProfile: boolean;
   public pendingHomieRequestCount: number;
   public unreadMessageCount: number;
 
-  private subscriptions: Subscription[];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -46,11 +47,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Increment page stats for home page
     this.pageStatsService.incrementPageCount( "home" );
 
-    // Initialize the subscriptions array
-    this.subscriptions = [];
-
-    // Get initial login state and track changes
-    this.subscribeToLoginChanges();
+    if(!this.isBaseClass){
+      // Get initial login state and track changes
+      this.subscribeToLoginChanges();
+    }
   }
 
   // Unsubscribes to all observables before closing

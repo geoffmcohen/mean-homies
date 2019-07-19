@@ -16,6 +16,7 @@ import { PictureUploadDialogComponent } from '../picture-upload-dialog/picture-u
 })
 export class EditProfileComponent implements OnInit {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "EditProfileComponent";
   public loggedIn: boolean;
   public loggedInUser: string;
   public message: string;
@@ -27,6 +28,8 @@ export class EditProfileComponent implements OnInit {
   public locationError: string;
   public showMap: boolean;
   public profileImage: string;
+  public locationTooltipText: string = `Instead of your home address, you can enter in the name or address of a local business in your neighborhood like "Erewhon Venice Beach", the name of a local landmark like "Brooklyn Borough Hall" or a combination of your city, state/province and country like "San Francisco, California, USA".`;
+
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private picUploadDialogRef: MatDialogRef<PictureUploadDialogComponent>;
 
@@ -34,8 +37,6 @@ export class EditProfileComponent implements OnInit {
   location = new FormControl('', []);
   aboutMe = new FormControl('', []);
   lookingToMeet = new FormControl('', []);
-
-  public locationTooltipText: string = `Instead of your home address, you can enter in the name or address of a local business in your neighborhood like "Erewhon Venice Beach", the name of a local landmark like "Brooklyn Borough Hall" or a combination of your city, state/province and country like "San Francisco, California, USA".`;
 
   constructor(
     private appStateService: ApplicationStateService,
@@ -50,12 +51,14 @@ export class EditProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Get initial login state and track changes
-    this.subscribeToLoginChanges();
+    if(!this.isBaseClass){
+      // Get initial login state and track changes
+      this.subscribeToLoginChanges();
 
-    // If logged in, get and set the existing values
-    if(this.loggedIn){
-      this.loadProfile();
+      // If logged in, get and set the existing values
+      if(this.loggedIn){
+        this.loadProfile();
+      }
     }
   }
 

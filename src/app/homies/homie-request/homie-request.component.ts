@@ -18,7 +18,9 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
 export class HomieRequestComponent implements OnInit {
   @Input() homieRequest: any;
   @Input() requestType: string;
+  
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "HomieRequestComponent";
   public profile: any;
   public profileImage: string;
 
@@ -39,23 +41,25 @@ export class HomieRequestComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Get the other user based on the type of request
-    var user = this.requestType == 'pending' ? this.homieRequest.requestUser : this.homieRequest.acceptUser;
+    if (!this.isBaseClass){
+      // Get the other user based on the type of request
+      var user = this.requestType == 'pending' ? this.homieRequest.requestUser : this.homieRequest.acceptUser;
 
-    // If the homie request message is blank, set it to a return char for display purposes
-    if (!this.isMobile && this.homieRequest.message.length < 1) this.homieRequest.message = "\n";
+      // If the homie request message is blank, set it to a return char for display purposes
+      if (!this.isMobile && this.homieRequest.message.length < 1) this.homieRequest.message = "\n";
 
-    // Set the profile image to the default
-    this.profileImage = '../../../assets/images/default profile.gif';
+      // Set the profile image to the default
+      this.profileImage = '../../../assets/images/default profile.gif';
 
-    // Get the profile and profile image
-    this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), user, (res : any) => {
-      if(res.success) this.profile = res.profile;
+      // Get the profile and profile image
+      this.userService.getUserProfile(this.authService.getUserToken(), this.authService.getUser(), user, (res : any) => {
+        if(res.success) this.profile = res.profile;
 
-      this.userService.getUserProfilePicture(this.authService.getUserToken(), user, (res : any) => {
-        if(res.success) this.profileImage = res.imageUrl;
+        this.userService.getUserProfilePicture(this.authService.getUserToken(), user, (res : any) => {
+          if(res.success) this.profileImage = res.imageUrl;
+        });
       });
-    });
+    }
   }
 
   // Displays a loading dialog

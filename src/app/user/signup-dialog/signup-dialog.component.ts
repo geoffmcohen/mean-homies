@@ -19,8 +19,10 @@ export class SignupDialogComponent implements OnInit {
   passwordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.password)]);
 
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "SignupDialogComponent";
   public passwordRequirements = "Min 8 chars, at least 1 upper, 1 lower & 1 number";
   public message: string;
+
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(

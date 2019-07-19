@@ -17,9 +17,11 @@ export class PasswordResetComponent implements OnInit {
   passwordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.password)]);
 
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "PasswordResetComponent";
   public passwordRequirements = "Min 8 chars, at least 1 upper, 1 lower & 1 number";
   private resetToken: string;
   public message: string;
+
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
@@ -35,15 +37,17 @@ export class PasswordResetComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Get the resetToken from parameters
-    this.route.params.subscribe(params => {
-      if (params['resetToken']) {
-        this.resetToken = params['resetToken'];
-      } else {
-        // If no token redirect to home page
-        this.router.navigate(['../../']);
-      }
-    });
+    if(!this.isBaseClass){
+      // Get the resetToken from parameters
+      this.route.params.subscribe(params => {
+        if (params['resetToken']) {
+          this.resetToken = params['resetToken'];
+        } else {
+          // If no token redirect to home page
+          this.router.navigate(['../../']);
+        }
+      });
+    }
   }
 
   // Displays a loading dialog

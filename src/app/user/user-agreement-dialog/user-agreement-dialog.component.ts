@@ -11,7 +11,7 @@ import { ApplicationStateService } from '../../shared/application-state.service'
 
 export class UserAgreementDialogComponent implements OnInit {
   public isMobile: boolean;
-  private agreementScrolled: boolean;
+  public isBaseClass: boolean = this.constructor.name == "UserAgreementDialogComponent";
   public userAgrees: boolean;
   public userAgreement =
 `This will be the user agreement... Blah, Blah, Blah, Blah, Blah, Blah
@@ -36,6 +36,8 @@ One more for the road...
 10
 End`;
 
+  private agreementScrolled: boolean;
+
   constructor(
     private appStateService: ApplicationStateService,
     private dialogRef: MatDialogRef<UserAgreementDialogComponent>
@@ -48,14 +50,16 @@ End`;
   }
 
   ngAfterViewChecked(){
-    // Finds the agreement text area
-    var agreementText = document.getElementById("agreementTextarea");
+    if(!this.isBaseClass){
+      // Finds the agreement text area
+      var agreementText = document.getElementById("agreementTextarea");
 
-    // If found, we will ensure that it is initially scrolled to the top
-    if(agreementText){
-      if(!this.agreementScrolled && agreementText.scrollTop != 0){
-        agreementText.scrollTop = 0;
-        this.agreementScrolled = true;
+      // If found, we will ensure that it is initially scrolled to the top
+      if(agreementText){
+        if(!this.agreementScrolled && agreementText.scrollTop != 0){
+          agreementText.scrollTop = 0;
+          this.agreementScrolled = true;
+        }
       }
     }
   }

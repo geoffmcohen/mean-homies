@@ -13,6 +13,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 
 export class UserPreferencesDialogComponent implements OnInit {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "UserPreferencesDialogComponent";
   public sendAnnouncementsEmail: boolean;
   public sendNewMessageEmail: boolean;
   public sendHomieRequestReceiveEmail: boolean;
@@ -34,8 +35,10 @@ export class UserPreferencesDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Get the users preferences if they exist
-    this.getUserPreferences();
+    if(!this.isBaseClass){
+      // Get the users preferences if they exist
+      this.getUserPreferences();
+    }
   }
 
   // Displays a loading dialog

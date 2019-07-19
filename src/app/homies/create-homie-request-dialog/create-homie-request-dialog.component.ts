@@ -15,6 +15,7 @@ import { HomiesService } from '../../homies/homies.service';
 })
 export class CreateHomieRequestDialogComponent implements OnInit {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "CreateHomieRequestDialogComponent";
   public profile: any;
   public message: string;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;

@@ -16,6 +16,7 @@ import { MessengerDialogComponent } from '../../messages/messenger-dialog/messen
 })
 export class ProfileViewDialogComponent implements OnInit {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "ProfileViewDialogComponent";
   public profile: any;
   public profileImage: string;
   public homieStatus: string;
@@ -37,21 +38,23 @@ export class ProfileViewDialogComponent implements OnInit {
     // Gets whether a mobile device is being used
     this.isMobile = appStateService.getIsMobile();
 
-    // Gets teh profile from the inpute data
+    // Gets the profile from the inpute data
     this.profile = data.profile;
   }
 
   ngOnInit() {
-    // Set the profile image to the default
-    this.profileImage = '../../../assets/images/default profile.gif';
+    if(!this.isBaseClass){
+      // Set the profile image to the default
+      this.profileImage = '../../../assets/images/default profile.gif';
 
-    // Make the call to actually get the users profile Picture
-    this.userService.getUserProfilePicture(this.authService.getUserToken(), this.profile.username, (res : any) => {
-      if(res.success) this.profileImage = res.imageUrl;
-    });
+      // Make the call to actually get the users profile Picture
+      this.userService.getUserProfilePicture(this.authService.getUserToken(), this.profile.username, (res : any) => {
+        if(res.success) this.profileImage = res.imageUrl;
+      });
 
-    // Get the homie status to see if the profile belongs to a homie
-    this.refreshHomieStatus();
+      // Get the homie status to see if the profile belongs to a homie
+      this.refreshHomieStatus();
+    }
   }
 
   // Refreshes homie status

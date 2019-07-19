@@ -14,14 +14,15 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 })
 export class HomiesComponent implements OnInit {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "HomiesComponent";
   public loggedIn: boolean;
   public hasActiveProfile: boolean;
-  private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
-  private subscriptions: Subscription[];
-
   public pendingHomieRequests: any[];
   public waitingHomieRequests: any[];
   public homies: any[];
+
+  private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private appStateService: ApplicationStateService,
@@ -35,13 +36,10 @@ export class HomiesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // #TODO: Need to fix double loading everywhere
-    // console.log("Loading class '%s'", this.constructor.name);
-    // Create the array of subscriptions
-    this.subscriptions = [];
-
-    // Get initial login state and track changes
-    this.subscribeToLoginChanges();
+    if(!this.isBaseClass){
+      // Get initial login state and track changes
+      this.subscribeToLoginChanges();
+    }
   }
 
   // Set up login state and subscribe to changes
