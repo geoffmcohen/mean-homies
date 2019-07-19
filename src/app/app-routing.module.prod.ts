@@ -10,7 +10,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 import { AdminComponent } from './admin/admin.component';
 import { BlogComponent } from './blog/blog.component';
-import { HomeComponent } from './home/home.component';
+import { HomeComponent } from './home/home/home.component';
 import { PasswordResetComponent } from './user/password-reset/password-reset.component';
 import { DefaultComponent } from './home/default/default.component';
 import { AboutComponent } from './home/about/about.component';

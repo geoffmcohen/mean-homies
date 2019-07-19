@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { ApplicationStateService } from '../shared/application-state.service';
-import { AuthenticationService } from '../auth/authentication.service';
-import { UserService } from '../user/user.service';
-import { HomiesService } from '../homies/homies.service';
-import { MessagesService } from '../messages/messages.service';
-import { PageStatsService } from '../shared/page-stats.service';
-import { LoginDialogComponent } from '../user/login-dialog/login-dialog.component';
-import { SignupDialogComponent } from '../user/signup-dialog/signup-dialog.component';
-import { UserAgreementDialogComponent } from '../user/user-agreement-dialog/user-agreement-dialog.component';
-import { ChangePasswordDialogComponent } from '../user/change-password-dialog/change-password-dialog.component';
-import { UserPreferencesDialogComponent } from '../user/user-preferences-dialog/user-preferences-dialog.component';
+import { ApplicationStateService } from '../../shared/application-state.service';
+import { AuthenticationService } from '../../auth/authentication.service';
+import { UserService } from '../../user/user.service';
+import { HomiesService } from '../../homies/homies.service';
+import { MessagesService } from '../../messages/messages.service';
+import { PageStatsService } from '../../shared/page-stats.service';
+import { LoginDialogComponent } from '../../user/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from '../../user/signup-dialog/signup-dialog.component';
+import { UserAgreementDialogComponent } from '../../user/user-agreement-dialog/user-agreement-dialog.component';
+import { ChangePasswordDialogComponent } from '../../user/change-password-dialog/change-password-dialog.component';
+import { UserPreferencesDialogComponent } from '../../user/user-preferences-dialog/user-preferences-dialog.component';
 
 @Component({
   selector: 'app-home',
