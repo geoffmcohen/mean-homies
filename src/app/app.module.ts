@@ -104,6 +104,8 @@ import { HomieViewMobileComponent } from './homies/homie-view/homie-view-mobile/
 import { HomieViewDesktopComponent } from './homies/homie-view/homie-view-desktop/homie-view-desktop.component';
 import { MessengerDialogMobileComponent } from './messages/messenger-dialog/messenger-dialog-mobile/messenger-dialog-mobile.component';
 import { MessengerDialogDesktopComponent } from './messages/messenger-dialog/messenger-dialog-desktop/messenger-dialog-desktop.component';
+import { MessageCenterMobileComponent } from './messages/message-center/message-center-mobile/message-center-mobile.component';
+import { MessageCenterDesktopComponent } from './messages/message-center/message-center-desktop/message-center-desktop.component';
 
 @NgModule({
   declarations: [
@@ -181,7 +183,9 @@ import { MessengerDialogDesktopComponent } from './messages/messenger-dialog/mes
     HomieViewMobileComponent,
     HomieViewDesktopComponent,
     MessengerDialogMobileComponent,
-    MessengerDialogDesktopComponent
+    MessengerDialogDesktopComponent,
+    MessageCenterMobileComponent,
+    MessageCenterDesktopComponent
   ],
   imports: [
     BrowserModule,

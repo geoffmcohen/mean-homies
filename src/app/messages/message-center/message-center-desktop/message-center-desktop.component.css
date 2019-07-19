@@ -1,0 +1,18 @@
+.new-conversation{
+  display: flex;
+  flex-direction: row;
+}
+
+mat-form-field{
+  margin-bottom: -1.25em;
+  width: 400px;
+}
+
+mat-card{
+  margin-bottom: 10px;
+}
+
+/deep/ button{
+  height: 50px !important;
+  margin: 10px !important;
+}

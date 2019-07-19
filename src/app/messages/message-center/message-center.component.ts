@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
 import { Subscription } from 'rxjs';
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
@@ -14,6 +15,8 @@ import { MessengerDialogComponent } from '../../messages/messenger-dialog/messen
   styleUrls: ['./message-center.component.css']
 })
 export class MessageCenterComponent implements OnInit, OnDestroy {
+  public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "MessageCenterComponent";
   public loggedIn: boolean;
   public hasActiveProfile: boolean;
 
@@ -28,22 +31,25 @@ export class MessageCenterComponent implements OnInit, OnDestroy {
 
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private messengerDialogRef: MatDialogRef<MessengerDialogComponent>;
-  private subscriptions: Subscription[];
+  private subscriptions: Subscription[] = [];
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private homiesService: HomiesService,
     private msgService: MessagesService,
     private dialog: MatDialog
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = appStateService.getIsMobile();
+  }
 
   ngOnInit() {
-    // Create the array of subscriptions
-    this.subscriptions = [];
-
-    // Get initial login state and track changes
-    this.subscribeToLoginChanges();
+    if (!this.isBaseClass){
+      // Get initial login state and track changes
+      this.subscribeToLoginChanges();
+    }
   }
 
   // Set up login state and subscribe to changes
@@ -313,9 +319,14 @@ export class MessageCenterComponent implements OnInit, OnDestroy {
     dialogConfig.autoFocus = true;
     dialogConfig.data = { profile: this.homiesProfileMap[this.homieToMessage] };
 
-    // #TODO: Have to figure out how to make this mobile friendly
-    dialogConfig.minWidth = "800px";
-    dialogConfig.maxWidth = "800px";
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    } else {
+      dialogConfig.minWidth = "768px";
+      dialogConfig.maxWidth = "768px";
+    }
 
     // Show the messenger dialog
     this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);

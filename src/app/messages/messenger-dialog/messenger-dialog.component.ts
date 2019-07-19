@@ -16,6 +16,7 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 })
 export class MessengerDialogComponent implements OnInit, OnDestroy {
   public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "MessengerDialogComponent";
   public profile: any;
   public profileImage: string;
   public messages: any[];
@@ -45,14 +46,9 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
     this.profile = data.profile;
   }
 
-  // Determines if this is the base class or an inherited class
-  isBaseClass(){
-    return this.constructor.name == "MessengerDialogComponent";
-  }
-
   ngOnInit() {
     // Only load the page data for the subclasses
-    if(!this.isBaseClass()){
+    if(!this.isBaseClass){
       // Determine if we should resize the messages for mobile
       this.needsToBeResizedForMobile = this.isMobile;
 
@@ -98,7 +94,7 @@ export class MessengerDialogComponent implements OnInit, OnDestroy {
 
   // Keep the messages scrolled to the bottom
   ngAfterViewChecked(){
-    if(!this.isBaseClass()){
+    if(!this.isBaseClass){
       // Resize the messages div in mobile view to fit
       if(this.needsToBeResizedForMobile) this.resizeMessagesToFitMobile();
 
