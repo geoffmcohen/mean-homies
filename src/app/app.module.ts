@@ -106,6 +106,8 @@ import { MessengerDialogMobileComponent } from './messages/messenger-dialog/mess
 import { MessengerDialogDesktopComponent } from './messages/messenger-dialog/messenger-dialog-desktop/messenger-dialog-desktop.component';
 import { MessageCenterMobileComponent } from './messages/message-center/message-center-mobile/message-center-mobile.component';
 import { MessageCenterDesktopComponent } from './messages/message-center/message-center-desktop/message-center-desktop.component';
+import { ConversationViewMobileComponent } from './messages/conversation-view/conversation-view-mobile/conversation-view-mobile.component';
+import { ConversationViewDesktopComponent } from './messages/conversation-view/conversation-view-desktop/conversation-view-desktop.component';
 
 @NgModule({
   declarations: [
@@ -185,7 +187,9 @@ import { MessageCenterDesktopComponent } from './messages/message-center/message
     MessengerDialogMobileComponent,
     MessengerDialogDesktopComponent,
     MessageCenterMobileComponent,
-    MessageCenterDesktopComponent
+    MessageCenterDesktopComponent,
+    ConversationViewMobileComponent,
+    ConversationViewDesktopComponent
   ],
   imports: [
     BrowserModule,

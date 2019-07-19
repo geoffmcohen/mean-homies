@@ -1,0 +1,52 @@
+.conversation-view{
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-title{
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.user-said{
+  font-weight: bold;
+  font-size: 75%;
+  margin-bottom: 5px;
+}
+
+.message-sent{
+  height: 50px;
+  overflow-y: hidden;
+  padding: 5px;
+  border: 1px solid LightBlue;
+  border-radius: 10px 10px 10px 10px;
+  background-color: #EBF6F9;
+}
+
+.message-received{
+  height: 50px;
+  overflow-y: hidden;
+  padding: 5px;
+  border: 1px solid LightGreen;
+  border-radius: 10px 10px 10px 10px;
+  background-color: #E9FCE9;
+}
+
+.message-text{
+  font-size: 100;
+}
+
+.message-info{
+  font-size: 50%;
+  color: Grey;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+mat-card{
+  margin-bottom: 10px;
+}
+
+/deep/ button{
+  margin: 5px !important;
+}

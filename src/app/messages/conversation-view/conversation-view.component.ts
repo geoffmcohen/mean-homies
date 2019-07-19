@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
+import { ApplicationStateService } from '../../shared/application-state.service';
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { MessengerDialogComponent } from '../../messages/messenger-dialog/messenger-dialog.component';
@@ -14,6 +15,8 @@ export class ConversationViewComponent implements OnInit {
   @Input() latestMessage: any;
   @Input() profile: any;
 
+  public isMobile: boolean;
+  public isBaseClass: boolean = this.constructor.name == "ConversationViewComponent";
   public loggedInUser: string;
   public conversationWithUser: string;
   public profileImage: string;
@@ -22,25 +25,34 @@ export class ConversationViewComponent implements OnInit {
   private profileDialogRef: MatDialogRef<ProfileViewDialogComponent>;
 
   constructor(
+    private appStateService: ApplicationStateService,
     private authService: AuthenticationService,
     private userService: UserService,
     private dialog: MatDialog
-  ) { }
+  ) {
+    // Gets whether a mobile device is being used
+    this.isMobile = appStateService.getIsMobile();
+  }
 
   ngOnInit() {
-    // Set the logged in user
-    this.loggedInUser = this.authService.getUser();
+    if(!this.isBaseClass){
+      // Set the logged in user
+      this.loggedInUser = this.authService.getUser();
 
-    // Get the user that this conversation is with
-    this.conversationWithUser = this.latestMessage.sendUser == this.loggedInUser ? this.latestMessage.receiveUser : this.latestMessage.sendUser;
+      // Get the user that this conversation is with
+      this.conversationWithUser = this.latestMessage.sendUser == this.loggedInUser ? this.latestMessage.receiveUser : this.latestMessage.sendUser;
 
-    // Set the profile image to the default
-    this.profileImage = '../../../assets/images/default profile.gif';
+      // Get profile image for desktop only
+      if(!this.isMobile){
+        // Set the profile image to the default
+        this.profileImage = '../../../assets/images/default profile.gif';
 
-    // Get the users profile image
-    this.userService.getUserProfilePicture(this.authService.getUserToken(), this.conversationWithUser, (res : any) => {
-      if(res.success) this.profileImage = res.imageUrl;
-    });
+        // Get the users profile image
+        this.userService.getUserProfilePicture(this.authService.getUserToken(), this.conversationWithUser, (res : any) => {
+          if(res.success) this.profileImage = res.imageUrl;
+        });
+      }
+    }
   }
 
   // Opens the messenger dialog to allow for messaging
@@ -50,9 +62,14 @@ export class ConversationViewComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.data = { profile: this.profile };
 
-    // #TODO: Have to figure out how to make this mobile friendly
-    dialogConfig.minWidth = "800px";
-    dialogConfig.maxWidth = "800px";
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    } else {
+      dialogConfig.minWidth = "768px";
+      dialogConfig.maxWidth = "768px";
+    }
 
     // Show the messenger dialog
     this.messengerDialogRef = this.dialog.open(MessengerDialogComponent, dialogConfig);
@@ -64,7 +81,14 @@ export class ConversationViewComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.autoFocus = true;
     dialogConfig.data = {profile: this.profile};
-    dialogConfig.minWidth = "90%";
+
+    // Set mobile take up entire screen
+    if (this.isMobile){
+      dialogConfig.minWidth = "100vw";
+      dialogConfig.height = "100vh";
+    } else {
+      dialogConfig.minWidth = "90%";
+    }
 
     // Show the profile dislay dialog
     this.profileDialogRef = this.dialog.open(ProfileViewDialogComponent, dialogConfig);
