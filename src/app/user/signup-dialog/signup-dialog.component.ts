@@ -14,12 +14,13 @@ import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dial
 })
 export class SignupDialogComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email], this.validateEmailIsTaken(this.userService));
-  username = new FormControl('', [Validators.required], this.validateUsernameIsTaken(this.userService));
+  username = new FormControl('', [Validators.required, Validators.pattern(/^([a-zA-Z])[a-zA-Z0-9_]{2,11}$/)], this.validateUsernameIsTaken(this.userService));
   password = new FormControl('', [Validators.required, Validators.pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/)]);
   passwordConfirm = new FormControl('', [Validators.required, this.validatePasswordsMatch(this.password)]);
 
   public isMobile: boolean;
   public isBaseClass: boolean = this.constructor.name == "SignupDialogComponent";
+  public usernameRequirements = "Length 3-12 chars, starts with letter, no special chars";
   public passwordRequirements = "Min 8 chars, at least 1 upper, 1 lower & 1 number";
   public message: string;
 
@@ -96,6 +97,8 @@ export class SignupDialogComponent implements OnInit {
   getUsernameErrorMessage() {
     if(this.username.hasError('required')){
       return "Username is required";
+    } else if (this.username.hasError('pattern')){
+      return this.usernameRequirements;
     } else if (this.username.hasError('isTaken')){
       return "Username is in use. Please select a new username.";
     }
