@@ -5,6 +5,7 @@
     <mat-label>Display Name</mat-label>
     <input matInput placeholder="Display Name" [formControl]="displayName">
     <mat-hint>Enter a name to display instead of your username (optional)</mat-hint>
+    <mat-error *ngIf="displayName.invalid">{{getDisplayNameErrorMessage()}}</mat-error>
   </mat-form-field>
   <br>
   <mat-form-field appearance="outline" class="medium-width" [matTooltip]="locationTooltipText">

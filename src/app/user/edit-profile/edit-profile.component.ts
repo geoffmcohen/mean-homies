@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig, MatDialogRef, MatSnackBar } from "@angular/material";
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { ApplicationStateService } from '../../shared/application-state.service';
@@ -33,7 +33,7 @@ export class EditProfileComponent implements OnInit {
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
   private picUploadDialogRef: MatDialogRef<PictureUploadDialogComponent>;
 
-  displayName = new FormControl('', []);
+  displayName = new FormControl('', [Validators.pattern(/^.{1,24}$/)]);
   location = new FormControl('', []);
   aboutMe = new FormControl('', []);
   lookingToMeet = new FormControl('', []);
@@ -139,6 +139,8 @@ export class EditProfileComponent implements OnInit {
     // If the user has entered a location but not been located
     if (this.location.value && (!this.lat || !this.lng)){
       this.locationError = "Please hit the 'Find Me' button to find your location.";
+    } else if (!this.checkFieldValidations()){
+      this.message = "Please clear errors above.";
     } else {
       // Show loading dialog
       this.showLoadingDialog();
@@ -276,5 +278,22 @@ export class EditProfileComponent implements OnInit {
     this.userService.getUserProfilePicture(this.authService.getUserToken(), this.loggedInUser, (res : any) => {
       if(res.success) this.profileImage = res.imageUrl;
     });
+  }
+
+  // Check field validations
+  checkFieldValidations() : boolean{
+    // Check each control with validations
+    if (this.displayName.errors) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  // Get the error message for the diplay name
+  getDisplayNameErrorMessage(){
+    if(this.displayName.hasError('pattern')){
+      return "Maximum 24 characters";
+    }
   }
 }
