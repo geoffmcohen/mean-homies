@@ -5,6 +5,7 @@ import { ApplicationStateService } from '../../shared/application-state.service'
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../homies.service';
+import { PageStatsService } from '../../shared/page-stats.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 
 @Component({
@@ -29,6 +30,7 @@ export class HomiesComponent implements OnInit {
     private authService: AuthenticationService,
     private userService: UserService,
     private homiesService: HomiesService,
+    private pageStatsService: PageStatsService,
     private dialog: MatDialog
   ) {
     // Gets whether a mobile device is being used
@@ -37,6 +39,9 @@ export class HomiesComponent implements OnInit {
 
   ngOnInit() {
     if(!this.isBaseClass){
+      // Records the user activity
+      this.pageStatsService.recordPageStats("homies", this.authService.getUser(), this.isMobile);
+
       // Get initial login state and track changes
       this.subscribeToLoginChanges();
     }

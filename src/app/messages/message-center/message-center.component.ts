@@ -6,6 +6,7 @@ import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { HomiesService } from '../../homies/homies.service';
 import { MessagesService } from '../messages.service';
+import { PageStatsService } from '../../shared/page-stats.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 import { MessengerDialogComponent } from '../../messages/messenger-dialog/messenger-dialog.component';
 
@@ -39,8 +40,12 @@ export class MessageCenterComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private homiesService: HomiesService,
     private msgService: MessagesService,
+    private pageStatsService: PageStatsService,
     private dialog: MatDialog
   ) {
+    // Records the user activity
+    this.pageStatsService.recordPageStats("messages", this.authService.getUser(), this.isMobile);
+
     // Gets whether a mobile device is being used
     this.isMobile = appStateService.getIsMobile();
   }

@@ -4,6 +4,7 @@ import { ApplicationStateService } from '../../shared/application-state.service'
 import { AuthenticationService } from '../../auth/authentication.service';
 import { UserService } from '../../user/user.service';
 import { SearchService } from '../search.service';
+import { PageStatsService } from '../../shared/page-stats.service';
 import { LoadingDialogComponent } from '../../shared/loading-dialog/loading-dialog.component';
 
 @Component({
@@ -18,10 +19,10 @@ export class SearchComponent implements OnInit {
   public hasActiveProfile: boolean;
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
-  public nearRadioValue: string;
+  public nearRadioValue: string = "me";
   public nearLocation: string;
-  public distance: string;
-  public distanceUnit: string;
+  public distance: string = "5";
+  public distanceUnit: string = "Miles";
   public message: string;
 
   public pageSize = 10;
@@ -34,6 +35,7 @@ export class SearchComponent implements OnInit {
     private authService: AuthenticationService,
     private userService: UserService,
     private searchService: SearchService,
+    private pageStatsService: PageStatsService,
     private dialog: MatDialog
     ){
       // Gets whether a mobile device is being used
@@ -42,13 +44,11 @@ export class SearchComponent implements OnInit {
 
   ngOnInit() {
     if(!this.isBaseClass){
+      // Records the user activity
+      this.pageStatsService.recordPageStats("search", this.authService.getUser(), this.isMobile);
+
       // Get initial login state and track changes
       this.subscribeToLoginChanges();
-
-      // Set default values
-      this.nearRadioValue = "me";
-      this.distance = "5";
-      this.distanceUnit = "Miles";
     }
   }
 

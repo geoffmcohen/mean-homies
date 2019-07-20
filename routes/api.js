@@ -179,7 +179,7 @@ module.exports = (function(){
     var formidable = require('formidable');
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files){
-      require('../modules/page-stats.js').recordPageStats(fields.pageName, fields.username, fields.isMobile);
+      require('../modules/page-stats.js').recordPageStats(fields.pageName, fields.username, fields.isMobile == 'true');
     });
   });
 
