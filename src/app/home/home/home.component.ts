@@ -44,10 +44,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Increment page stats for home page
-    this.pageStatsService.incrementPageCount( "home" );
-
     if(!this.isBaseClass){
+      // Records the user activity
+      this.pageStatsService.recordPageStats("home", this.authService.getUser(), this.isMobile);
+
       // Get initial login state and track changes
       this.subscribeToLoginChanges();
     }

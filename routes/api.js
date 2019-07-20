@@ -167,8 +167,19 @@ module.exports = (function(){
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files){
       if(fields.pageName) {
-        require('../modules/page-counter.js').incrementPageCount(fields.pageName, function(err, result){});
+        require('../modules/page-stats.js').incrementPageCount(fields.pageName, function(err, result){});
       };
+    });
+  });
+
+  // Records page stats
+  api.post('/record_page_stats', function(req, res){
+    console.log('api/record_page_stats called');
+
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      require('../modules/page-stats.js').recordPageStats(fields.pageName, fields.username, fields.isMobile);
     });
   });
 
@@ -176,7 +187,7 @@ module.exports = (function(){
   api.get('/admin/get_page_counts', function(req, res){
     console.log('api/admin/get_page_counts called');
 
-    var pageCounter = require('../modules/page-counter.js');
+    var pageCounter = require('../modules/page-stats.js');
     pageCounter.getPageCounts(function(err, results){
       if (err) {
         sendError(res, err, "Unable to get page counts");

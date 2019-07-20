@@ -19,4 +19,9 @@ export class PageStatsService {
     // Make the REST call to the api
     return this.http.get<any>('/api/admin/get_page_counts');
   };
+
+  // Increments the page count for page/component
+  public recordPageStats(pageName: string, username: string, isMobile: boolean): void{
+    this.http.post<any>("/api/record_page_stats", {pageName: pageName, username: username, isMobile: String(isMobile)}).subscribe((res: any) => {});
+  }
 }
