@@ -27,3 +27,7 @@ mat-form-field{
   flex-direction: row;
   align-self: flex-end;
 }
+
+/deep/ .mat-dialog-container {
+  padding: 5px !important;
+}

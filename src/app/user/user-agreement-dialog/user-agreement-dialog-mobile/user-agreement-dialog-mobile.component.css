@@ -16,3 +16,7 @@
 .button-area{
   align-self: flex-end;
 }
+
+/deep/ .mat-dialog-container {
+  padding: 5px !important;
+}
