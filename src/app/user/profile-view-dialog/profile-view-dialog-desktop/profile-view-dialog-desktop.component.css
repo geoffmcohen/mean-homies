@@ -52,3 +52,29 @@ mat-form-field{
   width: 100%;
   margin-bottom: -1.25em;
 }
+
+.graphiti-label-div{
+  text-align: center;
+  margin-top: 5px;
+}
+
+.graphiti-label-small{
+  font-family: ADrippingMarker;
+  font-size: 150%;
+  font-weight: bold;
+  color: FireBrick;
+}
+
+.graphiti-label-medium{
+  font-family: ADrippingMarker;
+  font-size: 175%;
+  font-weight: bold;
+  color: FireBrick;
+}
+
+.graphiti-label-large{
+  font-family: ADrippingMarker;
+  font-size: 200%;
+  font-weight: bold;
+  color: FireBrick;
+}

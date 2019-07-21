@@ -11,23 +11,19 @@
       <span class="location">{{profile.location.city}}, {{profile.location.stateProvince}}, {{profile.location.country}}</span>
       <br>
       <div *ngIf="homieStatus=='homies'">
-        <img class="homie-status-image" src="../../../../assets/images/My Homie Label.jpg">
-        <br>
+        <div class="graphiti-label-div"><span class="graphiti-label-large">My Homie</span></div>
         <button mat-raised-button color="primary" (click)="sendHomieMessage()"><mat-icon>message</mat-icon> Send Message</button>
       </div>
       <div *ngIf="homieStatus=='waiting'">
-        <img class="homie-status-image" src="../../../../assets/images/Homie Requested Label.jpg">
-        <br>
+        <div class="graphiti-label-div"><span class="graphiti-label-small">Homie Requested</span></div>
         <button mat-raised-button color="primary" disabled><mat-icon>hourglass_empty</mat-icon> Waiting...</button>
       </div>
       <div *ngIf="homieStatus=='pending'">
-        <img class="homie-status-image" src="../../../../assets/images/Be My Homie Label.jpg" >
-        <br>
+        <div class="graphiti-label-div"><span class="graphiti-label-medium">Be My Homie?</span></div>
         <button mat-raised-button color="primary" (click)="acceptHomieRequest()"><mat-icon>thumb_up</mat-icon> Yes</button>&nbsp;<button mat-raised-button color="primary" (click)="declineHomieRequest()"><mat-icon>thumb_down</mat-icon> No</button>
       </div>
       <div *ngIf="homieStatus=='n/a'">
-        <img class="homie-status-image" src="../../../../assets/images/Be My Homie Label.jpg" >
-        <br>
+        <div class="graphiti-label-div"><span class="graphiti-label-medium">Be My Homie?</span></div>
         <button mat-raised-button color="primary" (click)="showHomieRequestDialog()"><mat-icon>person_add</mat-icon> Send Request</button>
       </div>
     </div>

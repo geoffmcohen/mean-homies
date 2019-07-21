@@ -31,6 +31,33 @@
 }
 
 .button-area{
-  align-self: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
   margin-top: 10px;
+}
+
+.graphiti-label-small{
+  font-family: ADrippingMarker;
+  font-size: 200%;
+  font-weight: bold;
+  color: FireBrick;
+}
+
+.graphiti-label-medium{
+  font-family: ADrippingMarker;
+  font-size: 250%;
+  font-weight: bold;
+  color: FireBrick;
+}
+
+.graphiti-label-large{
+  font-family: ADrippingMarker;
+  font-size: 300%;
+  font-weight: bold;
+  color: FireBrick;
+}
+
+/deep/ button {
+  margin: 5px !important;
 }
