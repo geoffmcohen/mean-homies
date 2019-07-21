@@ -8,5 +8,11 @@
 
 /* Match the font family of the prebuilt material theme */
 * {
-  font-family:Roboto,"Helvetica Neue",sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Add the dripping marker font */
+@font-face {
+  font-family: ADrippingMarker;
+  src: url("assets/fonts/adrip1.ttf") format("truetype");
 }
