@@ -28,8 +28,8 @@ export class AuthenticationService {
     ).subscribe((res : any) => {
         // Store the user and token if successful
         if(res.success){
-          cookies.set('admin-user', username);
-          cookies.set('admin-token', res.token);
+          cookies.set('admin-user', username, {expires: .25});
+          cookies.set('admin-token', res.token,  {expires: .25});
         } else {
           this.adminLogout();
         }
@@ -89,8 +89,8 @@ export class AuthenticationService {
     ).subscribe((res : any) => {
         // Store the user and token if successful
         if(res.success){
-          cookies.set('user', res.actualUsername);
-          cookies.set('user-token', res.token);
+          cookies.set('user', res.actualUsername, {expires: 1});
+          cookies.set('user-token', res.token, {expires: 1});
           this.userLoginChange.emit(true);
         } else {
           this.userLogout();
