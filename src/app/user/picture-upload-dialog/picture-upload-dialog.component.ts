@@ -16,7 +16,7 @@ export class PictureUploadDialogComponent implements OnInit {
   public imageFilename: string;
   public imageFile: File;
   public message: string;
-  
+
   private loadingDialogRef: MatDialogRef<LoadingDialogComponent>;
 
   constructor(
@@ -52,7 +52,27 @@ export class PictureUploadDialogComponent implements OnInit {
 
   // Used to set the image file to upload
   onFileChange(event){
-    this.imageFile = event.target.files.item(0);
+    // Check the file first
+    this.validateFile(event.target.files.item(0));
+  }
+
+  // Validates that the file meets size requirements
+  validateFile(file){
+    var fr = new FileReader();
+    fr.onload = (f : any) => {
+      var img = new Image;
+      img.onload = () => {
+        if(img.width > 800 || img.height > 800){
+          this.message = "Image dimensions must be no greater than 800 x 800.  Please resize or crop your image."
+          this.clearSelectedFile();
+        } else {
+          this.message = null;
+          this.imageFile = file;
+        }
+      }
+      img.src = String(fr.result);
+    }
+    fr.readAsDataURL(file);
   }
 
   // Clears the image selection
