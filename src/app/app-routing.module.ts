@@ -15,7 +15,7 @@ import { HomiesComponent } from './homies/homies/homies.component';
 import { MessageCenterComponent } from './messages/message-center/message-center.component';
 
 const routes: Routes = [
-  //{path: '', component: ComingSoonComponent},
+  {path: 'coming-soon', component: ComingSoonComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent,
     children: [

@@ -1,0 +1,26 @@
+.coming-soon{
+  display: flex;
+  flex-direction: column;
+}
+
+.coming-soon-img{
+  align-self: center;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.description{
+  text-align: center;
+}
+
+.launching{
+  font-family: AdrippingMarker;
+  font-size: 275%;
+  color: #c53d00;
+}
+
+.launch-date{
+  color: #329239;
+  font-size: 150%;
+}

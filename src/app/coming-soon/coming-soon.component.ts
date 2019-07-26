@@ -7,6 +7,7 @@ import { PageStatsService } from '../shared/page-stats.service';
   styleUrls: ['./coming-soon.component.css']
 })
 export class ComingSoonComponent implements OnInit {
+  // public launchDate: Date = new Date("9/18/2019");
 
   constructor(private pageStatsService: PageStatsService) { }
 
