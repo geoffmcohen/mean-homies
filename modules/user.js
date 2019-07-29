@@ -589,6 +589,11 @@ insertUserProfile = function(
     // Determine whether profile should be considered activate
     profile.active = userProfileShouldBeActive(profile);
 
+    // Add an activation time if the profile is newly activated
+    if(profile.active){
+      profile.activationTime = Date.now();
+    }
+
     // Insert the record
     dbo.collection("userProfiles").insertOne(profile, function(err, res){
       db.close();
@@ -629,6 +634,7 @@ updateUserProfile = function(
   city,
   stateProvince,
   country,
+  activationTime,
   callback
 ){
   // Connect to the database
@@ -664,6 +670,11 @@ updateUserProfile = function(
 
     // Determine whether profile should be considered activate
     profile.active = userProfileShouldBeActive(profile);
+
+    // Add an activation time if the profile is newly activated
+    if(!activationTime && profile.active){
+      profile.activationTime = Date.now();
+    }
 
     // Update the profile to the input values
     dbo.collection("userProfiles").updateOne({username: username}, {$set: profile}, function(err, result){
@@ -720,6 +731,7 @@ exports.saveUserProfile = saveUserProfile = function(
             city,
             stateProvince,
             country,
+            profile.activationTime,
             function(success, message, isActive){
             return callback(success, message, isActive);
           });
