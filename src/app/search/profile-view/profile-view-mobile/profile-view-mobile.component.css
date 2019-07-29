@@ -41,21 +41,21 @@
   font-family: ADrippingMarker;
   font-size: 200%;
   font-weight: bold;
-  color: FireBrick;
+  color: #c53d00;
 }
 
 .graphiti-label-medium{
   font-family: ADrippingMarker;
   font-size: 250%;
   font-weight: bold;
-  color: FireBrick;
+  color: #c53d00;
 }
 
 .graphiti-label-large{
   font-family: ADrippingMarker;
   font-size: 300%;
   font-weight: bold;
-  color: FireBrick;
+  color: #c53d00;
 }
 
 /deep/ button {

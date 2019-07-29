@@ -1,5 +1,9 @@
 <div style="text-align:center; width:100%">
   <img src="../../assets/images/Vegan Homies Blog Banner.jpg">
 </div>
+<!-- <div class="top-banner-ad">
+  <script type="text/javascript" src="//uprimp.com/bnr.php?section=General&pub=957627&format=300x250&ga=g"></script>
+  <noscript><a href="https://yllix.com/publishers/957627" target="_blank"><img src="//ylx-aff.advertica-cdn.com/pub/300x250.png" style="border:none;margin:0;padding:0;vertical-align:baseline;" /></a></noscript>
+</div> -->
 <app-blog-post *ngFor="let blogPost of blogPosts" [blogPost]="blogPost" ></app-blog-post>
 <app-blog-page-navigation *ngIf="pageInfo" [pageInfo]="pageInfo"></app-blog-page-navigation>
