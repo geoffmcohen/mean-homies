@@ -19,6 +19,7 @@ import { EditProfileComponent } from './user/edit-profile/edit-profile.component
 
 const routes: Routes = [
   {path: '', component: ComingSoonComponent},
+  {path: 'about', component: AboutComponent},
   // {path: '', redirectTo: 'home', pathMatch: 'full'},
   // {path: 'home', component: HomeComponent,
   //   children: [
@@ -31,7 +32,7 @@ const routes: Routes = [
   {path: 'blog', component: BlogComponent},
   {path: 'blog/page/:pageNumber', component: BlogComponent},
   {path: 'admin', component: AdminComponent},
-  {path: 'user/password-reset/:resetToken', component: PasswordResetComponent}
+  // {path: 'user/password-reset/:resetToken', component: PasswordResetComponent}
 ];
 
 @NgModule({

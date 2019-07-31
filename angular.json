@@ -21,7 +21,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/robots.txt"
+              "src/robots.txt",
+              "src/.htaccess"
             ],
             "styles": [
               {
@@ -42,6 +43,10 @@
                 {
                   "replace": "src/app/app-routing.module.ts",
                   "with": "src/app/app-routing.module.prod.ts"
+                },
+                {
+                  "replace": "src/.htaccess",
+                  "with": "src/.htaccess.prod"
                 }
               ],
               "optimization": true,

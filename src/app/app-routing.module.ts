@@ -16,6 +16,7 @@ import { MessageCenterComponent } from './messages/message-center/message-center
 
 const routes: Routes = [
   {path: 'coming-soon', component: ComingSoonComponent},
+  {path: 'about', component: AboutComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent,
     children: [
