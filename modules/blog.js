@@ -13,6 +13,9 @@ exports.insertBlogPost = function(blogPost, callback){
     }
     var dbo = db.db();
 
+    // Wrap paragraphs with <p></p>
+    blogPost.body = "<p>" + blogPost.body.replace(/\n\n/g, "</p><p>", ) + "</p>";
+
     // Add the entry time if object has none
     if(!blogPost.entryTime) {
       blogPost.entryTime = Date.now();
@@ -21,7 +24,6 @@ exports.insertBlogPost = function(blogPost, callback){
     // Check if the post has an image that needs to uploaded first
     if(blogPost.image_file){
       console.log("Attempting to upload image file '%s'...", blogPost.image_file);
-      // TODO: We should probably add some real validation to make sure the image is legit
       // Upload the image first
       var cloudinary = require('cloudinary');
       cloudinary.v2.uploader.upload(blogPost.image_file, {folder: "blog"}, function(err, result){
