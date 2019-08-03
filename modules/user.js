@@ -155,6 +155,7 @@ exports.createUser = function(email, username, password, callback){
                   console.error(err);
                   return callback(false, "An error occurred while trying to create user.");
               } else {
+                exports.sendUserCreationNotification();
                 console.log("Created user '%s'", username);
                 return callback(true, "Your new account has successfully been created.  Please check your email to activate your new account.");
               }
@@ -166,6 +167,57 @@ exports.createUser = function(email, username, password, callback){
       }
     });
   });
+}
+
+// Checks if a notification needs to be sent with the total user count
+exports.sendUserCreationNotification = function(){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Get the count of users
+    dbo.collection("users").countDocuments(function(err, count){
+      db.close();
+      if(err){
+        console.error("Unable to get count of users!");
+        console.error(err);
+      } else {
+        // Send an email for the first 10 users, each 10 users until 100, each 100 users until 1k, etc...
+        var exponent = parseInt(count.toExponential().split("e+")[1]);
+        var denominator = Math.pow(10, exponent);
+        if(count % denominator == 0){
+          console.log("Sending email notification that user #%d was created", count);
+          exports.sendUserCreationNotificationEmail(count);
+        } else {
+          console.log("User #%d created", count);
+        }
+      }
+    });
+  });
+}
+
+// Actually sends  the email with the count
+exports.sendUserCreationNotificationEmail = function(userCount, send = true, preview = false){
+  var email = require('./email.js');
+
+  // Set up the inputs for the email template
+  templateInputs = {userCount: userCount};
+
+  // Send the email using the template
+  email.sendAppTemplateEmail(
+    "geoff@veganhomies.com",
+    'user-count',
+    templateInputs,
+    send,
+    preview
+  );
 }
 
 // Activates the users account
