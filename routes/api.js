@@ -19,48 +19,13 @@ module.exports = (function(){
   api.get('/blog/get_posts', function(req, res){
     console.log("api/blog/get_posts called");
 
-    var input = {page: 1, postsPerPage: 3};
-    if(req.query.page) input.page = parseInt(req.query.page);
-    if(req.query.posts_per_page) input.postsPerPage = parseInt(req.query.posts_per_page);
+    // Get the input if provided in the HTTP request
+    var page = req.query.page ? parseInt(req.query.page) : 1;
+    var postsPerPage = req.query.posts_per_page ? parseInt(req.query.posts_per_page) : 5;
 
-    // #TODO: Move this into module
-    // Connect to the database
-    var MongoClient = require('mongodb').MongoClient;
-    var mongoURI = process.env.MONGOLAB_URI;
-    MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
-      if(err){
-        sendError(res, err, "Unable to connect to MongoDB");
-      } else {
-        // Get the collection
-        var dbo = db.db();
-        dbo.collection("blog", function(err, coll){
-          if(err){
-            return sendError(res, err, "Unable to get collection blog");
-          } else {
-            // Find all records sorted last to first
-            coll.find({}, {sort:{entryTime: -1}}, function(err, items){
-              if(err){
-                sendError(res, err, "Unable to execute find on blog collection" );
-              } else {
-                // Get paged data
-                items = items.skip(input.postsPerPage * (input.page - 1)).limit(input.postsPerPage);
-
-                // Convert the cursor to an array
-                items.toArray(function(err, arr){
-                  // Create return JSON with the array and information about paging
-                  var ret = {blogPosts: arr, pageInfo: {currentPage: parseInt(input.page)}};
-
-                  // Perform a count to determine how many pages total
-                  coll.countDocuments(function(err, count){
-                    ret.pageInfo.pageCount = Math.ceil(count / input.postsPerPage);
-                    res.send(ret);
-                  });
-                });
-              }
-            });
-          }
-        });
-      }
+    // Call the blog module to get the results
+    require("../modules/blog.js").getBlogPosts(page, postsPerPage, function(success, blogResults){
+      res.send({success: success, blogResults: blogResults});
     });
   });
 

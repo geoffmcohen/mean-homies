@@ -11,7 +11,7 @@ export class BlogService {
 
   public getPosts(
     page: number = 1,
-    postsPerPage: number = 3
+    postsPerPage: number = 5
   ): Observable<any>{
     // Set up the parameters to pass
     var params = new HttpParams()

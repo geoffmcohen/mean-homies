@@ -31,8 +31,10 @@ export class BlogComponent implements OnInit {
       console.log("Page number = %d", pageNumber);
 
       this.blogService.getPosts(pageNumber).subscribe((res : any) => {
-        this.blogPosts = res.blogPosts;
-        this.pageInfo = res.pageInfo;
+        if(res.success){
+          this.blogPosts = res.blogResults.blogPosts;
+          this.pageInfo = res.blogResults.pageInfo;
+        }
       });
     });
 
