@@ -108,6 +108,7 @@ import { MessageCenterMobileComponent } from './messages/message-center/message-
 import { MessageCenterDesktopComponent } from './messages/message-center/message-center-desktop/message-center-desktop.component';
 import { ConversationViewMobileComponent } from './messages/conversation-view/conversation-view-mobile/conversation-view-mobile.component';
 import { ConversationViewDesktopComponent } from './messages/conversation-view/conversation-view-desktop/conversation-view-desktop.component';
+import { ContactComponent } from './home/contact/contact.component';
 
 @NgModule({
   declarations: [
@@ -189,7 +190,8 @@ import { ConversationViewDesktopComponent } from './messages/conversation-view/c
     MessageCenterMobileComponent,
     MessageCenterDesktopComponent,
     ConversationViewMobileComponent,
-    ConversationViewDesktopComponent
+    ConversationViewDesktopComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,

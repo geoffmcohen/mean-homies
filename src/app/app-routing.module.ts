@@ -9,6 +9,7 @@ import { PasswordResetComponent } from './user/password-reset/password-reset.com
 import { DefaultComponent } from './home/default/default.component';
 import { AboutComponent } from './home/about/about.component';
 import { FaqComponent } from './home/faq/faq.component';
+import { ContactComponent } from './home/contact/contact.component';
 import { EditProfileComponent } from './user/edit-profile/edit-profile.component';
 import { SearchComponent } from './search/search/search.component';
 import { HomiesComponent } from './homies/homies/homies.component';
@@ -17,12 +18,15 @@ import { MessageCenterComponent } from './messages/message-center/message-center
 const routes: Routes = [
   {path: 'coming-soon', component: ComingSoonComponent},
   {path: 'about', component: AboutComponent},
+  {path: 'faq', component: FaqComponent},
+  {path: 'contact', component: ContactComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent,
     children: [
       {path: '', component: DefaultComponent, pathMatch: 'full'},
       {path: 'about', component: AboutComponent},
       {path: 'faq', component: FaqComponent},
+      {path: 'contact', component: ContactComponent},
       {path: 'user/edit-profile', component: EditProfileComponent},
       {path: 'search', component: SearchComponent},
       {path: 'homies', component: HomiesComponent},

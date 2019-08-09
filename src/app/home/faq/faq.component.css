@@ -1,0 +1,41 @@
+mat-card{
+}
+
+mat-card-title{
+}
+
+.site-name{
+  color: #c53d00;
+  font-weight: bold;
+}
+
+.keyword{
+  font-size: 100%;
+  font-weight: normal;
+  display: inline;
+}
+
+.q-and-a{
+  display: flex;
+  flex-direction: column;
+}
+
+.question{
+}
+
+.answer{
+  margin-left: 20px;
+}
+
+.veganism-definition{
+  font-style: italic;
+  font-weight: bold;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.italic{
+  font-style: italic;
+}
