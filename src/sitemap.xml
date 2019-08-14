@@ -3,15 +3,15 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
-        <loc>https://veganhomies.com/</loc>
+        <loc>https://www.veganhomies.com/</loc>
     </url>
     <url>
-        <loc>https://veganhomies.com/blog</loc>
+        <loc>https://www.veganhomies.com/blog</loc>
     </url>
     <url>
-        <loc>https://veganhomies.com/about</loc>
+        <loc>https://www.veganhomies.com/about</loc>
     </url>
     <url>
-        <loc>https://veganhomies.com/faq</loc>
+        <loc>https://www.veganhomies.com/faq</loc>
     </url>
 </urlset>
