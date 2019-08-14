@@ -1226,3 +1226,9 @@ exports.getUserEmail = function(username, callback){
     });
   });
 };
+// 
+// exports.banUser = function(adminToken, adminUser, username, banType, banPeriod, banComment){
+//
+// }
+//
+// exports.banUserNo
