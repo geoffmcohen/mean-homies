@@ -1226,9 +1226,59 @@ exports.getUserEmail = function(username, callback){
     });
   });
 };
-// 
-// exports.banUser = function(adminToken, adminUser, username, banType, banPeriod, banComment){
-//
-// }
-//
-// exports.banUserNo
+
+// Called to ban a user
+exports.banUser = function(adminToken, adminUser, targetUser, banType, banPeriod, banPeriodUnit, banComment, callback){
+  // Check to make sure a user token is valid
+  require('./auth.js').verifyUser(adminToken, adminUser, 'admin', function(err, isTokenValid){
+    if(!isTokenValid){
+      console.error('Error encountered while trying to verify admin token');
+      console.error(err);
+      return callback(false);
+    } else {
+      exports.banUserNoToken(targetUser, banType, banPeriod, banPeriodUnit, banComment, function(success){
+        return callback(success);
+      });
+    }
+  });
+}
+
+// Creates the actual user ban and notifies the target user of the ban
+exports.banUserNoToken = function(targetUser, banType, banPeriod, banPeriodUnit, banComment, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Create the data to be added to the users record
+    updateData = {banType: banType};
+    if(banType == "temporary"){
+      updateData.banExpirationTime = require("moment").add(banPeriod, banPeriodUnit).valueOf();
+    };
+
+    // Update the users record to have the ban
+    dbo.collection("users").updateOne({username: targetUser}, {$set: updateData}, function(err, updateResult){
+      if(err){
+        console.error("Unable to create ban for user '%s'", targetUser);
+        console.error(err);
+        return callback(false);
+      } else {
+        console.log("User '%s' has been successfully banned.");
+        // Send email notification to user regarding ban
+        exports.notifyUserOfBan(targetUser, banType, banPeriod, banPeriodUnit, banComment);
+        return callback(true);
+      }
+    });
+  });
+}
+
+// Notfies the user that they have been banned via email
+exports.notifyUserOfBan = function(targetUser, banType, banPeriod, banPeriodUnit, banComment){
+
+}
