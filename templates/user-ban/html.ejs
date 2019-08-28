@@ -1,0 +1,7 @@
+<p>You have recieved a <%=banType%> ban from using VeganHomies.com due to your bad behavior.</p>
+<% if(banComment) {%>
+<p><%=banComment%></p>
+<% } %>
+<% if(banType == "temporary") {%>
+<p>You will be able to access the site again in <%=banPeriod%> <%=banPeriodUnit%>. Please use this time to reflect on your behavior.</p>
+<% } %>

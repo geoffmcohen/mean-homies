@@ -1213,6 +1213,7 @@ exports.getUserEmail = function(username, callback){
 
     // Get the user object
     dbo.collection("users").findOne({username: username}, function(err, user){
+      db.close();
       if(err){
         console.error("Error encountered finding email for user '%s'", username);
         console.error(err);
@@ -1259,17 +1260,18 @@ exports.banUserNoToken = function(targetUser, banType, banPeriod, banPeriodUnit,
     // Create the data to be added to the users record
     updateData = {banType: banType};
     if(banType == "temporary"){
-      updateData.banExpirationTime = require("moment").add(banPeriod, banPeriodUnit).valueOf();
+      updateData.banExpirationTime = require("moment")().add(banPeriod, banPeriodUnit).valueOf();
     };
 
     // Update the users record to have the ban
     dbo.collection("users").updateOne({username: targetUser}, {$set: updateData}, function(err, updateResult){
+      db.close();
       if(err){
         console.error("Unable to create ban for user '%s'", targetUser);
         console.error(err);
         return callback(false);
       } else {
-        console.log("User '%s' has been successfully banned.");
+        console.log("User '%s' has been successfully banned.", targetUser);
         // Send email notification to user regarding ban
         exports.notifyUserOfBan(targetUser, banType, banPeriod, banPeriodUnit, banComment);
         return callback(true);
@@ -1279,6 +1281,27 @@ exports.banUserNoToken = function(targetUser, banType, banPeriod, banPeriodUnit,
 }
 
 // Notfies the user that they have been banned via email
-exports.notifyUserOfBan = function(targetUser, banType, banPeriod, banPeriodUnit, banComment){
+exports.notifyUserOfBan = function(targetUser, banType, banPeriod, banPeriodUnit, banComment, send = true, preview = false){
+  exports.getUserEmail(targetUser, function(success, userEmail){
+    if(success){
+      var email = require('./email.js');
 
+      // Set up the inputs for the email template
+      templateInputs = {
+        banType: banType,
+        banPeriod: banPeriod,
+        banPeriodUnit: banPeriodUnit,
+        banComment: banComment,
+      };
+
+      // Send the email using the template
+      email.sendAppTemplateEmail(
+        userEmail,
+        'user-ban',
+        templateInputs,
+        send,
+        preview
+      );
+    }
+  });
 }
