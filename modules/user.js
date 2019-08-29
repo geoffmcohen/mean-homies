@@ -298,9 +298,18 @@ exports.authenticateUser = function(username, password, callback){
             if(passwordMatch){
               // Make sure the user has activated their account
               if(result.activationTime) {
-                console.log("User %s authenticated", result.username);
-                updateLastLoginTime(result.username);
-                return callback(true, null, result.username);
+                if(result.banType == 'permanent'){
+                  console.log("Permanently banned user '%s' has attempted to log in", result.username);
+                  return callback(false, "You have been permanently banned from VeganHomies.com for violating the site's user agreement policies. Please kindly fuck off.", null);
+                } else if (result.banType == 'temporary' && Date.now() < result.banExpirationTime){
+                  console.log("Temporily banned user '%s' has attempted to log in", result.username);
+                  return callback(false, "You have been temporarily banned from VeganHomies.com. You will be able to log back in later after your ban expires.", null);
+                }
+                else {
+                  console.log("User %s authenticated", result.username);
+                  updateLastLoginTime(result.username);
+                  return callback(true, null, result.username);
+                }
               } else {
                 console.log("User '%s' attempted to login with unactived account", result.username);
                 return callback(false, util.format("Account '%s' has not yet been activated. Please use the activation link sent to your email to activate the account.", result.username), null);
