@@ -69,15 +69,28 @@ exports.verifyUser = function(token, username, userType, callback){
   var jwtSecret = process.env.JWT_SECRET || 'superdupersecret';
   jwt.verify(token, jwtSecret, function(err, decoded){
     if(err){
-      callback(err, false);
+      return callback(err, false);
     } else {
       // Ensure username and userType match token data if provided
       if(username && decoded.username != username) {
-        callback(new Error('Wrong user for token'), false);
+        return callback(new Error('Wrong user for token'), false);
       } else if (userType && decoded.userType != userType) {
         callback(new Error('Wrong userType for token'), false);
       } else {
-        callback(null, true);
+        if(userType == 'admin' || !username){
+          return callback(null, true);
+        } else {
+          // Now check if user is currently banned
+          require('./user.js').checkIfUserIsBanned(username, function(success, isBanned){
+            if(!success) {
+              return callback(new Error("Unable to determine if user is banned"), false);
+            } else if(isBanned){
+              return callback(new Error("User is banned and is not allowed to call the API"), false);
+            } else {
+              return callback(null, true);
+            }
+          });
+        }
       }
     }
   });

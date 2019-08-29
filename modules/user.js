@@ -1314,3 +1314,37 @@ exports.notifyUserOfBan = function(targetUser, banType, banPeriod, banPeriodUnit
     }
   });
 }
+
+// Checks if the user is currently banned
+exports.checkIfUserIsBanned = function(username, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.log("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+    dbo.collection("users").findOne({username: username}, function(err, user){
+      db.close();
+      if(err){
+        console.error("Error encountered while checking if user '%s' is banned", username);
+        console.error(err);
+        return callback(false, true);
+      } else if (!user) {
+        console.error("Unable to find user object for '%s' to check if banned", username);
+        return callback(false, true);
+      } else if (user.banType == 'permanent'){
+        console.log("Permanently banned user '%s' has attempted to call an API function", username);
+        return callback(true, true);
+      } else if (user.banType == 'temporary' && user.banExpirationTime > Date.now()){
+        console.log("Temporarily banned user '%s' has attempted to call an API function", username);
+        return callback(true, true)
+      } else{
+        return callback(true, false);
+      }
+    });
+  });
+}
