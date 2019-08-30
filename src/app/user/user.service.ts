@@ -263,4 +263,30 @@ export class UserService {
       callback(res);
     });
   }
+
+  // Creates a ban on a user
+  public banUser(
+    adminToken: string,
+    adminUser: string,
+    targetUser: string,
+    banType: string,
+    banPeriod: number,
+    banPeriodUnit: string,
+    banComment: string,
+    callback: ((result: any) => void)
+  ) : void{
+    // Make the REST call
+    this.http.post<any>('/api/admin/create_user_ban', {
+      adminToken: adminToken,
+      adminUser: adminUser,
+      targetUser: targetUser,
+      banType: banType,
+      banPeriod: String(banPeriod),
+      banPeriodUnit: banPeriodUnit,
+      banComment: banComment
+    }).subscribe((res: any) => {
+      // Send the results back to callback
+      callback(res);
+    });
+  }
 }

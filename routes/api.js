@@ -649,6 +649,22 @@ module.exports = (function(){
     });
   });
 
+  // Bans a user
+  api.post('/admin/create_user_ban', function(req, res){
+    console.log('api/admin/create_user_ban');
+
+    // Get the parameters from the request
+    var formidable = require('formidable');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+      // Send the message
+      var user = require("../modules/user.js");
+      user.banUser(fields.adminToken, fields.adminUser, fields.targetUser, fields.banType, fields.banPeriod, fields.banPeriodUnit, fields.banComment, function(success, message){
+        res.send({success: success, message: message});
+      });
+    });
+  });
+
   // api.get()
   return api;
 })();

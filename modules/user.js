@@ -1278,12 +1278,12 @@ exports.banUserNoToken = function(targetUser, banType, banPeriod, banPeriodUnit,
       if(err){
         console.error("Unable to create ban for user '%s'", targetUser);
         console.error(err);
-        return callback(false);
+        return callback(false, "Unable to create ban for user. See logs for details.");
       } else {
         console.log("User '%s' has been successfully banned.", targetUser);
         // Send email notification to user regarding ban
         exports.notifyUserOfBan(targetUser, banType, banPeriod, banPeriodUnit, banComment);
-        return callback(true);
+        return callback(true, "User has been successfully banned." );
       }
     });
   });
