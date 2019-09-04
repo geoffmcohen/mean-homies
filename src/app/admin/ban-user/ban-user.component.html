@@ -1,0 +1,42 @@
+<mat-card>
+  <div class="ban-user">
+    <mat-card-title>Ban User</mat-card-title>
+    <mat-form-field>
+      <mat-label>Target User</mat-label>
+      <input matInput [(ngModel)]="targetUser" placeholder="User to Ban...">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Ban Type</mat-label>
+      <mat-select [(value)]="banType">
+        <mat-option value="temporary">Temporary</mat-option>
+        <mat-option value="permanent">Permanent</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="temp-ban-period">
+      <mat-form-field>
+        <mat-label>Ban Period</mat-label>
+        <input matInput [(ngModel)]="banPeriod" [matAutocomplete]="banperiodauto" placeholder="">
+      </mat-form-field>
+      <mat-autocomplete #banperiodauto="matAutocomplete">
+        <mat-option [value]="12">12</mat-option>
+        <mat-option [value]="24">24</mat-option>
+        <mat-option [value]="48">48</mat-option>
+        <mat-option [value]="3">3</mat-option>
+        <mat-option [value]="5">5</mat-option>
+        <mat-option [value]="7">7</mat-option>
+      </mat-autocomplete>
+      <mat-form-field>
+        <mat-label>Ban Period Unit</mat-label>
+        <mat-select [(value)]="banPeriodUnit">
+          <mat-option value="hours">Hours</mat-option>
+          <mat-option value="days">Days</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-form-field>
+      <textarea matInput [(ngModel)]="banComment" placeholder="Optional Message to Target User..." cdkTextareaAutosize cdkAutosizeMinRows="5"></textarea>
+    </mat-form-field>
+    <div *ngIf="message" class='message'>{{message}}</div>
+    <button class="mat-raised-button mat-primary" (click)="submitBan()">Ban User</button>
+  </div>
+</mat-card>

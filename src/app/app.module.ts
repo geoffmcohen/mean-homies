@@ -109,6 +109,7 @@ import { MessageCenterDesktopComponent } from './messages/message-center/message
 import { ConversationViewMobileComponent } from './messages/conversation-view/conversation-view-mobile/conversation-view-mobile.component';
 import { ConversationViewDesktopComponent } from './messages/conversation-view/conversation-view-desktop/conversation-view-desktop.component';
 import { ContactComponent } from './home/contact/contact.component';
+import { BanUserComponent } from './admin/ban-user/ban-user.component';
 
 @NgModule({
   declarations: [
@@ -191,7 +192,8 @@ import { ContactComponent } from './home/contact/contact.component';
     MessageCenterDesktopComponent,
     ConversationViewMobileComponent,
     ConversationViewDesktopComponent,
-    ContactComponent
+    ContactComponent,
+    BanUserComponent
   ],
   imports: [
     BrowserModule,

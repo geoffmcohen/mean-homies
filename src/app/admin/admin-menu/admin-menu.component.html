@@ -15,7 +15,7 @@
   <button mat-menu-item disabled>Delete Admin User</button>
 </mat-menu>
 <mat-menu #vhusersubmenu="matMenu">
-  <button mat-menu-item disabled>Swing Ban Hammer</button>
+  <button mat-menu-item (click)="displayComponent({componentName: 'ban-user'})">Swing Ban Hammer</button>
   <button mat-menu-item disabled>Restore Banned User</button>
 </mat-menu>
 

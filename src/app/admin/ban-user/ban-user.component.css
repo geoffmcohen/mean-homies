@@ -1,0 +1,17 @@
+.ban-user{
+  display: flex;
+  flex-direction: column;
+}
+
+.temp-ban-period{
+    display: flex;
+    flex-direction: row;
+}
+
+.message{
+  color: red;
+  width: 100%;
+}
+
+mat-form-field{
+}

@@ -1244,10 +1244,10 @@ exports.banUser = function(adminToken, adminUser, targetUser, banType, banPeriod
     if(!isTokenValid){
       console.error('Error encountered while trying to verify admin token');
       console.error(err);
-      return callback(false);
+      return callback(false, "Invalid admin token");
     } else {
-      exports.banUserNoToken(targetUser, banType, banPeriod, banPeriodUnit, banComment, function(success){
-        return callback(success);
+      exports.banUserNoToken(targetUser, banType, banPeriod, banPeriodUnit, banComment, function(success, message){
+        return callback(success, message);
       });
     }
   });
@@ -1279,6 +1279,9 @@ exports.banUserNoToken = function(targetUser, banType, banPeriod, banPeriodUnit,
         console.error("Unable to create ban for user '%s'", targetUser);
         console.error(err);
         return callback(false, "Unable to create ban for user. See logs for details.");
+      } else if(updateResult.result.nModified < 1){
+        console.error("Unable to ban user '%s'. Make sure the username is correct.", targetUser);
+        return callback(false, "Unable to update user record.  Check if the Target User is correct");
       } else {
         console.log("User '%s' has been successfully banned.", targetUser);
         // Send email notification to user regarding ban

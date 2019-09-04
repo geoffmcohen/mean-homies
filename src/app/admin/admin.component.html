@@ -4,4 +4,5 @@
 <div *ngIf="loggedIn">
   <app-new-blog-post *ngIf="componentDisplayed.componentName=='new-blog-post'"></app-new-blog-post>
   <app-report *ngIf="componentDisplayed.componentName=='report'" [args]="componentDisplayed.args"></app-report>
+  <app-ban-user *ngIf="componentDisplayed.componentName=='ban-user'"></app-ban-user>
 </div>
