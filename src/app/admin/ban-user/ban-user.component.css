@@ -3,6 +3,11 @@
   flex-direction: column;
 }
 
+.target-user-and-ban-type{
+  display: flex;
+  flex-direction: row;
+}
+
 .temp-ban-period{
     display: flex;
     flex-direction: row;
@@ -11,6 +16,11 @@
 .message{
   color: red;
   width: 100%;
+}
+
+.small-field{
+  width: 200px;
+  margin-right: 10px;
 }
 
 mat-form-field{
