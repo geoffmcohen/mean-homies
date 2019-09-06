@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material";
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { ApplicationStateService } from '../../shared/application-state.service';
+import { TermsService } from '../../terms/terms.service'
 
 @Component({
   selector: 'app-user-agreement-dialog',
@@ -13,37 +14,20 @@ export class UserAgreementDialogComponent implements OnInit {
   public isMobile: boolean;
   public isBaseClass: boolean = this.constructor.name == "UserAgreementDialogComponent";
   public userAgrees: boolean;
-  public userAgreement =
-`This will be the user agreement... Blah, Blah, Blah, Blah, Blah, Blah
-
-Another paragraph of text.
-
-And another...
-
-And another...
-
-And another...
-
-One more for the road...
-1
-2
-3
-4
-5
-6
-7
-9
-10
-End`;
+  public userAgreement: string;
 
   private agreementScrolled: boolean;
 
   constructor(
     private appStateService: ApplicationStateService,
+    private termsService: TermsService,
     private dialogRef: MatDialogRef<UserAgreementDialogComponent>
   ) {
     // Gets whether a mobile device is being used
     this.isMobile = appStateService.getIsMobile();
+
+    // Gets the user agreement from the terms service
+    this.userAgreement = this.termsService.getFullUserAgreement();
   }
 
   ngOnInit() {

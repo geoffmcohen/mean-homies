@@ -1,8 +1,20 @@
 .agreement-dialog {
-    min-width: 600px;
-    min-height: 600px;
+  min-width: 600px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
 .mat-form-field {
   width: 100%;
+}
+
+.checkbox-area{
+  align-self: flex-end;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+
+.button-area{
+  align-self: flex-end;
 }
