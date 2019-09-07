@@ -7,3 +7,14 @@
   font-size: 200%;
   color: #c53d00;
 }
+
+.home-footer{
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-text{
+  font-size: 60%;
+  align-self: center;
+}

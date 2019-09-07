@@ -21,6 +21,7 @@ const routes: Routes = [
   {path: 'about', component: AboutComponent},
   {path: 'faq', component: FaqComponent},
   {path: 'contact', component: ContactComponent},
+  {path: 'terms-of-service', component: TermsOfServiceComponent},
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent,
     children: [

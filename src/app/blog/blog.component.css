@@ -3,3 +3,14 @@
   max-width: 100%;
   height: auto;
 }
+
+.home-footer{
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-text{
+  font-size: 60%;
+  align-self: center;
+}
