@@ -36,28 +36,28 @@ GDPR / FTC NOTICE: Among other means that you may provide us for our communicati
 
 3. What We May Collect: Under our standard practices we may collect the following information, which shall not be considered private information or personal data as between you and us, or as among you and us and our contractors (as defined in Section 9 below), but which shall be considered private and personal as to third parties other than our contractors:
 
-Contact information including names and email address(es).
-General demographic information including without limitation geographic information such as countries, states, provinces, territories, etc.
-Other information relating to your preferences and interests or that is relevant to any customer orders, surveys and/or any offer.
-Any information you may send, provide or deliver to us, either electronically or otherwise, regardless of whether we have committed not to collect it as part of our standard practices under this policy.
+- Contact information including names and email address(es).
+- General demographic information including without limitation geographic information such as countries, states, provinces, territories, etc.
+- Other information relating to your preferences and interests or that is relevant to any customer orders, surveys and/or any offer.
+- Any information you may send, provide or deliver to us, either electronically or otherwise, regardless of whether we have committed not to collect it as part of our standard practices under this policy.
 
 4. What We Do Not Collect, Hold or Control: We use secure third-party payment processors for any online payments to us, and we also use secure third-party email service providers and other contractors (as defined in Section 9 below) for communicating with you. For these reasons, and for the benefit of your privacy and security, under our standard practices we do not collect, hold or control any of the following information:
 
-Credit card or debit card numbers.
-Online financial information or bank account information.
-Internet Protocol (“IP”) addresses or Media Access Control (“MAC”) addresses, which may be obtained by us only if required to do so by applicable law, Regulation, rule, administrative order, or in the event you have breached any of your duties to us under this Agreement or any other written agreement we have with you.
-Dates of birth.
-Any information from persons under age 13.
-Tax identification numbers, including without limitation US social security numbers or Canadian social insurance numbers.
-By our past, present and intended future actions, on our website or otherwise, you and we agree that we are not a “data collector” or “data processor”, nor are we in any way accepting the duties or obligations of a “data collector” or “data processor”, as such term may be described or defined in the GDPR.
+- Credit card or debit card numbers.
+- Online financial information or bank account information.
+- Internet Protocol (“IP”) addresses or Media Access Control (“MAC”) addresses, which may be obtained by us only if required to do so by applicable law, Regulation, rule, administrative order, or in the event you have breached any of your duties to us under this Agreement or any other written agreement we have with you.
+- Dates of birth.
+- Any information from persons under age 13.
+- Tax identification numbers, including without limitation US social security numbers or Canadian social insurance numbers.
+- By our past, present and intended future actions, on our website or otherwise, you and we agree that we are not a “data collector” or “data processor”, nor are we in any way accepting the duties or obligations of a “data collector” or “data processor”, as such term may be described or defined in the GDPR.
 
 5. What We Do with the Information We Gather: We require this information to understand your needs and provide you with a better service, and in particular for the following reasons:
 
-We use the information to help you connect with other other users.  The information provided in your profile will be used to allow other users to find and contact you.
-We may use the information to improve and customize our website, products and/or services.
-We may periodically send you promotional emails about new features of the website or other information we think you may find interesting using the email address which you have provided.
-We may contact you by email, online chat, social-media connections, phone, text, fax or mail, according to the contact information you have provided us and/or the way(s) you have communicated with us.
-From time to time, we may also use your information to contact you for market-research purposes.
+- We use the information to help you connect with other other users.  The information provided in your profile will be used to allow other users to find and contact you.
+- We may use the information to improve and customize our website, products and/or services.
+- We may periodically send you promotional emails about new features of the website or other information we think you may find interesting using the email address which you have provided.
+- We may contact you by email, online chat, social-media connections, phone, text, fax or mail, according to the contact information you have provided us and/or the way(s) you have communicated with us.
+- From time to time, we may also use your information to contact you for market-research purposes.
 
 6. Security: We are committed to ensuring that your information is secure. In order to prevent unauthorized access or disclosure, we have put in place suitable physical, electronic and managerial procedures to safeguard and secure the information we collect online, including our use of secure contractors (as defined in Sec. 9 below), third-party payment processors and email service providers. Any of your information collected by these secure contractors, third-party payment processors and service providers is subject to their own privacy policies, not ours; therefore, you and we agree that we will have no liability in connection with the actions or inactions of these payment processors and service providers.
 

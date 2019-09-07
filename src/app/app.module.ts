@@ -110,6 +110,7 @@ import { ConversationViewMobileComponent } from './messages/conversation-view/co
 import { ConversationViewDesktopComponent } from './messages/conversation-view/conversation-view-desktop/conversation-view-desktop.component';
 import { ContactComponent } from './home/contact/contact.component';
 import { BanUserComponent } from './admin/ban-user/ban-user.component';
+import { TermsOfServiceComponent } from './terms/terms-of-service/terms-of-service.component';
 
 @NgModule({
   declarations: [
@@ -193,7 +194,8 @@ import { BanUserComponent } from './admin/ban-user/ban-user.component';
     ConversationViewMobileComponent,
     ConversationViewDesktopComponent,
     ContactComponent,
-    BanUserComponent
+    BanUserComponent,
+    TermsOfServiceComponent
   ],
   imports: [
     BrowserModule,
