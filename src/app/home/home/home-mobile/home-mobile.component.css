@@ -14,3 +14,7 @@
   font-size: 60%;
   align-self: center;
 }
+
+mat-card{
+  margin: 5px;
+}
