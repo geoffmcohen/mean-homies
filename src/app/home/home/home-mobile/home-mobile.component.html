@@ -3,7 +3,7 @@
     <button mat-icon-button [matMenuTriggerFor]="mainmenu" [matBadge]="getTotalAlertCount()" [matBadgeHidden]="shouldHideMenuBadge()" matBadgeSize="small" matBadgeColor="accent"><mat-icon>menu</mat-icon></button>
     &nbsp;<span class="site-name">VeganHomies.com</span>
   </mat-toolbar>
-  <mat-card *ngIf="!loggedIn">Welcome to VeganHomies.com, if you have an account please <a href="javascript:void(0)" (click)="showLoginDialog()">Log In</a>. Otherwise please <a href="javascript:void(0)" (click)="showSignupDialog()">Sign Up</a> to create a new account to be able to access the sites full features.</mat-card>
+  <div class="welcome-div" *ngIf="!loggedIn"><span class="welcome-span">Welcome to VeganHomies.com, if you have an account please <a href="javascript:void(0)" (click)="showLoginDialog()">Log In</a>, otherwise please <a href="javascript:void(0)" (click)="showSignupDialog()">Sign Up</a> to create a new account to be able to access the sites full features.</span></div>
   <router-outlet></router-outlet>
   <div class="home-footer">
     <span class="footer-text">Copyright © 2019 VeganHomies.com. All Rights Reserved.</span>

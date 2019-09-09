@@ -19,6 +19,14 @@
   align-self: center;
 }
 
-mat-card{
-  margin: 5px;
+.welcome-div{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-span{
+  font-size: 115%;
+  align-self: center;
 }
