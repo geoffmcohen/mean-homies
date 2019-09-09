@@ -17,12 +17,14 @@ import { AboutComponent } from './home/about/about.component';
 import { FaqComponent } from './home/faq/faq.component';
 import { ContactComponent } from './home/contact/contact.component';
 import { EditProfileComponent } from './user/edit-profile/edit-profile.component';
+import { TermsOfServiceComponent } from './terms/terms-of-service/terms-of-service.component';
 
 const routes: Routes = [
   {path: '', component: ComingSoonComponent},
   {path: 'about', component: AboutComponent},
   {path: 'faq', component: FaqComponent},
   {path: 'contact', component: ContactComponent},
+  {path: 'terms-of-service', component: TermsOfServiceComponent},
   // {path: '', redirectTo: 'home', pathMatch: 'full'},
   // {path: 'home', component: HomeComponent,
   //   children: [
