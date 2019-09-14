@@ -1,5 +1,5 @@
 <span *ngIf="loggedIn">
-  {{loggedInUser}} &nbsp;<!-- For testing only -->
+  <!-- {{loggedInUser}} &nbsp;--> <!-- For testing only -->
   <button mat-icon-button [routerLink]="['search']" [disabled]="!hasActiveProfile"><mat-icon>search</mat-icon></button>
   <button mat-icon-button [routerLink]="['homies']" [disabled]="!hasActiveProfile" [matBadge]="pendingHomieRequestCount" [matBadgeHidden]="pendingHomieRequestCount<1" matBadgeSize="small" matBadgeColor="accent"><mat-icon>people</mat-icon></button>
   <button mat-icon-button [routerLink]="['messages']" [disabled]="!hasActiveProfile" [matBadge]="unreadMessageCount" [matBadgeHidden]="unreadMessageCount<1" matBadgeSize="small" matBadgeColor="accent"><mat-icon>message</mat-icon></button>
@@ -17,7 +17,7 @@
   <button mat-menu-item [routerLink]="['about']">About</button>
   <button mat-menu-item [routerLink]="['faq']">FAQ</button>
   <button mat-menu-item [routerLink]="['contact']">Contact</button>
-  <button mat-menu-item [routerLink]="['terms-of-service']">Terms of Service</button>  
+  <button mat-menu-item [routerLink]="['terms-of-service']">Terms of Service</button>
   <button mat-menu-item (click)="openBlog()">Blog</button>
 </mat-menu>
 
