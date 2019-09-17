@@ -7,7 +7,7 @@ to hide everything that is unser construction.
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ComingSoonComponent } from './coming-soon/coming-soon.component';
+// import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 import { AdminComponent } from './admin/admin.component';
 import { BlogComponent } from './blog/blog.component';
 import { HomeComponent } from './home/home/home.component';
@@ -23,12 +23,12 @@ import { MessageCenterComponent } from './messages/message-center/message-center
 import { TermsOfServiceComponent } from './terms/terms-of-service/terms-of-service.component';
 
 const routes: Routes = [
-  {path: '', component: ComingSoonComponent}, // Replace with commented out redirect
+  // {path: '', component: ComingSoonComponent}, // Replace with commented out redirect
   {path: 'about', component: AboutComponent},
   {path: 'faq', component: FaqComponent},
   {path: 'contact', component: ContactComponent},
   {path: 'terms-of-service', component: TermsOfServiceComponent},
-  // {path: '', redirectTo: 'home', pathMatch: 'full'},
+  {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent,
     children: [
       {path: '', component: DefaultComponent, pathMatch: 'full'},
