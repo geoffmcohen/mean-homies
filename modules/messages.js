@@ -474,3 +474,42 @@ exports.getMessageNoToken = function(sendUser, receiveUser, sendTimestamp, markA
     });
   });
 }
+
+// Inserts the accepted Homie Request message as the first message in a conversation
+exports.insertHomieRequestMessageIntoMessages = function(homieRecord, callback){
+  // Connect to the database
+  var MongoClient = require('mongodb').MongoClient;
+  var mongoURI = process.env.MONGOLAB_URI;
+  MongoClient.connect(mongoURI, {useNewUrlParser: true}, function(err, db){
+    // Throw error if unable to connect
+    if(err){
+      console.error("Unable to connect to MongoDB!!!");
+      throw err;
+    }
+    var dbo = db.db();
+
+    // Create the message
+    message = {
+      conversationId: createConversationId(homieRecord.requestUser, homieRecord.acceptUser),
+      sendUser: homieRecord.requestUser,
+      receiveUser: homieRecord.acceptUser,
+      messageText: homieRecord.requestMessage,
+      sendTimestamp: homieRecord.requestTime,
+      status: 'read',
+      readTimestamp: homieRecord.acceptTime
+    };
+
+    // Insert the message into the database
+    dbo.collection("messages").insertOne(message, function(err, insertResult){
+      db.close();
+      if(err){
+        console.error("Error inserting homie request message '%s' -> '%s'", homieRecord.requestUser, homieRecord.acceptUser);
+        console.error(err);
+        return callback(false, serverErrorMessage);
+      } else {
+        console.log("Succesfully inserted homie request message '%s' -> '%s'", homieRecord.requestUser, homieRecord.acceptUser);
+        return callback(true, null);
+      }
+    });
+  });
+}

@@ -330,8 +330,7 @@ exports.acceptHomieRequestNoToken = function(username, targetUser, callback){
         // Find the homieRequest
         searchCriteria = {requestUser: targetUser, acceptUser: username};
         dbo.collection("homieRequests").findOne(searchCriteria, function(err, homieRequest){
-          if (!homieRequest)
-          {
+          if (!homieRequest){
             console.log("Unable to find homieRequest between '%s' and '%s'", targetUser, username);
             return callback(false, serverErrorMessage);
           } else {
@@ -356,8 +355,21 @@ exports.acceptHomieRequestNoToken = function(username, targetUser, callback){
                     console.error(err);
                     return callback(false, serverErrorMessage);
                   } else {
-                    console.log("Succesfully accepted homie request '%s' >>> '%s'", targetUser, username);
-                    return callback(true, "Succesfully accepted Homie Request");
+                    if(homieRecord.requestMessage){
+                      // Add the request message to the messages between the users
+                      require("./messages.js").insertHomieRequestMessageIntoMessages(homieRecord, function(result, errorMessage){
+                        if(!result){
+                          console.log("Homie request accepted but message failed to be persisted to messages '%s' >>> '%s'", targetUser, username);
+                          return callback(false, serverErrorMessage);
+                        } else {
+                          console.log("Succesfully accepted homie request '%s' >>> '%s'", targetUser, username);
+                          return callback(true, "Succesfully accepted Homie Request");
+                        }
+                      });
+                    } else {
+                      console.log("Succesfully accepted homie request '%s' >>> '%s'", targetUser, username);
+                      return callback(true, "Succesfully accepted Homie Request");
+                    }
                   };
                 });
               }
